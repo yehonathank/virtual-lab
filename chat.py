@@ -27,8 +27,9 @@ def run_scientific_meeting(
     team_members: tuple[str],
     agenda: str,
     save_dir: Path,
+    save_name: str = "discussion",
     summaries: tuple[str] = (),
-    num_rounds: int = 2,
+    num_rounds: int = 3,
     max_tokens: int | None = None,
     model: str = "gpt-4o",
 ) -> None:
@@ -137,12 +138,12 @@ def run_scientific_meeting(
     # Save the discussion as JSON and Markdown
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    with open(save_dir / "discussion.json", "w") as f:
+    with open(save_dir / f"{save_name}.json", "w") as f:
         json.dump(discussion, f, indent=4)
 
-    with open(save_dir / "discussion.md", "w") as file:
+    with open(save_dir / f"{save_name}.md", "w") as file:
         for message in discussion:
-            role = message["role"]
+            role = message["role"]  # TODO: replace with agent name
             content = message["content"]
             file.write(f"## {role.capitalize()}\n\n{content}\n\n")
 
@@ -151,12 +152,12 @@ if __name__ == "__main__":
     team_lead = "Principal Investigator"
     team_members = tuple(TEAM_TO_PROMPT.keys())
 
-    # run_scientific_meeting(
-    #     team_lead=team_lead,
-    #     team_members=team_members,
-    #     agenda=PROJECT_SELECTION_PROMPT,
-    #     save_path=Path("discussion.json"),
-    # )
+    run_scientific_meeting(
+        team_lead=team_lead,
+        team_members=team_members,
+        agenda=PROJECT_SELECTION_PROMPT,
+        save_dir=Path("discussions/project_selection"),
+    )
 
     summaries = load_summaries([Path("discussions/project_selection/discussion.json")])
 
