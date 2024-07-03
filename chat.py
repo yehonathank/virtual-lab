@@ -145,5 +145,5 @@ if __name__ == "__main__":
         team_lead="Principal Investigator",
         team_members=tuple(TEAM_TO_PROMPT.keys()),
         agenda=PROJECT_SELECTION_PROMPT,
-        save_path=Path("project_selection.json"),
+        save_path=Path("project_selection_2.json"),
     )
