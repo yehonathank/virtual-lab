@@ -50,4 +50,34 @@ def scientific_meeting_team_member_prompt(team_member: str) -> str:
     return f"{team_member}, please provide your thoughts on the discussion."
 
 
+ECL_INSTRUMENT_SIMPLIFICATION_PROMPT = """A long piece of text will be given to you. Please read the text and then write the name of every single experiment. After each experiment name, copy the example applications, if provided. For example, given this input text in quotes:
+
+"ExperimentSolidPhaseExtraction(Beta)
+Base Package
+
+Example applications include: Compound Separation, Compound Purification, Mobile Phase, Solid Sorbent, Filtration
+
+Small Robotic Liquid Handler
+20 PSI pressure push (independent for each vessel)
+0.1 to 100 mL/min flow rates for solvent pushes
+Up to 20 L of wash solvent per batch
+Up to 700 mL of equilibration buffer and elution buffer per batch
+Filter through 3 cc or 6 cc SPE cartridges
+
+Collects in SBS deep well plates
+
+Positive Pressure Filter
+0 to 40 PSI independent pressure sources for each well
+Filter though SBS filter plates
+Collects in SBS deep well plates"
+
+you would then write the following text, provided here in quotes:
+
+"ExperimentSolidPhaseExtraction(Beta)
+
+Example applications include: Compound Separation, Compound Purification, Mobile Phase, Solid Sorbent, Filtration"
+
+Below is the text you need to read. Please read it and write out all the experiments as explained."""
+
+
 PROJECT_SELECTION_PROMPT = "We are starting on a research project that is aiming to apply artificial intelligence to drug discovery. Specifically, we have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. In this meeting, we need to select a specific research direction for this project. The primary considerations are: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must involve the development of an artificial intelligence model, and (3) the project must use ECL to validate the artificial intelligence model’s output, which means that any required wet lab experiments must be within the capabilities of ECL’s scientific instrumentation. Please determine a research project that meets these criteria. Please be as specific as possible in terms of the precise goal of the project and the experiments that will be run."

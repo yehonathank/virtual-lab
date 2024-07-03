@@ -10,7 +10,7 @@ def display_discussion(discussion_path: Path = Path("project_selection.json")) -
         discussion = json.load(file)
 
     for turn in discussion:
-        print(turn["content"] + "\n\n")
+        print(f"## {turn['role'].capitalize()}\n\n{turn['content']}")
 
 
 if __name__ == "__main__":
