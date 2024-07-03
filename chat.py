@@ -16,7 +16,7 @@ def run_scientific_meeting(
     team_members: tuple[str],
     agenda: str,
     summaries: tuple[str] = (),
-    num_rounds: int = 1,
+    num_rounds: int = 2,
     max_tokens: int = 4096,
     model: str = "gpt-3.5-turbo",  # TODO: swap for GPT-4o
     save_path: Path = Path("discussion.json"),
@@ -53,34 +53,45 @@ def run_scientific_meeting(
         },
     ]
 
-    # Loop through rounds and team members and illicit their responses
-    for _ in trange(num_rounds, desc="Rounds"):
+    # Loop through rounds
+    for round_num in trange(num_rounds, desc="Rounds"):
+
+        # Loop through team members and illicit their response
         for team_member in tqdm(team_members, desc="Team Members"):
-            # Prompt team member for a response
+            # Special prompt for team lead
+            if team_member == team_lead:
+                if round_num == 0:
+                    prompt = f"{team_lead}, please provide your initial thoughts on the agenda as well as any questions you have to guide the discussion among the team members."
+                else:
+                    prompt = f"{team_lead}, please synthesize the discussion, provide your thoughts, and then ask any questions you have for the team members to further the discussion."
+
+            # Prompt for other team members
+            else:
+                prompt = f"{team_member}, please provide your thoughts on the discussion."
+
+            # Add prompt to discussion along with team member meta prompt
             discussion.append(
                 {
                     "role": "user",
-                    "content": f"{team_member}, please provide your thoughts based on the discussion so far and based on your expertise, goal, and role.",
+                    "content": prompt,
                 }
             )
-            messages = [TEAM_TO_MESSAGE[team_member]] + discussion
 
             # Get the response
             chat_completion = client.chat.completions.create(
-                messages=messages,
+                messages=[TEAM_TO_MESSAGE[team_member]] + discussion,
                 model=model,
                 stream=False,
                 temperature=0,
                 seed=0,
                 max_tokens=max_tokens,
             )
-            response = chat_completion.choices[0].message.content
 
             # Add the response to the discussion
             discussion.append(
                 {
                     "role": "assistant",
-                    "content": f"{team_member}: {response}",
+                    "content": chat_completion.choices[0].message.content,
                 }
             )
 
@@ -91,24 +102,22 @@ def run_scientific_meeting(
             "content": f"{team_lead}, please summarize this meeting in one paragraph for reference in future discussions. Then, provide a specific recommendation regarding the agenda based on team member feedback and your expert judgment.",
         }
     )
-    messages = [TEAM_TO_MESSAGE[team_lead]] + discussion
 
     # Get the response
     chat_completion = client.chat.completions.create(
-        messages=messages,
+        messages=[TEAM_TO_MESSAGE[team_lead]] + discussion,
         model=model,
         stream=False,
         temperature=0,
         seed=0,
         max_tokens=max_tokens,
     )
-    response = chat_completion.choices[0].message.content
 
     # Add the response to the discussion
     discussion.append(
         {
             "role": "assistant",
-            "content": f"{team_lead}: {response}",
+            "content": chat_completion.choices[0].message.content,
         }
     )
 
@@ -123,5 +132,5 @@ if __name__ == "__main__":
     run_scientific_meeting(
         team_lead="Principal Investigator",
         team_members=tuple(TEAM_TO_PROMPT.keys()),
-        agenda="We are interesting in peptide-based drug discovery. Please select an appropriate target for the development of a novel peptide drug.",
+        agenda="We are interesting in peptide-based drug discovery. Please select an appropriate protein target for the development of a novel peptide drug.",
     )

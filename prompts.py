@@ -29,11 +29,4 @@ def scientific_meeting_start_prompt(
     else:
         summary_statement = ""
 
-    return f"""This is the beginning of a scientific meeting to discuss our research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting and provide their initial thoughts on the agenda, including any questions about the agenda that the team members should discuss. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will synthesize the points raised by each team member and ask any additional questions to spur further discussion. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will summarize the conversation in one paragraph and then provide a specific recommendation regarding the agenda based on team member feedback."""
-
-
-# [Team member prompts] {team_member}, please provide your thoughts on the agenda based on the discussion so far and based on your expertise, goal, and role.
-#
-# [Round prompt for team lead] {team_lead}, please synthesize the discussion so far. Then state whether you would like to request another round of team feedback. If so, please provide guiding thoughts and/or questions for the next round of feedback.
-#
-# [Final prompt for team lead] {team_lead}, please summarize this meeting in one paragraph for reference in future discussions. Then, provide a specific recommendation regarding the agenda based on team member feedback and your expert judgment."""
+    return f"""This is the beginning of a scientific meeting to discuss our research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will synthesize the points raised by each team member and ask additional questions to spur further discussion. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will summarize the conversation and provide a specific recommendation regarding the agenda based on team member feedback."""
