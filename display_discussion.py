@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 
-def display_discussion(discussion_path: Path = Path("discussion.json")) -> None:
+def display_discussion(discussion_path: Path = Path("project_selection.json")) -> None:
     """Display a discussion saved as JSON."""
     with open(discussion_path, "r") as file:
         discussion = json.load(file)

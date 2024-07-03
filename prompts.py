@@ -1,5 +1,6 @@
 """Prompts for the language model agents and meetings."""
 
+# Team member meta prompts
 TEAM_TO_PROMPT = {
     "Principal Investigator": "You are a Principal Investigator. Your expertise is in applying artificial intelligence to drug discovery. Your goal is to perform research in your area of expertise that maximizes the scientific impact of the work. Your role is to lead a team of experts to solve an important problem in artificial intelligence for drug discovery.",
     "Clinician": "You are a Clinician. Your expertise is in aiding the development of new drugs for clinical use from a medical perspective. Your goal is to make progress toward developing a new drug for a disease with unmet clinical need. Your role is to ensure that the research project you participate in has meaningful clinical impact for patients.",
@@ -17,6 +18,7 @@ TEAM_TO_MESSAGE = {
 }
 
 
+# Scientific meeting prompts
 def scientific_meeting_start_prompt(
     team_lead: str,
     team_members: tuple[str],
@@ -30,3 +32,22 @@ def scientific_meeting_start_prompt(
         summary_statement = ""
 
     return f"""This is the beginning of a scientific meeting to discuss our research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will synthesize the points raised by each team member and ask additional questions to spur further discussion. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will summarize the conversation and provide a specific recommendation regarding the agenda based on team member feedback."""
+
+
+def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
+    return f"{team_lead}, please provide your initial thoughts on the agenda as well as any questions you have to guide the discussion among the team members."
+
+
+def scientific_meeting_team_lead_intermediate_prompt(team_lead: str) -> str:
+    return f"{team_lead}, please synthesize the discussion, provide your thoughts, and then ask any questions you have for the team members to further the discussion."
+
+
+def scientific_meeting_team_lead_final_prompt(team_lead: str) -> str:
+    return f"{team_lead}, please summarize this meeting for future discussions. Please be as concise as possible but include all important details. Then, provide a specific recommendation regarding the agenda based on team member feedback and your expert judgment."
+
+
+def scientific_meeting_team_member_prompt(team_member: str) -> str:
+    return f"{team_member}, please provide your thoughts on the discussion."
+
+
+PROJECT_SELECTION_PROMPT = "We are starting on a research project that is aiming to apply artificial intelligence to drug discovery. Specifically, we have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. In this meeting, we need to select a specific research direction for this project. The primary considerations are: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must involve the development of an artificial intelligence model, and (3) the project must use ECL to validate the artificial intelligence model’s output, which means that any required wet lab experiments must be within the capabilities of ECL’s scientific instrumentation. Please determine a research project that meets these criteria. Please be as specific as possible in terms of the precise goal of the project and the experiments that will be run."

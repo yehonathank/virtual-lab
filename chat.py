@@ -6,7 +6,17 @@ from pathlib import Path
 from openai import OpenAI
 from tqdm import trange, tqdm
 
-from prompts import scientific_meeting_start_prompt, TEAM_TO_MESSAGE, TEAM_TO_PROMPT
+from prompts import (
+    PROJECT_SELECTION_PROMPT,
+    scientific_meeting_start_prompt,
+    scientific_meeting_team_lead_initial_prompt,
+    scientific_meeting_team_lead_intermediate_prompt,
+    scientific_meeting_team_lead_final_prompt,
+    scientific_meeting_team_member_prompt,
+    TEAM_TO_MESSAGE,
+    TEAM_TO_PROMPT,
+)
+from utils import compute_token_cost, count_tokens
 
 client = OpenAI()
 
@@ -17,8 +27,8 @@ def run_scientific_meeting(
     agenda: str,
     summaries: tuple[str] = (),
     num_rounds: int = 2,
-    max_tokens: int = 4096,
-    model: str = "gpt-3.5-turbo",  # TODO: swap for GPT-4o
+    max_tokens: int | None = None,
+    model: str = "gpt-4o",
     save_path: Path = Path("discussion.json"),
 ) -> None:
     """Runs a scientific meeting."""
@@ -53,21 +63,27 @@ def run_scientific_meeting(
         },
     ]
 
+    # Track token counts
+    input_token_count = 0
+    output_token_count = 0
+
     # Loop through rounds
-    for round_num in trange(num_rounds, desc="Rounds"):
+    for round_num in trange(num_rounds + 1, desc="Rounds (+ Summary Round)"):
 
         # Loop through team members and illicit their response
         for team_member in tqdm(team_members, desc="Team Members"):
             # Special prompt for team lead
             if team_member == team_lead:
                 if round_num == 0:
-                    prompt = f"{team_lead}, please provide your initial thoughts on the agenda as well as any questions you have to guide the discussion among the team members."
+                    prompt = scientific_meeting_team_lead_initial_prompt(team_lead)
+                elif round_num == num_rounds:
+                    prompt = scientific_meeting_team_lead_final_prompt(team_lead)
                 else:
-                    prompt = f"{team_lead}, please synthesize the discussion, provide your thoughts, and then ask any questions you have for the team members to further the discussion."
+                    prompt = scientific_meeting_team_lead_intermediate_prompt(team_lead)
 
             # Prompt for other team members
             else:
-                prompt = f"{team_member}, please provide your thoughts on the discussion."
+                prompt = scientific_meeting_team_member_prompt(team_member)
 
             # Add prompt to discussion along with team member meta prompt
             discussion.append(
@@ -86,40 +102,36 @@ def run_scientific_meeting(
                 seed=0,
                 max_tokens=max_tokens,
             )
+            response = chat_completion.choices[0].message.content
+
+            # Update token counts
+            input_token_count += sum(
+                count_tokens(turn["content"]) for turn in discussion
+            )
+            output_token_count += count_tokens(response)
 
             # Add the response to the discussion
             discussion.append(
                 {
                     "role": "assistant",
-                    "content": chat_completion.choices[0].message.content,
+                    "content": response,
                 }
             )
 
-    # Ask team lead to summarize the discussion
-    discussion.append(
-        {
-            "role": "user",
-            "content": f"{team_lead}, please summarize this meeting in one paragraph for reference in future discussions. Then, provide a specific recommendation regarding the agenda based on team member feedback and your expert judgment.",
-        }
-    )
+            # If summary round, only team lead responds
+            if round_num == num_rounds:
+                break
 
-    # Get the response
-    chat_completion = client.chat.completions.create(
-        messages=[TEAM_TO_MESSAGE[team_lead]] + discussion,
+    # Print token counts and cost
+    print(f"Input token count: {input_token_count:,}")
+    print(f"Output token count: {output_token_count:,}")
+
+    cost = compute_token_cost(
         model=model,
-        stream=False,
-        temperature=0,
-        seed=0,
-        max_tokens=max_tokens,
+        input_token_count=input_token_count,
+        output_token_count=output_token_count,
     )
-
-    # Add the response to the discussion
-    discussion.append(
-        {
-            "role": "assistant",
-            "content": chat_completion.choices[0].message.content,
-        }
-    )
+    print(f"Cost: ${cost:.2f}")
 
     # Save the discussion as JSON
     save_path.parent.mkdir(parents=True, exist_ok=True)
@@ -132,5 +144,6 @@ if __name__ == "__main__":
     run_scientific_meeting(
         team_lead="Principal Investigator",
         team_members=tuple(TEAM_TO_PROMPT.keys()),
-        agenda="We are interesting in peptide-based drug discovery. Please select an appropriate protein target for the development of a novel peptide drug.",
+        agenda=PROJECT_SELECTION_PROMPT,
+        save_path=Path("project_selection.json"),
     )
