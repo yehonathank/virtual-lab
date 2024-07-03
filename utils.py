@@ -1,5 +1,8 @@
 """Contains useful utility functions."""
 
+import json
+from pathlib import Path
+
 import tiktoken
 
 from constants import MODEL_TO_INPUT_PRICE_PER_TOKEN, MODEL_TO_OUTPUT_PRICE_PER_TOKEN
@@ -32,3 +35,18 @@ def compute_token_cost(
         input_token_count * MODEL_TO_INPUT_PRICE_PER_TOKEN[model]
         + output_token_count * MODEL_TO_OUTPUT_PRICE_PER_TOKEN[model]
     )
+
+
+def load_summaries(discussion_paths: list[Path]) -> tuple[str]:
+    """Load summaries from a list of discussion paths.
+
+    :param discussion_paths: The paths to the discussion JSON files. The summary is the last entry in the discussion.
+    :return: A tuple of summaries.
+    """
+    summaries = []
+    for discussion_path in discussion_paths:
+        with open(discussion_path, "r") as file:
+            discussion = json.load(file)
+        summaries.append(discussion[-1]["content"])
+
+    return tuple(summaries)

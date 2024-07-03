@@ -27,7 +27,7 @@ def scientific_meeting_start_prompt(
     num_rounds: int = 1,
 ) -> str:
     if summaries:
-        summary_statement = f"Here are summaries of our previous meetings:\n\n{'\n\n'.join(summaries)}\n\n"
+        summary_statement = f"Here are summaries of our previous meetings:\n\n<begin summary>\n\n{'<end summary>\n\n<begin summary>'.join(summaries)}\n\n<end summary>\n\n"
     else:
         summary_statement = ""
 
@@ -80,8 +80,10 @@ Example applications include: Compound Separation, Compound Purification, Mobile
 Below is the text you need to read. Please read it and write out all the experiments as explained."""
 
 
-with open("emerald_instrumentation_short_7.3.24.txt", "r") as f:
+with open("emerald/emerald_experiments_7.3.24.txt", "r") as f:
     ECL_EXPERIMENTS = f.read()
 
 
 PROJECT_SELECTION_PROMPT = f"We are starting on a research project that is aiming to apply artificial intelligence to drug discovery. Specifically, we have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. In this meeting, we need to select a specific research direction for this project. The primary considerations are: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must involve the development of an artificial intelligence model, and (3) the project must use ECL to validate the artificial intelligence model’s output, which means that any required wet lab experiments must be within the capabilities of ECL’s scientific instrumentation. Please determine a research project that meets these criteria. Please be as specific as possible in terms of the precise goal of the project and the experiments that will be run. The full list of experiments available at ECL are below.\n\n{ECL_EXPERIMENTS}."
+
+TARGET_SELECTION_PROMPT = f"In our previous meeting, we settled on a general project direction related to drug discovery for cancer (see summary). Now, we need to make that project more precisely defined. Please select one specific disease target and one specific drug modality for this target. Remember that we are constrained by the capabilities of Emerald Cloud Labs (ECL). The full list of experiments available at ECL are below.\n\n{ECL_EXPERIMENTS}."
