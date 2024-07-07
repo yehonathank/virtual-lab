@@ -77,9 +77,9 @@ NAME_TO_AGENT = {agent.name: agent for agent in TEAM}
 # Scientific meeting prompts
 def scientific_meeting_start_prompt(
     team_lead: str,
-    team_members: tuple[str],
+    team_members: tuple[str, ...],
     agenda: str,
-    summaries: tuple[str] = (),
+    summaries: tuple[str, ...] = (),
     num_rounds: int = 1,
 ) -> str:
     if summaries:
