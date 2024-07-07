@@ -124,8 +124,7 @@ def run_scientific_meeting(
                 messages=messages,
                 model=model,
                 stream=False,
-                temperature=0,
-                seed=0,
+                temperature=0.2,
                 max_tokens=max_tokens,
             )
             response = chat_completion.choices[0].message.content

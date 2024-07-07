@@ -87,7 +87,7 @@ def scientific_meeting_start_prompt(
     else:
         summary_statement = ""
 
-    return f"""This is the beginning of a scientific meeting to discuss our research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will synthesize the points raised by each team member and ask additional questions to spur further discussion. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will summarize the conversation and provide a specific recommendation regarding the agenda based on team member feedback."""
+    return f"""This is the beginning of a scientific meeting to discuss our research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will synthesize the points raised by each team member, provide their thoughts, and ask follow-up questions to spur further discussion. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will summarize the conversation and provide a specific recommendation regarding the agenda based on the discussion."""
 
 
 def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
@@ -99,7 +99,7 @@ def scientific_meeting_team_lead_intermediate_prompt(team_lead: str) -> str:
 
 
 def scientific_meeting_team_lead_final_prompt(team_lead: str) -> str:
-    return f"{team_lead}, please summarize this meeting for future discussions. Please be as concise as possible but include all important details. Then, provide a specific recommendation regarding the agenda based on team member feedback and your expert judgment."
+    return f"{team_lead}, please summarize this meeting for future discussions. Please be concise but comprehensive and include all important details. Then, provide a specific recommendation regarding the agenda based on team member feedback and your expert judgment."
 
 
 def scientific_meeting_team_member_prompt(team_member: str) -> str:
