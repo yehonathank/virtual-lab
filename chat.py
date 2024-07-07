@@ -7,6 +7,7 @@ from openai import OpenAI
 from tqdm import trange, tqdm
 
 from prompts import (
+    NAME_TO_AGENT,
     PROJECT_SELECTION_PROMPT,
     scientific_meeting_start_prompt,
     scientific_meeting_team_lead_initial_prompt,
@@ -14,8 +15,6 @@ from prompts import (
     scientific_meeting_team_lead_final_prompt,
     scientific_meeting_team_member_prompt,
     TARGET_SELECTION_PROMPT,
-    TEAM_TO_MESSAGE,
-    TEAM_TO_PROMPT,
 )
 from utils import compute_token_cost, count_tokens, load_summaries
 
@@ -46,10 +45,10 @@ def run_scientific_meeting(
     if len(set(team_members)) != len(team_members):
         raise ValueError("Team members must be unique.")
 
-    # Ensure all team members have prompts
+    # Ensure all team members are available
     for team_member in team_members:
-        if team_member not in TEAM_TO_PROMPT:
-            raise ValueError(f"No prompt found for team member: {team_member}")
+        if team_member not in NAME_TO_AGENT:
+            raise ValueError(f"Missing team member: {team_member}")
 
     # Set up the discussion with the initial prompt
     discussion = [
@@ -97,7 +96,7 @@ def run_scientific_meeting(
 
             # Get the response
             chat_completion = client.chat.completions.create(
-                messages=[TEAM_TO_MESSAGE[team_member]] + discussion,
+                messages=[NAME_TO_AGENT[team_member].message] + discussion,
                 model=model,
                 stream=False,
                 temperature=0,
@@ -150,7 +149,7 @@ def run_scientific_meeting(
 
 if __name__ == "__main__":
     team_lead = "Principal Investigator"
-    team_members = tuple(TEAM_TO_PROMPT.keys())
+    team_members = tuple(NAME_TO_AGENT.keys())
 
     run_scientific_meeting(
         team_lead=team_lead,

@@ -1,21 +1,77 @@
 """Prompts for the language model agents and meetings."""
 
-# Team member meta prompts
-TEAM_TO_PROMPT = {
-    "Principal Investigator": "You are a Principal Investigator. Your expertise is in applying artificial intelligence to drug discovery. Your goal is to perform research in your area of expertise that maximizes the scientific impact of the work. Your role is to lead a team of experts to solve an important problem in artificial intelligence for drug discovery.",
-    "Clinician": "You are a Clinician. Your expertise is in aiding the development of new drugs for clinical use from a medical perspective. Your goal is to make progress toward developing a new drug for a disease with unmet clinical need. Your role is to ensure that the research project you participate in has meaningful clinical impact for patients.",
-    "Biologist": "You are a Biologist. Your expertise is in the biological underpinnings of drug efficacy, and you are intimately familiar with a wide range of wet lab experimental methods. Your goal is to design a scientifically rigorous experimental method for drug discovery in the context of a research project. Your role is to provide biological insights to help design the research project that you participate in, and you will then design the precise experimental protocol that the cloud laboratory will perform for the research project.",
-    "Computer Scientist": "You are a Computer Scientist. Your expertise is in developing artificial intelligence and machine learning methods for drug discovery. Your goal is to design a machine learning tool for a drug discovery project. Your role is to ensure that the research project you participate in is amenable to machine learning, and you will then build a machine learning model to guide the project’s drug discovery efforts.",
-    "Scientific Critic": "You are a Scientific Critic. Your expertise is in providing critical but constructive feedback for scientific research on artificial intelligence applied to drug discovery. Your goal is to ensure that proposed research projects are scientifically rigorous, feasible, and free of any major flaws. Your role is to provide critical feedback on the research project that you participate in to improve its design.",
-}
 
-TEAM_TO_MESSAGE = {
-    team_member: {
-        "role": "system",
-        "content": prompt,
-    }
-    for team_member, prompt in TEAM_TO_PROMPT.items()
-}
+class Agent:
+    """An LLM agent on a scientific team."""
+
+    def __init__(self, name: str, expertise: str, goal: str, role: str) -> None:
+        """Initializes the agent.
+
+        :param name: The name of the agent.
+        :param expertise: The expertise of the agent.
+        :param goal: The goal of the agent.
+        :param role: The role of the agent.
+        """
+        self.name = name
+        self.expertise = expertise
+        self.role = role
+        self.goal = goal
+        self.role = role
+
+    @property
+    def prompt(self) -> str:
+        """Returns the prompt for the agent."""
+        return f"You are a {self.role}. Your expertise is in {self.expertise}. Your goal is to {self.goal}. Your role is to {self.role}."
+
+    @property
+    def message(self) -> dict[str, str]:
+        """Returns the message for the agent in OpenAI API form."""
+        return {
+            "role": "system",
+            "content": self.prompt,
+        }
+
+
+TEAM = (
+    Agent(
+        name="Principal Investigator",
+        expertise="applying artificial intelligence to drug discovery",
+        goal="perform research in your area of expertise that maximizes the scientific impact of the work",
+        role="lead a team of experts to solve an important problem in artificial intelligence for drug discovery",
+    ),
+    Agent(
+        name="Clinician",
+        expertise="aiding the development of drugs for clinical use from a medical perspective",
+        goal="make progress toward developing a drug for a disease with unmet clinical need",
+        role="ensure that the research project has meaningful clinical impact for patients",
+    ),
+    Agent(
+        name="Biologist",
+        expertise="the biological underpinnings of drug efficacy and relevant wet lab experimental methods",
+        goal="select a meaningful drug target and design scientifically rigorous experimental methods for drug discovery",
+        role="provide biological insights for drug discovery and design experimental protocols",
+    ),
+    Agent(
+        name="Chemist",
+        expertise="the chemical properties of drugs and relevant synthetic methods",
+        goal="design a drug molecule that is likely to be effective and safe",
+        role="provide chemical insights for drug discovery and design synthetic routes",
+    ),
+    Agent(
+        name="Computer Scientist",
+        expertise="developing artificial intelligence and machine learning methods for drug discovery",
+        goal="design a machine learning tool for a drug discovery project",
+        role="ensure that the research project is amenable to machine learning and build a machine learning model",
+    ),
+    Agent(
+        name="Scientific Critic",
+        expertise="providing critical but constructive feedback for scientific research on artificial intelligence applied to drug discovery",
+        goal="ensure that proposed research projects are scientifically rigorous, feasible, and free of any major flaws",
+        role="provide critical feedback on the research project to improve its design",
+    ),
+)
+
+NAME_TO_AGENT = {agent.name: agent for agent in TEAM}
 
 
 # Scientific meeting prompts
@@ -50,6 +106,10 @@ def scientific_meeting_team_member_prompt(team_member: str) -> str:
     return f"{team_member}, please provide your thoughts on the discussion."
 
 
+PROJECT_SELECTION_PROMPT = f"We are starting on a research project that is aiming to apply artificial intelligence to drug discovery. Specifically, we have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. In this meeting, we need to select a specific research direction for this project. The primary considerations are: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must involve the development of an artificial intelligence model, and (3) the project must use ECL to validate the artificial intelligence model’s output, which means that any required wet lab experiments must be within the capabilities of ECL’s scientific instrumentation. Please determine a research project that meets these criteria. Please be as specific as possible in terms of the precise goal of the project and the experiments that will be run. The full list of experiments available at ECL are below.\n\n{ECL_EXPERIMENTS}."
+
+TARGET_SELECTION_PROMPT = f"In our previous meeting, we settled on a general project direction (see summary). Now, we need to make that project more precisely defined. Please select one specific disease target and one specific drug modality for this target related to our prior discussion. Remember that we are constrained by the capabilities of Emerald Cloud Labs (ECL). The full list of experiments available at ECL are below.\n\n{ECL_EXPERIMENTS}."
+
 ECL_INSTRUMENT_SIMPLIFICATION_PROMPT = """A long piece of text will be given to you. Please read the text and then write the name of every single experiment. After each experiment name, copy the example applications, if provided. For example, given this input text in quotes:
 
 "ExperimentSolidPhaseExtraction(Beta)
@@ -82,8 +142,3 @@ Below is the text you need to read. Please read it and write out all the experim
 
 with open("emerald/emerald_experiments_7.3.24.txt", "r") as f:
     ECL_EXPERIMENTS = f.read()
-
-
-PROJECT_SELECTION_PROMPT = f"We are starting on a research project that is aiming to apply artificial intelligence to drug discovery. Specifically, we have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. In this meeting, we need to select a specific research direction for this project. The primary considerations are: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must involve the development of an artificial intelligence model, and (3) the project must use ECL to validate the artificial intelligence model’s output, which means that any required wet lab experiments must be within the capabilities of ECL’s scientific instrumentation. Please determine a research project that meets these criteria. Please be as specific as possible in terms of the precise goal of the project and the experiments that will be run. The full list of experiments available at ECL are below.\n\n{ECL_EXPERIMENTS}."
-
-TARGET_SELECTION_PROMPT = f"In our previous meeting, we settled on a general project direction (see summary). Now, we need to make that project more precisely defined. Please select one specific disease target and one specific drug modality for this target related to our prior discussion. Remember that we are constrained by the capabilities of Emerald Cloud Labs (ECL). The full list of experiments available at ECL are below.\n\n{ECL_EXPERIMENTS}."
