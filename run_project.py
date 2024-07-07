@@ -17,7 +17,7 @@ from prompts import (
     scientific_meeting_team_member_prompt,
     TARGET_SELECTION_PROMPT,
 )
-from utils import compute_token_cost, count_tokens
+from utils import compute_token_cost, count_tokens, get_summary, load_summaries
 
 client = OpenAI()
 
@@ -180,21 +180,21 @@ def run_scientific_meeting(
             file.write(f"## {turn['agent']}\n\n{turn['message']['content']}\n\n")
 
     # Extract summary
-    summary = discussion[-1]["message"]["content"]
+    summary = get_summary(discussion)
 
     return summary
 
 
 def run_project(
-    save_dir: Path,
-    save_name: str = "discussion",
+    save_dir: Path = Path("discussions"),
+    num_iterations: int = 3,
     num_rounds: int = 3,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
 ) -> None:
     """Runs a research project with GPT agents.
 
     :param save_dir: The directory to save the discussion.
-    :param save_name: The name of the discussion file that will be saved.
+    :param num_iterations: The number of times to run the project.
     :param num_rounds: The number of rounds of discussion.
     :param model: The OpenAI model to use.
     """
@@ -202,28 +202,33 @@ def run_project(
     team_lead = "Principal Investigator"
     team_members = tuple(NAME_TO_AGENT.keys())
 
-    # Project selection meeting
-    project_selection_summary = run_scientific_meeting(
-        team_lead=team_lead,
-        team_members=team_members,
-        agenda=PROJECT_SELECTION_PROMPT,
-        save_dir=save_dir / "project_selection",
-        save_name=save_name,
-        num_rounds=num_rounds,
-        model=model,
-    )
+    # Repeat the project multiple times
+    for iteration_num in trange(num_iterations, desc="Project Iterations"):
+        # Project selection meeting
+        run_scientific_meeting(
+            team_lead=team_lead,
+            team_members=team_members,
+            agenda=PROJECT_SELECTION_PROMPT,
+            save_dir=save_dir / "project_selection",
+            save_name=f"discussion_{iteration_num + 1}",
+            num_rounds=num_rounds,
+            model=model,
+        )
 
-    # Target selection meeting
-    target_selection_summary = run_scientific_meeting(
-        team_lead=team_lead,
-        team_members=team_members,
-        agenda=TARGET_SELECTION_PROMPT,
-        summaries=(project_selection_summary,),
-        save_dir=save_dir / "target_selection",
-        save_name=save_name,
-        num_rounds=num_rounds,
-        model=model,
-    )
+        # Load summaries from previous meetings
+        summaries = load_summaries(discussion_paths=[save_dir / "project_selection" / "discussion_1.json"])
+
+        # Target selection meeting
+        run_scientific_meeting(
+            team_lead=team_lead,
+            team_members=team_members,
+            agenda=TARGET_SELECTION_PROMPT,
+            summaries=summaries,
+            save_dir=save_dir / "target_selection",
+            save_name=f"discussion_{iteration_num + 1}",
+            num_rounds=num_rounds,
+            model=model,
+        )
 
 
 if __name__ == "__main__":

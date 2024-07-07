@@ -37,7 +37,16 @@ def compute_token_cost(
     )
 
 
-def load_summaries(discussion_paths: list[Path]) -> tuple[str]:
+def get_summary(discussion: list[dict[str, dict[str, str]]]) -> str:
+    """Get the summary from a discussion.
+
+    :param discussion: The discussion to extract the summary from.
+    :return: The summary.
+    """
+    return discussion[-1]["message"]["content"]
+
+
+def load_summaries(discussion_paths: list[Path]) -> tuple[str, ...]:
     """Load summaries from a list of discussion paths.
 
     :param discussion_paths: The paths to the discussion JSON files. The summary is the last entry in the discussion.
@@ -47,6 +56,6 @@ def load_summaries(discussion_paths: list[Path]) -> tuple[str]:
     for discussion_path in discussion_paths:
         with open(discussion_path, "r") as file:
             discussion = json.load(file)
-        summaries.append(discussion[-1]["content"])
+        summaries.append(get_summary(discussion))
 
     return tuple(summaries)
