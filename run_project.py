@@ -66,14 +66,17 @@ def run_scientific_meeting(
     # Set up the discussion with the initial prompt
     discussion = [
         {
-            "role": "user",
-            "content": scientific_meeting_start_prompt(
-                team_lead=team_lead,
-                team_members=team_members,
-                agenda=agenda,
-                summaries=summaries,
-                num_rounds=num_rounds,
-            ),
+            "agent": "User",
+            "message": {
+                "role": "user",
+                "content": scientific_meeting_start_prompt(
+                    team_lead=team_lead,
+                    team_members=team_members,
+                    agenda=agenda,
+                    summaries=summaries,
+                    num_rounds=num_rounds,
+                ),
+            },
         },
     ]
 
@@ -103,14 +106,22 @@ def run_scientific_meeting(
             # Add prompt to discussion along with team member meta prompt
             discussion.append(
                 {
-                    "role": "user",
-                    "content": prompt,
+                    "agent": "User",
+                    "message": {
+                        "role": "user",
+                        "content": prompt,
+                    },
                 }
             )
 
+            # Get messages
+            messages = [NAME_TO_AGENT[team_member].message] + [
+                turn["message"] for turn in discussion
+            ]
+
             # Get the response
             chat_completion = client.chat.completions.create(
-                messages=[NAME_TO_AGENT[team_member].message] + discussion,
+                messages=messages,
                 model=model,
                 stream=False,
                 temperature=0,
@@ -121,7 +132,7 @@ def run_scientific_meeting(
 
             # Update token counts
             new_input_token_count = sum(
-                count_tokens(turn["content"]) for turn in discussion
+                count_tokens(turn["message"]["content"]) for turn in discussion
             )
             new_output_token_count = count_tokens(response)
 
@@ -135,8 +146,11 @@ def run_scientific_meeting(
             # Add the response to the discussion
             discussion.append(
                 {
-                    "role": "assistant",
-                    "content": response,
+                    "agent": NAME_TO_AGENT[team_member].name,
+                    "message": {
+                        "role": "assistant",
+                        "content": response,
+                    },
                 }
             )
 
@@ -163,13 +177,11 @@ def run_scientific_meeting(
         json.dump(discussion, f, indent=4)
 
     with open(save_dir / f"{save_name}.md", "w") as file:
-        for message in discussion:
-            role = message["role"]  # TODO: replace with agent name
-            content = message["content"]
-            file.write(f"## {role.capitalize()}\n\n{content}\n\n")
+        for turn in discussion:
+            file.write(f"## {turn['agent']}\n\n{turn['message']['content']}\n\n")
 
     # Extract summary
-    summary = discussion[-1]["content"]
+    summary = discussion[-1]["message"]["content"]
 
     return summary
 
