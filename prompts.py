@@ -116,6 +116,8 @@ PROJECT_SELECTION_PROMPT = f"We are starting on a research project that is aimin
 
 TARGET_SELECTION_PROMPT = f"In our previous meeting, we settled on a general project direction (see summary). Now, we need to make that project more precisely defined. Please select one specific disease target and one specific drug modality for this target related to our prior discussion. Remember that we are constrained by the capabilities of Emerald Cloud Labs (ECL). {ECL_CAPABILITIES_PROMPT}"
 
+LITERATURE_REVIEW_PROMPT = "In our previous meeting, we chose a specific disease target and drug modality for our project (see summary). Now we need to review the literature on this target and drug modality. Please suggest the most important papers in this area that would help us further define our project."
+
 ECL_INSTRUMENT_SIMPLIFICATION_PROMPT = """A long piece of text will be given to you. Please read the text and then write the name of every single experiment. After each experiment name, copy the example applications, if provided. For example, given this input text in quotes:
 
 "ExperimentSolidPhaseExtraction(Beta)
