@@ -9,15 +9,13 @@ from tqdm import trange, tqdm
 
 from prompts import (
     NAME_TO_AGENT,
-    PROJECT_SELECTION_PROMPT,
     scientific_meeting_start_prompt,
     scientific_meeting_team_lead_initial_prompt,
     scientific_meeting_team_lead_intermediate_prompt,
     scientific_meeting_team_lead_final_prompt,
     scientific_meeting_team_member_prompt,
-    TARGET_SELECTION_PROMPT,
 )
-from utils import compute_token_cost, count_tokens, get_summary, load_summaries
+from utils import compute_token_cost, count_tokens, get_summary
 
 client = OpenAI()
 
@@ -183,55 +181,3 @@ def run_scientific_meeting(
     summary = get_summary(discussion)
 
     return summary
-
-
-def run_project(
-    save_dir: Path = Path("discussions"),
-    num_iterations: int = 3,
-    num_rounds: int = 3,
-    model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
-) -> None:
-    """Runs a research project with GPT agents.
-
-    :param save_dir: The directory to save the discussion.
-    :param num_iterations: The number of times to run the project.
-    :param num_rounds: The number of rounds of discussion.
-    :param model: The OpenAI model to use.
-    """
-    # Set up the team
-    team_lead = "Principal Investigator"
-    team_members = tuple(NAME_TO_AGENT.keys())
-
-    # Repeat the project multiple times
-    for iteration_num in trange(num_iterations, desc="Project Iterations"):
-        # Project selection meeting
-        run_scientific_meeting(
-            team_lead=team_lead,
-            team_members=team_members,
-            agenda=PROJECT_SELECTION_PROMPT,
-            save_dir=save_dir / "project_selection",
-            save_name=f"discussion_{iteration_num + 1}",
-            num_rounds=num_rounds,
-            model=model,
-        )
-
-        # Load summaries from previous meetings
-        summaries = load_summaries(discussion_paths=[save_dir / "project_selection" / "discussion_1.json"])
-
-        # Target selection meeting
-        run_scientific_meeting(
-            team_lead=team_lead,
-            team_members=team_members,
-            agenda=TARGET_SELECTION_PROMPT,
-            summaries=summaries,
-            save_dir=save_dir / "target_selection",
-            save_name=f"discussion_{iteration_num + 1}",
-            num_rounds=num_rounds,
-            model=model,
-        )
-
-
-if __name__ == "__main__":
-    from tap import tapify
-
-    tapify(run_project)
