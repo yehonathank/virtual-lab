@@ -29,6 +29,7 @@ def run_scientific_meeting(
     summaries: tuple[str, ...] = (),
     num_rounds: int = 3,
     max_tokens: int | None = None,
+    temperature: float = 0.2,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
 ) -> str:
     """Runs a scientific meeting.
@@ -41,6 +42,7 @@ def run_scientific_meeting(
     :param summaries: The summaries of previous meetings.
     :param num_rounds: The number of rounds of discussion.
     :param max_tokens: The maximum number of tokens per response.
+    :param temperature: The sampling temperature.
     :param model: The OpenAI model to use.
     :return: The summary of the meeting (i.e., the last message).
     """
@@ -122,7 +124,7 @@ def run_scientific_meeting(
                 messages=messages,
                 model=model,
                 stream=False,
-                temperature=0.2,
+                temperature=temperature,
                 max_tokens=max_tokens,
             )
             response = chat_completion.choices[0].message.content
