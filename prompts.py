@@ -83,7 +83,7 @@ def scientific_meeting_start_prompt(
     num_rounds: int = 1,
 ) -> str:
     if summaries:
-        summary_statement = f"Here are summaries of our previous meetings:\n\n<begin summary>\n\n{'<end summary>\n\n<begin summary>'.join(summaries)}\n\n<end summary>\n\n"
+        summary_statement = f"Here are summaries of our previous meetings:\n\n[begin summary]\n\n{'[end summary]\n\n[begin summary]'.join(summaries)}\n\n[end summary]\n\n"
     else:
         summary_statement = ""
 
