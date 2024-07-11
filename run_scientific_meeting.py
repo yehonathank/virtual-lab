@@ -76,6 +76,7 @@ def run_scientific_meeting(
                     team_members=team_members,
                     agenda=agenda,
                     summaries=summaries,
+                    contexts=contexts,
                     num_rounds=num_rounds,
                 ),
             },
@@ -95,15 +96,23 @@ def run_scientific_meeting(
             # Special prompt for team lead
             if team_member == team_lead:
                 if round_num == 0:
-                    prompt = scientific_meeting_team_lead_initial_prompt(team_lead)
+                    prompt = scientific_meeting_team_lead_initial_prompt(
+                        team_lead=team_lead
+                    )
                 elif round_num == num_rounds:
-                    prompt = scientific_meeting_team_lead_final_prompt(team_lead)
+                    prompt = scientific_meeting_team_lead_final_prompt(
+                        team_lead=team_lead
+                    )
                 else:
-                    prompt = scientific_meeting_team_lead_intermediate_prompt(team_lead)
+                    prompt = scientific_meeting_team_lead_intermediate_prompt(
+                        team_lead=team_lead, round_num=round_num, num_rounds=num_rounds
+                    )
 
             # Prompt for other team members
             else:
-                prompt = scientific_meeting_team_member_prompt(team_member)
+                prompt = scientific_meeting_team_member_prompt(
+                    team_member=team_member, round_num=round_num, num_rounds=num_rounds
+                )
 
             # Add prompt to discussion along with team member meta prompt
             discussion.append(
