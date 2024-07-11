@@ -24,6 +24,7 @@ def run_scientific_meeting(
     team_lead: str,
     team_members: tuple[str, ...],
     agenda: str,
+    agenda_questions: tuple[str, ...],
     save_dir: Path,
     save_name: str = "discussion",
     summaries: tuple[str, ...] = (),
@@ -38,6 +39,7 @@ def run_scientific_meeting(
     :param team_lead: The team lead.
     :param team_members: The team members.
     :param agenda: The agenda for the meeting.
+    :param agenda_questions: The agenda questions to answer by the end of the meeting.
     :param save_dir: The directory to save the discussion.
     :param save_name: The name of the discussion file that will be saved.
     :param summaries: The summaries of previous meetings.
@@ -75,6 +77,7 @@ def run_scientific_meeting(
                     team_lead=team_lead,
                     team_members=team_members,
                     agenda=agenda,
+                    agenda_questions=agenda_questions,
                     summaries=summaries,
                     contexts=contexts,
                     num_rounds=num_rounds,
@@ -101,7 +104,9 @@ def run_scientific_meeting(
                     )
                 elif round_num == num_rounds:
                     prompt = scientific_meeting_team_lead_final_prompt(
-                        team_lead=team_lead
+                        team_lead=team_lead,
+                        agenda=agenda,
+                        agenda_questions=agenda_questions,
                     )
                 else:
                     prompt = scientific_meeting_team_lead_intermediate_prompt(

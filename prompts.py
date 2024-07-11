@@ -74,9 +74,37 @@ TEAM = (
 NAME_TO_AGENT = {agent.name: agent for agent in TEAM}
 
 
-SYNTHESIS_PROMPT = "synthesize the points raised by each team member, make decisions regarding the agenda based on team member input, and then ask follow-up questions to gather more information and feedback about how to better address the agenda"
+SYNTHESIS_PROMPT = "synthesize the points raised by each team member, make decisions regarding the agenda based on team member input, and ask follow-up questions to gather more information and feedback about how to better address the agenda"
 
 SUMMARY_PROMPT = "summarize the meeting for future discussions and provide a specific recommendation regarding the agenda based on the discussion"
+
+SUMMARY_STRUCTURE_PROMPT = """Your summary should take the following form.
+
+### Agenda
+
+Restate the agenda in your own words.
+
+### Team Member Input
+
+Summarize the key points raised by each team member.
+
+### Recommendation
+
+Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision. It is essential that you provide a clear, specific, and actionable recommendation.
+
+### Answers
+
+Provide short, specific answers (1-2 sentences) to every question included in the agenda based on your recommendation above.
+
+### Next Steps
+
+Outline the next steps that the team should take based on the discussion."""
+
+
+def format_agenda_questions(agenda_questions: tuple[str, ...]) -> str:
+    return "\n\n".join(
+        f"{i + 1}. {question}" for i, question in enumerate(agenda_questions)
+    )
 
 
 # Scientific meeting prompts
@@ -84,6 +112,7 @@ def scientific_meeting_start_prompt(
     team_lead: str,
     team_members: tuple[str, ...],
     agenda: str,
+    agenda_questions: tuple[str, ...],
     summaries: tuple[str, ...] = (),
     contexts: tuple[str, ...] = (),
     num_rounds: int = 1,
@@ -108,7 +137,7 @@ def scientific_meeting_start_prompt(
     else:
         context_statement = ""
 
-    return f"""This is the beginning of a scientific meeting to discuss your research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{context_statement}{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will {SYNTHESIS_PROMPT}. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will {SUMMARY_PROMPT}."""
+    return f"""This is the beginning of a scientific meeting to discuss your research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{context_statement}{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\nThe agenda questions that must be answered by the end of the meeting are following:\n\n{format_agenda_questions(agenda_questions)}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will {SYNTHESIS_PROMPT}. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will {SUMMARY_PROMPT}."""
 
 
 def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
@@ -127,8 +156,10 @@ def scientific_meeting_team_lead_intermediate_prompt(
     return f"This concludes round {round_num} of {num_rounds} of discussion. {team_lead}, please {SYNTHESIS_PROMPT}."
 
 
-def scientific_meeting_team_lead_final_prompt(team_lead: str) -> str:
-    return f"{team_lead}, please {SUMMARY_PROMPT}."
+def scientific_meeting_team_lead_final_prompt(
+    team_lead: str, agenda: str, agenda_questions: tuple[str, ...]
+) -> str:
+    return f"{team_lead}, please {SUMMARY_PROMPT}.\n\n{SUMMARY_STRUCTURE_PROMPT}\n\nAs a reminder, here is the agenda:\n\n{agenda}\n\nHere are the agenda questions:\n\n{format_agenda_questions(agenda_questions)}"
 
 
 ANTIBODIES_CONTEXT_PROMPT = "You have access to experimental collaborators who can perform binding and neutralization assays for 96 antibodies at a time, and they can run these assays two times."
