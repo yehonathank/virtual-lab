@@ -37,7 +37,7 @@ TEAM = (
         name="Principal Investigator",
         expertise="applying artificial intelligence to drug discovery",
         goal="perform research in your area of expertise that maximizes the scientific impact of the work",
-        role="lead a team of experts to solve an important problem in artificial intelligence for drug discovery",
+        role="lead a team of experts to solve an important problem in artificial intelligence for drug discovery and make key decisions about the project direction based on team member input",
     ),
     Agent(
         name="Clinician",
@@ -67,7 +67,7 @@ TEAM = (
         name="Scientific Critic",
         expertise="providing critical but constructive feedback for scientific research on artificial intelligence applied to drug discovery",
         goal="ensure that proposed research projects are scientifically rigorous, feasible, and free of any major flaws",
-        role="provide critical feedback on the research project to improve its design",
+        role="provide critical feedback on the research project to improve its design and push the team to make specific, actionable research decisions",
     ),
 )
 
