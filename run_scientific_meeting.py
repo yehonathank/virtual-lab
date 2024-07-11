@@ -27,6 +27,7 @@ def run_scientific_meeting(
     save_dir: Path,
     save_name: str = "discussion",
     summaries: tuple[str, ...] = (),
+    contexts: tuple[str, ...] = (),
     num_rounds: int = 3,
     max_tokens: int | None = None,
     temperature: float = 0.2,
@@ -40,6 +41,7 @@ def run_scientific_meeting(
     :param save_dir: The directory to save the discussion.
     :param save_name: The name of the discussion file that will be saved.
     :param summaries: The summaries of previous meetings.
+    :param contexts: The contexts for the meeting.
     :param num_rounds: The number of rounds of discussion.
     :param max_tokens: The maximum number of tokens per response.
     :param temperature: The sampling temperature.

@@ -80,14 +80,30 @@ def scientific_meeting_start_prompt(
     team_members: tuple[str, ...],
     agenda: str,
     summaries: tuple[str, ...] = (),
+    contexts: tuple[str, ...] = (),
     num_rounds: int = 1,
 ) -> str:
     if summaries:
-        summary_statement = f"Here are summaries of our previous meetings:\n\n[begin summary]\n\n{'[end summary]\n\n[begin summary]'.join(summaries)}\n\n[end summary]\n\n"
+        summary_statement = (
+            f"Here are summaries of the previous meetings:"
+            f"\n\n[begin summary]\n\n"
+            f"{'[end summary]\n\n[begin summary]'.join(summaries)}"
+            f"\n\n[end summary]\n\n"
+        )
     else:
         summary_statement = ""
 
-    return f"""This is the beginning of a scientific meeting to discuss our research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will synthesize the points raised by each team member, provide their thoughts, and ask follow-up questions to spur further discussion. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will summarize the conversation and provide a specific recommendation regarding the agenda based on the discussion."""
+    if contexts:
+        context_statement = (
+            f"Here is context for this meeting:"
+            f"\n\n[begin context]\n\n"
+            f"{'[end context]\n\n[begin context]'.join(contexts)}"
+            f"\n\n[end context]\n\n"
+        )
+    else:
+        context_statement = ""
+
+    return f"""This is the beginning of a scientific meeting to discuss your research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{context_statement}{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will synthesize the points raised by each team member, provide their thoughts, and ask follow-up questions to spur further discussion. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will summarize the conversation and provide a specific recommendation regarding the agenda based on the discussion."""
 
 
 def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
@@ -106,11 +122,14 @@ def scientific_meeting_team_member_prompt(team_member: str) -> str:
     return f"{team_member}, please provide your thoughts on the discussion."
 
 
+ANTIBODIES_CONTEXT_PROMPT = "You have access to experimental collaborators who can perform binding and neutralization assays for 96 antibodies at a time, and they can run these assays two times."
+
+
 with open("emerald/emerald_experiments_7.3.24.txt", "r") as f:
     ECL_EXPERIMENTS = f.read()
 
 
-ECL_CAPABILITIES_PROMPT = f"The full list of experiments available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs.\n\n{ECL_EXPERIMENTS}."
+ECL_CONTEXT_PROMPT = f"You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs.\n\n{ECL_EXPERIMENTS}."
 
 ECL_INSTRUMENT_SIMPLIFICATION_PROMPT = """A long piece of text will be given to you. Please read the text and then write the name of every single experiment. After each experiment name, copy the example applications, if provided. For example, given this input text in quotes:
 
