@@ -92,17 +92,18 @@ def run_scientific_meeting(
     max_token_length = 0
 
     # Loop through rounds
-    for round_num in trange(num_rounds + 1, desc="Rounds (+ Summary Round)"):
+    for round_index in trange(num_rounds + 1, desc="Rounds (+ Summary Round)"):
+        round_num = round_index + 1
 
         # Loop through team members and illicit their response
         for team_member in tqdm(team_members, desc="Team Members"):
             # Special prompt for team lead
             if team_member == team_lead:
-                if round_num == 0:
+                if round_index == 0:
                     prompt = scientific_meeting_team_lead_initial_prompt(
                         team_lead=team_lead
                     )
-                elif round_num == num_rounds:
+                elif round_index == num_rounds:
                     prompt = scientific_meeting_team_lead_final_prompt(
                         team_lead=team_lead,
                         agenda=agenda,
@@ -170,7 +171,7 @@ def run_scientific_meeting(
             )
 
             # If summary round, only team lead responds
-            if round_num == num_rounds:
+            if round_index == num_rounds:
                 break
 
     # Print token counts and cost

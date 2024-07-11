@@ -159,7 +159,7 @@ def scientific_meeting_team_lead_intermediate_prompt(
 def scientific_meeting_team_lead_final_prompt(
     team_lead: str, agenda: str, agenda_questions: tuple[str, ...]
 ) -> str:
-    return f"{team_lead}, please {SUMMARY_PROMPT}.\n\n{SUMMARY_STRUCTURE_PROMPT}\n\nAs a reminder, here is the agenda:\n\n{agenda}\n\nHere are the agenda questions:\n\n{format_agenda_questions(agenda_questions)}"
+    return f"{team_lead}, please {SUMMARY_PROMPT}. As a reminder, here is the agenda:\n\n{agenda}\n\nHere are the agenda questions:\n\n{format_agenda_questions(agenda_questions)}\n\n{SUMMARY_STRUCTURE_PROMPT}"
 
 
 ANTIBODIES_CONTEXT_PROMPT = "You have access to experimental collaborators who can perform binding and neutralization assays for 96 antibodies at a time, and they can run these assays two times."
