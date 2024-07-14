@@ -111,7 +111,7 @@ def run_scientific_meeting(
                     )
                 else:
                     prompt = scientific_meeting_team_lead_intermediate_prompt(
-                        team_lead=team_lead, round_num=round_num, num_rounds=num_rounds
+                        team_lead=team_lead, round_num=round_num - 1, num_rounds=num_rounds
                     )
 
             # Prompt for other team members

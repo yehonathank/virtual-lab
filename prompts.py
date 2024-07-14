@@ -90,11 +90,15 @@ Summarize the key points raised by each team member.
 
 ### Recommendation
 
-Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision. It is essential that you provide a clear, specific, and actionable recommendation.
+Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision. It is essential that you provide a clear, specific, and actionable recommendation. Please justify your recommendation as well.
 
 ### Answers
 
-Provide short, specific answers (1-2 sentences) to every question included in the agenda based on your recommendation above.
+For each agenda question, please provide the following:
+
+Answer: A short, specific answer (1-2 sentences) to the question based on your recommendation above.
+
+Justification: A brief explanation (1-2 sentences) of why you provided that answer.
 
 ### Next Steps
 
