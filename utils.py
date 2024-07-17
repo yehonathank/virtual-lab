@@ -21,6 +21,30 @@ def count_tokens(string: str, encoding_name: str = "cl100k_base") -> int:
     return num_tokens
 
 
+def update_token_counts(
+    token_counts: dict[str, int],
+    discussion: list[dict[str, dict[str, str]]],
+    response: str,
+) -> None:
+    """Updates the token counts (in place) with a discussion and response.
+
+    :param token_counts: The token counts to update.
+    :param discussion: The discussion to update the token counts with.
+    :param response: The response to update the token counts with.
+    """
+    new_input_token_count = sum(
+        count_tokens(turn["message"]["content"]) for turn in discussion
+    )
+    new_output_token_count = count_tokens(response)
+
+    token_counts["input"] += new_input_token_count
+    token_counts["output"] += new_output_token_count
+
+    token_counts["max"] = max(
+        token_counts["max"], new_input_token_count + new_output_token_count
+    )
+
+
 def compute_token_cost(
     model: str, input_token_count: int, output_token_count: int
 ) -> float:
@@ -35,6 +59,28 @@ def compute_token_cost(
         input_token_count * MODEL_TO_INPUT_PRICE_PER_TOKEN[model]
         + output_token_count * MODEL_TO_OUTPUT_PRICE_PER_TOKEN[model]
     )
+
+
+def print_cost_and_time(
+    token_counts: dict[str, int],
+    model: str,
+    elapsed_time: float,
+) -> None:
+    # Print token counts
+    print(f"Input token count: {token_counts['input']:,}")
+    print(f"Output token count: {token_counts['output']:,}")
+    print(f"Max token length: {token_counts['max']:,}")
+
+    # Compute cost
+    cost = compute_token_cost(
+        model=model,
+        input_token_count=token_counts["input"],
+        output_token_count=token_counts["output"],
+    )
+
+    # Print cost and time
+    print(f"Cost: ${cost:.2f}")
+    print(f"Time: {int(elapsed_time // 60)}:{int(elapsed_time % 60):02d}")
 
 
 def get_summary(discussion: list[dict[str, dict[str, str]]]) -> str:
@@ -59,3 +105,25 @@ def load_summaries(discussion_paths: list[Path]) -> tuple[str, ...]:
         summaries.append(get_summary(discussion))
 
     return tuple(summaries)
+
+
+def save_meeting(
+    save_dir: Path, save_name: str, discussion: list[dict[str, dict[str, str]]]
+) -> None:
+    """Save a meeting discussion to JSON and Markdown files.
+
+    :param save_dir: The directory to save the discussion.
+    :param save_name: The name of the discussion file that will be saved.
+    :param discussion: The discussion to save.
+    """
+    # Create the save directory if it does not exist
+    save_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save the discussion as JSON
+    with open(save_dir / f"{save_name}.json", "w") as f:
+        json.dump(discussion, f, indent=4)
+
+    # Save the discussion as Markdown
+    with open(save_dir / f"{save_name}.md", "w") as file:
+        for turn in discussion:
+            file.write(f"## {turn['agent']}\n\n{turn['message']['content']}\n\n")

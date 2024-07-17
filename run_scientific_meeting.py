@@ -1,6 +1,6 @@
-"""Runs a research project with GPT agents."""
+"""Runs a scientific meeting with LLM agents."""
 
-import json
+import time
 from pathlib import Path
 from typing import Literal
 
@@ -15,7 +15,7 @@ from prompts import (
     scientific_meeting_team_lead_final_prompt,
     scientific_meeting_team_member_prompt,
 )
-from utils import compute_token_cost, count_tokens, get_summary
+from utils import get_summary, print_cost_and_time, save_meeting, update_token_counts
 
 client = OpenAI()
 
@@ -34,7 +34,7 @@ def run_scientific_meeting(
     temperature: float = 0.2,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
 ) -> str:
-    """Runs a scientific meeting.
+    """Runs a scientific meeting with LLM agents.
 
     :param team_lead: The team lead.
     :param team_members: The team members.
@@ -50,6 +50,9 @@ def run_scientific_meeting(
     :param model: The OpenAI model to use.
     :return: The summary of the meeting (i.e., the last message).
     """
+    # Start timing the meeting
+    start_time = time.time()
+
     # Ensure team members is non-empty
     if not team_members:
         raise ValueError("Team members must include at least one agent.")
@@ -87,9 +90,11 @@ def run_scientific_meeting(
     ]
 
     # Track token counts
-    input_token_count = 0
-    output_token_count = 0
-    max_token_length = 0
+    token_counts = {
+        "input": 0,
+        "output": 0,
+        "max": 0,
+    }
 
     # Loop through rounds
     for round_index in trange(num_rounds + 1, desc="Rounds (+ Summary Round)"):
@@ -111,7 +116,9 @@ def run_scientific_meeting(
                     )
                 else:
                     prompt = scientific_meeting_team_lead_intermediate_prompt(
-                        team_lead=team_lead, round_num=round_num - 1, num_rounds=num_rounds
+                        team_lead=team_lead,
+                        round_num=round_num - 1,
+                        num_rounds=num_rounds,
                     )
 
             # Prompt for other team members
@@ -131,14 +138,10 @@ def run_scientific_meeting(
                 }
             )
 
-            # Get messages
-            messages = [NAME_TO_AGENT[team_member].message] + [
-                turn["message"] for turn in discussion
-            ]
-
             # Get the response
             chat_completion = client.chat.completions.create(
-                messages=messages,
+                messages=[NAME_TO_AGENT[team_member].message]
+                + [turn["message"] for turn in discussion],
                 model=model,
                 stream=False,
                 temperature=temperature,
@@ -147,16 +150,10 @@ def run_scientific_meeting(
             response = chat_completion.choices[0].message.content
 
             # Update token counts
-            new_input_token_count = sum(
-                count_tokens(turn["message"]["content"]) for turn in discussion
-            )
-            new_output_token_count = count_tokens(response)
-
-            input_token_count += new_input_token_count
-            output_token_count += new_output_token_count
-
-            max_token_length = max(
-                max_token_length, new_input_token_count + new_output_token_count
+            update_token_counts(
+                token_counts=token_counts,
+                discussion=discussion,
+                response=response,
             )
 
             # Add the response to the discussion
@@ -174,27 +171,19 @@ def run_scientific_meeting(
             if round_index == num_rounds:
                 break
 
-    # Print token counts and cost
-    print(f"Input token count: {input_token_count:,}")
-    print(f"Output token count: {output_token_count:,}")
-    print(f"Max token length: {max_token_length:,}")
-
-    cost = compute_token_cost(
+    # Print cost and time
+    print_cost_and_time(
+        token_counts=token_counts,
         model=model,
-        input_token_count=input_token_count,
-        output_token_count=output_token_count,
+        elapsed_time=time.time() - start_time,
     )
-    print(f"Cost: ${cost:.2f}")
 
     # Save the discussion as JSON and Markdown
-    save_dir.mkdir(parents=True, exist_ok=True)
-
-    with open(save_dir / f"{save_name}.json", "w") as f:
-        json.dump(discussion, f, indent=4)
-
-    with open(save_dir / f"{save_name}.md", "w") as file:
-        for turn in discussion:
-            file.write(f"## {turn['agent']}\n\n{turn['message']['content']}\n\n")
+    save_meeting(
+        save_dir=save_dir,
+        save_name=save_name,
+        discussion=discussion,
+    )
 
     # Extract summary
     summary = get_summary(discussion)
