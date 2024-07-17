@@ -37,7 +37,7 @@ TEAM = (
         name="Principal Investigator",
         expertise="applying artificial intelligence to drug discovery",
         goal="perform research in your area of expertise that maximizes the scientific impact of the work",
-        role="lead a team of experts to solve an important problem in artificial intelligence for drug discovery and make key decisions about the project direction based on team member input",
+        role="lead a team of experts to solve an important problem in artificial intelligence for drug discovery, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
     ),
     Agent(
         name="Clinician",
@@ -151,7 +151,7 @@ def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
 def scientific_meeting_team_member_prompt(
     team_member: str, round_num: int, num_rounds: int
 ) -> str:
-    return f"{team_member}, please provide your thoughts on the discussion (round {round_num} of {num_rounds})."
+    return f"{team_member}, please provide your thoughts on the discussion (round {round_num} of {num_rounds}). If you do not have anything new or relevant to add, you may say 'pass'."
 
 
 def scientific_meeting_team_lead_intermediate_prompt(
