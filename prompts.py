@@ -4,15 +4,15 @@
 class Agent:
     """An LLM agent on a scientific team."""
 
-    def __init__(self, name: str, expertise: str, goal: str, role: str) -> None:
+    def __init__(self, title: str, expertise: str, goal: str, role: str) -> None:
         """Initializes the agent.
 
-        :param name: The name of the agent.
+        :param title: The title of the agent.
         :param expertise: The expertise of the agent.
         :param goal: The goal of the agent.
         :param role: The role of the agent.
         """
-        self.name = name
+        self.title = title
         self.expertise = expertise
         self.role = role
         self.goal = goal
@@ -21,7 +21,12 @@ class Agent:
     @property
     def prompt(self) -> str:
         """Returns the prompt for the agent."""
-        return f"You are a {self.role}. Your expertise is in {self.expertise}. Your goal is to {self.goal}. Your role is to {self.role}."
+        return (
+            f"You are a {self.title}. "
+            f"Your expertise is in {self.expertise}. "
+            f"Your goal is to {self.goal}. "
+            f"Your role is to {self.role}."
+        )
 
     @property
     def message(self) -> dict[str, str]:
@@ -34,44 +39,44 @@ class Agent:
 
 TEAM = (
     Agent(
-        name="Principal Investigator",
+        title="Principal Investigator",
         expertise="applying artificial intelligence to drug discovery",
         goal="perform research in your area of expertise that maximizes the scientific impact of the work",
         role="lead a team of experts to solve an important problem in artificial intelligence for drug discovery, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
     ),
     Agent(
-        name="Clinician",
+        title="Clinician",
         expertise="aiding the development of drugs for clinical use from a medical perspective",
         goal="make progress toward developing a drug for a disease with unmet clinical need",
         role="ensure that the research project has meaningful clinical impact for patients",
     ),
     Agent(
-        name="Biologist",
+        title="Biologist",
         expertise="the biological underpinnings of drug efficacy and relevant wet lab experimental methods",
         goal="select a meaningful drug target and design scientifically rigorous experimental methods for drug discovery",
         role="provide biological insights for drug discovery and design experimental protocols",
     ),
     Agent(
-        name="Chemist",
+        title="Chemist",
         expertise="the chemical properties of drugs and relevant synthetic methods",
         goal="design a drug molecule that is likely to be effective and safe",
         role="provide chemical insights for drug discovery and design synthetic routes",
     ),
     Agent(
-        name="Computer Scientist",
+        title="Computer Scientist",
         expertise="developing artificial intelligence and machine learning methods for drug discovery",
         goal="design a machine learning tool for a drug discovery project",
         role="ensure that the research project is amenable to machine learning and build a machine learning model",
     ),
     Agent(
-        name="Scientific Critic",
+        title="Scientific Critic",
         expertise="providing critical but constructive feedback for scientific research on artificial intelligence applied to drug discovery",
         goal="ensure that proposed research projects are scientifically rigorous, feasible, and free of any major flaws",
         role="provide critical feedback on the research project to improve its design and push the team to make specific, actionable research decisions",
     ),
 )
 
-NAME_TO_AGENT = {agent.name: agent for agent in TEAM}
+TITLE_TO_AGENT = {agent.title: agent for agent in TEAM}
 
 
 SYNTHESIS_PROMPT = "synthesize the points raised by each team member, make decisions regarding the agenda based on team member input, and ask follow-up questions to gather more information and feedback about how to better address the agenda"

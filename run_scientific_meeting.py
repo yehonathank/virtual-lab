@@ -8,7 +8,7 @@ from openai import OpenAI
 from tqdm import trange, tqdm
 
 from prompts import (
-    NAME_TO_AGENT,
+    TITLE_TO_AGENT,
     scientific_meeting_start_prompt,
     scientific_meeting_team_lead_initial_prompt,
     scientific_meeting_team_lead_intermediate_prompt,
@@ -67,7 +67,7 @@ def run_scientific_meeting(
 
     # Ensure all team members are available
     for team_member in team_members:
-        if team_member not in NAME_TO_AGENT:
+        if team_member not in TITLE_TO_AGENT:
             raise ValueError(f"Missing team member: {team_member}")
 
     # Set up the discussion with the initial prompt
@@ -140,7 +140,7 @@ def run_scientific_meeting(
 
             # Get the response
             chat_completion = client.chat.completions.create(
-                messages=[NAME_TO_AGENT[team_member].message]
+                messages=[TITLE_TO_AGENT[team_member].message]
                 + [turn["message"] for turn in discussion],
                 model=model,
                 stream=False,
@@ -159,7 +159,7 @@ def run_scientific_meeting(
             # Add the response to the discussion
             discussion.append(
                 {
-                    "agent": NAME_TO_AGENT[team_member].name,
+                    "agent": TITLE_TO_AGENT[team_member].title,
                     "message": {
                         "role": "assistant",
                         "content": response,
