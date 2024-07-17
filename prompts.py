@@ -55,19 +55,19 @@ Restate the agenda in your own words.
 
 ### Team Member Input
 
-Summarize the key points raised by each team member.
+Summarize all of the important points and decisions raised during the conversation. This is to ensure that key details are preserved for future meetings.
 
 ### Recommendation
 
-Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision. It is essential that you provide a clear, specific, and actionable recommendation. Please justify your recommendation as well.
+Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision and choose one option among several that may have been discussed. This decision can conflict with the input of some team members as long as it is well justified. It is essential that you provide a clear, specific, and actionable recommendation. Please justify your recommendation as well.
 
 ### Answers
 
 For each agenda question, please provide the following:
 
-Answer: A short, specific answer (1-2 sentences) to the question based on your recommendation above.
+Answer: A specific answer to the question based on your recommendation above.
 
-Justification: A brief explanation (1-2 sentences) of why you provided that answer.
+Justification: A brief explanation of why you provided that answer.
 
 ### Next Steps
 
@@ -175,7 +175,8 @@ def scientific_meeting_team_member_prompt(
     """
     return (
         f"{team_member}, please provide your thoughts on the discussion (round {round_num} of {num_rounds}). "
-        f"If you do not have anything new or relevant to add, you may say 'pass'."
+        f'If you do not have anything new or relevant to add, you may say "pass". '
+        f"Remember that you can and should (politely) disagree with other team members if you have a different perspective."
     )
 
 
@@ -447,9 +448,7 @@ with open("emerald/emerald_experiments_7.3.24.txt", "r") as f:
 
 ECL_CONTEXT = f"You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs.\n\n{ECL_EXPERIMENTS}."
 
-DRUG_DISCOVERY_CONTEXTS = (
-    ECL_CONTEXT,
-)
+DRUG_DISCOVERY_CONTEXTS = (ECL_CONTEXT,)
 
 ECL_INSTRUMENT_SIMPLIFICATION_PROMPT = """A long piece of text will be given to you. Please read the text and then write the name of every single experiment. After each experiment name, copy the example applications, if provided. For example, given this input text in quotes:
 
