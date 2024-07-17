@@ -78,9 +78,7 @@ SYNTHESIS_PROMPT = "synthesize the points raised by each team member, make decis
 
 SUMMARY_PROMPT = "summarize the meeting for future discussions and provide a specific recommendation regarding the agenda based on the discussion"
 
-SUMMARY_STRUCTURE_PROMPT = """Your summary should take the following form.
-
-### Agenda
+SUMMARY_STRUCTURE_PROMPT = """### Agenda
 
 Restate the agenda in your own words.
 
@@ -106,8 +104,47 @@ Outline the next steps that the team should take based on the discussion."""
 
 
 def format_agenda_questions(agenda_questions: tuple[str, ...]) -> str:
+    """Formats the agenda questions for the prompt as a numbered list.
+
+    :param agenda_questions: The agenda questions.
+    :return: The formatted agenda questions.
+    """
     return "\n\n".join(
         f"{i + 1}. {question}" for i, question in enumerate(agenda_questions)
+    )
+
+
+def format_summaries(summaries: tuple[str, ...]) -> str:
+    """Formats the summaries for the prompt.
+
+    :param summaries: The summaries.
+    :return: The formatted summaries.
+    """
+    if not summaries:
+        return ""
+
+    return (
+        f"Here are summaries of the previous meetings:"
+        f"\n\n[begin summary]\n\n"
+        f"{'[end summary]\n\n[begin summary]'.join(summaries)}"
+        f"\n\n[end summary]\n\n"
+    )
+
+
+def format_contexts(contexts: tuple[str, ...]) -> str:
+    """Formats the contexts for the prompt.
+
+    :param contexts: The contexts.
+    :return: The formatted contexts.
+    """
+    if not contexts:
+        return ""
+
+    return (
+        f"Here is context for this meeting:"
+        f"\n\n[begin context]\n\n"
+        f"{'[end context]\n\n[begin context]'.join(contexts)}"
+        f"\n\n[end context]\n\n"
     )
 
 
@@ -121,49 +158,110 @@ def scientific_meeting_start_prompt(
     contexts: tuple[str, ...] = (),
     num_rounds: int = 1,
 ) -> str:
-    if summaries:
-        summary_statement = (
-            f"Here are summaries of the previous meetings:"
-            f"\n\n[begin summary]\n\n"
-            f"{'[end summary]\n\n[begin summary]'.join(summaries)}"
-            f"\n\n[end summary]\n\n"
-        )
-    else:
-        summary_statement = ""
+    """Generates the start prompt for a scientific meeting.
 
-    if contexts:
-        context_statement = (
-            f"Here is context for this meeting:"
-            f"\n\n[begin context]\n\n"
-            f"{'[end context]\n\n[begin context]'.join(contexts)}"
-            f"\n\n[end context]\n\n"
-        )
-    else:
-        context_statement = ""
-
-    return f"""This is the beginning of a scientific meeting to discuss your research project. This is a meeting with the following team members: {', '.join(team_members)}.\n\n{context_statement}{summary_statement}Today’s agenda is the following:\n\n{agenda}\n\nThe agenda questions that must be answered by the end of the meeting are following:\n\n{format_agenda_questions(agenda_questions)}\n\n{team_lead} will convene the meeting. Then, each team member will provide their thoughts on the discussion one-by-one in the order above. After all team members have given their input, {team_lead} will {SYNTHESIS_PROMPT}. This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will {SUMMARY_PROMPT}."""
+    :param team_lead: The team lead.
+    :param team_members: The team members.
+    :param agenda: The agenda for the meeting.
+    :param agenda_questions: The agenda questions to answer by the end of the meeting.
+    :param summaries: The summaries of previous meetings.
+    :param contexts: The contexts for the meeting.
+    :param num_rounds: The number of rounds of discussion.
+    :return: The start prompt for the scientific meeting.
+    """
+    return (
+        f"This is the beginning of a scientific meeting to discuss your research project. "
+        f"This is a meeting with the following team members: {', '.join(team_members)}.\n\n"
+        f"{format_contexts(contexts)}"
+        f"{format_summaries(summaries)}"
+        f"Today’s agenda is the following:\n\n{agenda}\n\n"
+        f"The agenda questions that must be answered by the end of the meeting are following:\n\n{format_agenda_questions(agenda_questions)}\n\n"
+        f"{team_lead} will convene the meeting. "
+        f"Then, each team member will provide their thoughts on the discussion one-by-one in the order above. "
+        f"After all team members have given their input, {team_lead} will {SYNTHESIS_PROMPT}. "
+        f"This will continue for {num_rounds} rounds. Once the discussion is complete, {team_lead} will {SUMMARY_PROMPT}."
+    )
 
 
 def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
+    """Generates the initial prompt for the team lead in a scientific meeting.
+
+    :param team_lead: The team lead.
+    :return: The initial prompt for the team lead.
+    """
     return f"{team_lead}, please provide your initial thoughts on the agenda as well as any questions you have to guide the discussion among the team members."
 
 
 def scientific_meeting_team_member_prompt(
     team_member: str, round_num: int, num_rounds: int
 ) -> str:
-    return f"{team_member}, please provide your thoughts on the discussion (round {round_num} of {num_rounds}). If you do not have anything new or relevant to add, you may say 'pass'."
+    """Generates the prompt for a team member in a scientific meeting.
+
+    :param team_member: The team member.
+    :param round_num: The current round number.
+    :param num_rounds: The total number of rounds.
+    :return: The prompt for the team member.
+    """
+    return (
+        f"{team_member}, please provide your thoughts on the discussion (round {round_num} of {num_rounds}). "
+        f"If you do not have anything new or relevant to add, you may say 'pass'."
+    )
 
 
 def scientific_meeting_team_lead_intermediate_prompt(
     team_lead: str, round_num: int, num_rounds: int
 ) -> str:
+    """Generates the intermediate prompt for the team lead in a scientific meeting at the end of a round of discussion.
+
+    :param team_lead: The team lead.
+    :param round_num: The current round number.
+    :param num_rounds: The total number of rounds.
+    :return: The intermediate prompt for the team lead.
+    """
     return f"This concludes round {round_num} of {num_rounds} of discussion. {team_lead}, please {SYNTHESIS_PROMPT}."
 
 
 def scientific_meeting_team_lead_final_prompt(
     team_lead: str, agenda: str, agenda_questions: tuple[str, ...]
 ) -> str:
-    return f"{team_lead}, please {SUMMARY_PROMPT}. As a reminder, here is the agenda:\n\n{agenda}\n\nHere are the agenda questions:\n\n{format_agenda_questions(agenda_questions)}\n\n{SUMMARY_STRUCTURE_PROMPT}"
+    """Generates the final prompt for the team lead in a scientific meeting to summarize the discussion.
+
+    :param team_lead: The team lead.
+    :param agenda: The agenda for the meeting.
+    :param agenda_questions: The agenda questions to answer by the end of the meeting.
+    :return: The final prompt for the team lead.
+    """
+    return (
+        f"{team_lead}, please {SUMMARY_PROMPT}. "
+        f"As a reminder, here is the agenda:\n\n{agenda}\n\n"
+        f"Here are the agenda questions:\n\n{format_agenda_questions(agenda_questions)}\n\n"
+        f"Your summary should take the following form.\n\n"
+        f"{SUMMARY_STRUCTURE_PROMPT}"
+    )
+
+
+# Individual meeting prompts
+def individual_meeting_start_prompt(
+    team_member: str,
+    agenda: str,
+    summaries: tuple[str, ...] = (),
+    contexts: tuple[str, ...] = (),
+) -> str:
+    """Generates the start prompt for an individual meeting.
+
+    :param team_member: The team member.
+    :param agenda: The agenda for the meeting.
+    :param summaries: The summaries of previous meetings.
+    :param contexts: The contexts for the meeting.
+    :return: The start prompt for the individual meeting.
+    """
+    return (
+        f"This is the beginning of an individual meeting with {team_member} to discuss your research project. "
+        f"{format_contexts(contexts)}"
+        f"{format_summaries(summaries)}"
+        f"Today’s agenda is the following:\n\n{agenda}\n\n"
+        f"{team_member}, please provide your response to the agenda."
+    )
 
 
 ANTIBODIES_CONTEXT_PROMPT = "You have access to experimental collaborators who can perform binding and neutralization assays for 96 antibodies at a time, and they can run these assays two times."
