@@ -65,6 +65,9 @@ def run_scientific_meeting(
     if len(set(team_members)) != len(team_members):
         raise ValueError("Team members must be unique.")
 
+    # Set up team
+    team = [team_lead] + list(team_members)
+
     # Set up the discussion with the initial prompt
     discussion = [
         {
@@ -95,10 +98,10 @@ def run_scientific_meeting(
     for round_index in trange(num_rounds + 1, desc="Rounds (+ Summary Round)"):
         round_num = round_index + 1
 
-        # Loop through team members and illicit their response
-        for team_member in tqdm(team_members, desc="Team Members"):
+        # Loop through team and illicit their response
+        for agent in tqdm(team, desc="Team"):
             # Special prompt for team lead
-            if team_member == team_lead:
+            if agent == team_lead:
                 if round_index == 0:
                     prompt = scientific_meeting_team_lead_initial_prompt(
                         team_lead=team_lead
@@ -119,7 +122,7 @@ def run_scientific_meeting(
             # Prompt for other team members
             else:
                 prompt = scientific_meeting_team_member_prompt(
-                    team_member=team_member, round_num=round_num, num_rounds=num_rounds
+                    team_member=agent, round_num=round_num, num_rounds=num_rounds
                 )
 
             # Add prompt to discussion along with team member meta prompt
@@ -135,7 +138,7 @@ def run_scientific_meeting(
 
             # Get the response
             chat_completion = client.chat.completions.create(
-                messages=[team_member.message]
+                messages=[agent.message]
                 + [turn["message"] for turn in discussion],
                 model=model,
                 stream=False,
@@ -154,7 +157,7 @@ def run_scientific_meeting(
             # Add the response to the discussion
             discussion.append(
                 {
-                    "agent": team_member.title,
+                    "agent": agent.title,
                     "message": {
                         "role": "assistant",
                         "content": response,
