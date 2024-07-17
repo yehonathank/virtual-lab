@@ -1,49 +1,17 @@
 """Prompts for the language model agents and meetings."""
 
-
-class Agent:
-    """An LLM agent on a scientific team."""
-
-    def __init__(self, title: str, expertise: str, goal: str, role: str) -> None:
-        """Initializes the agent.
-
-        :param title: The title of the agent.
-        :param expertise: The expertise of the agent.
-        :param goal: The goal of the agent.
-        :param role: The role of the agent.
-        """
-        self.title = title
-        self.expertise = expertise
-        self.role = role
-        self.goal = goal
-        self.role = role
-
-    @property
-    def prompt(self) -> str:
-        """Returns the prompt for the agent."""
-        return (
-            f"You are a {self.title}. "
-            f"Your expertise is in {self.expertise}. "
-            f"Your goal is to {self.goal}. "
-            f"Your role is to {self.role}."
-        )
-
-    @property
-    def message(self) -> dict[str, str]:
-        """Returns the message for the agent in OpenAI API form."""
-        return {
-            "role": "system",
-            "content": self.prompt,
-        }
+from agent import Agent
 
 
-TEAM = (
-    Agent(
-        title="Principal Investigator",
-        expertise="applying artificial intelligence to drug discovery",
-        goal="perform research in your area of expertise that maximizes the scientific impact of the work",
-        role="lead a team of experts to solve an important problem in artificial intelligence for drug discovery, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
-    ),
+PRINCIPAL_INVESTIGATOR = Agent(
+    title="Principal Investigator",
+    expertise="applying artificial intelligence to biomedical research",
+    goal="perform research in your area of expertise that maximizes the scientific impact of the work",
+    role="lead a team of experts to solve an important problem in artificial intelligence for biomedicine, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
+)
+
+
+DRUG_DISCOVERY_TEAM = (
     Agent(
         title="Clinician",
         expertise="aiding the development of drugs for clinical use from a medical perspective",
@@ -75,8 +43,6 @@ TEAM = (
         role="provide critical feedback on the research project to improve its design and push the team to make specific, actionable research decisions",
     ),
 )
-
-TITLE_TO_AGENT = {agent.title: agent for agent in TEAM}
 
 
 SYNTHESIS_PROMPT = "synthesize the points raised by each team member, make decisions regarding the agenda based on team member input, and ask follow-up questions to gather more information and feedback about how to better address the agenda"
@@ -155,8 +121,8 @@ def format_contexts(contexts: tuple[str, ...]) -> str:
 
 # Scientific meeting prompts
 def scientific_meeting_start_prompt(
-    team_lead: str,
-    team_members: tuple[str, ...],
+    team_lead: Agent,
+    team_members: tuple[Agent, ...],
     agenda: str,
     agenda_questions: tuple[str, ...],
     summaries: tuple[str, ...] = (),
@@ -176,7 +142,7 @@ def scientific_meeting_start_prompt(
     """
     return (
         f"This is the beginning of a scientific meeting to discuss your research project. "
-        f"This is a meeting with the following team members: {', '.join(team_members)}.\n\n"
+        f"This is a meeting with the following team members: {', '.join(team_member.title for team_member in team_members)}.\n\n"
         f"{format_contexts(contexts)}"
         f"{format_summaries(summaries)}"
         f"Today’s agenda is the following:\n\n{agenda}\n\n"
@@ -188,7 +154,7 @@ def scientific_meeting_start_prompt(
     )
 
 
-def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
+def scientific_meeting_team_lead_initial_prompt(team_lead: Agent) -> str:
     """Generates the initial prompt for the team lead in a scientific meeting.
 
     :param team_lead: The team lead.
@@ -198,7 +164,7 @@ def scientific_meeting_team_lead_initial_prompt(team_lead: str) -> str:
 
 
 def scientific_meeting_team_member_prompt(
-    team_member: str, round_num: int, num_rounds: int
+    team_member: Agent, round_num: int, num_rounds: int
 ) -> str:
     """Generates the prompt for a team member in a scientific meeting.
 
@@ -214,7 +180,7 @@ def scientific_meeting_team_member_prompt(
 
 
 def scientific_meeting_team_lead_intermediate_prompt(
-    team_lead: str, round_num: int, num_rounds: int
+    team_lead: Agent, round_num: int, num_rounds: int
 ) -> str:
     """Generates the intermediate prompt for the team lead in a scientific meeting at the end of a round of discussion.
 
@@ -227,7 +193,7 @@ def scientific_meeting_team_lead_intermediate_prompt(
 
 
 def scientific_meeting_team_lead_final_prompt(
-    team_lead: str, agenda: str, agenda_questions: tuple[str, ...]
+    team_lead: Agent, agenda: str, agenda_questions: tuple[str, ...]
 ) -> str:
     """Generates the final prompt for the team lead in a scientific meeting to summarize the discussion.
 
@@ -247,7 +213,7 @@ def scientific_meeting_team_lead_final_prompt(
 
 # Individual meeting prompts
 def individual_meeting_start_prompt(
-    team_member: str,
+    team_member: Agent,
     agenda: str,
     summaries: tuple[str, ...] = (),
     contexts: tuple[str, ...] = (),

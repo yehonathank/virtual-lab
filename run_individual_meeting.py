@@ -6,17 +6,15 @@ from typing import Literal
 
 from openai import OpenAI
 
-from prompts import (
-    TITLE_TO_AGENT,
-    individual_meeting_start_prompt,
-)
+from agent import Agent
+from prompts import individual_meeting_start_prompt
 from utils import get_summary, print_cost_and_time, save_meeting, update_token_counts
 
 client = OpenAI()
 
 
 def run_individual_meeting(
-    team_member: str,
+    team_member: Agent,
     agenda: str,
     save_dir: Path,
     save_name: str = "discussion",
@@ -41,10 +39,6 @@ def run_individual_meeting(
     """
     # Start timing the meeting
     start_time = time.time()
-
-    # Ensure team member is available
-    if team_member not in TITLE_TO_AGENT:
-        raise ValueError(f"Missing team member: {team_member}")
 
     # Set up the discussion with the initial prompt
     discussion = [
@@ -71,8 +65,7 @@ def run_individual_meeting(
 
     # Get the response
     chat_completion = client.chat.completions.create(
-        messages=[TITLE_TO_AGENT[team_member].message]
-        + [turn["message"] for turn in discussion],
+        messages=[team_member.message] + [turn["message"] for turn in discussion],
         model=model,
         stream=False,
         temperature=temperature,
@@ -90,7 +83,7 @@ def run_individual_meeting(
     # Add the response to the discussion
     discussion.append(
         {
-            "agent": TITLE_TO_AGENT[team_member].title,
+            "agent": team_member.title,
             "message": {
                 "role": "assistant",
                 "content": response,
