@@ -235,14 +235,221 @@ def individual_meeting_start_prompt(
     )
 
 
-ANTIBODIES_CONTEXT_PROMPT = "You have access to experimental collaborators who can perform binding and neutralization assays for 96 antibodies at a time, and they can run these assays two times."
+ANTIBODIES_MIND_MAP_CONTEXT = """Below is a description of two computational approaches to discover novel monoclonal antibodies (mAbs) that bind to SARS-CoV-2 Spike.
+
+Idea 1: Cross-reactivity
+
+Identify coronavirus mAbs that also bind to SARS-CoV-2 Spike (e.g., sotrovimab)
+
+There are four initial options for this approach:
+
+Option 1:
+
+SEARCH
+
+Pubmed+patent search
+SARS-CoV-2 Spike mAbs (exclude other coronaviruses)
+
+EXTRACT
+
+Read papers, extract (if available):
+antibody CDR sequence
+epitope / hot spot residue(s)
+affinity, neutralization
+SARS-CoV-2 variant specificity
+
+Option 2:
+
+SEARCH
+
+PDB search:
+SARS-CoV-2 Spike mAb (exclude other coronaviruses)
+
+EXTRACT
+
+antibody CDR sequence
+
+epitope / hot spot residue
+
+Option 3:
+
+SEARCH
+
+Sequence database search:
+coronavirus Spike mAbs (including SARS-CoV-2)
+
+Option 4:
+
+SEARCH
+
+Uniprot search:
+SARS-CoV-2 Spike variants (exclude other coronaviruses)
+
+ANALYSIS
+
+Multiple sequence alignment
+
+After any of these four options, then do the following:
+
+ANALYSIS
+
+Weak/no binding to newer variants
+Epitope partially conserved
+Hotspot residue conserved
+
+Next, do the following:
+
+DESIGN
+
+ESM
+Inverse folding
+Rosetta
+Alphafold
+Rational (structure-guided)
+Chimeric CDRs
+
+Then, do the following:
+
+ANALYSIS
+
+Estimate buried surface area (model)
+Estimate interface (model)
+
+Finally, do the following:
+
+WET LAB
+
+Validate promising looking designs
+
+
+Idea 2: Rescue through redesign
+
+Modify bona fide SARS-CoV-2 Spike mAbs that have lost affinity to variants
+
+There are four initial options for this approach:
+
+Option 1:
+
+SEARCH
+
+Pubmed+patent search:
+coronavirus Spike antibodies
+OC43, 229E, NL63, HKU1, SARS, SARS-CoV-1, MERS Spike antibodies
+
+EXTRACT
+
+Read papers, extract (if available):
+antibody CDR sequence
+epitope / hot spot residue(s)
+affinity, neutralization
+coronavirus specificity
+
+Option 2:
+
+SEARCH
+
+Uniprot search:
+coronavirus Spike sequences (including SARS-CoV-2)
+
+ANALYSIS
+
+Multiple sequence alignment
+
+Option 3:
+
+SEARCH
+
+PDB search:
+coronavirus Spike
+coronavirus Spike antibodies
+
+EXTRACT
+
+antibody CDR sequence
+epitope / hot spot residue
+
+Option 4:
+
+SEARCH
+
+PDB search:
+coronavirus Spike
+coronavirus Spike antibodies
+
+ANALYSIS
+
+Structural alignment of representative Spikes
+
+After any of these four options, then do the following:
+
+ANALYSIS
+
+Epitope conserved in SARS-CoV-2 Spike?
+Hotspot conserved in SARS-CoV-2 Spike?
+
+Next, do one of the three following options depending on the outcome:
+
+Outcome 1: Yes (unlikely)
+
+WET LAB
+
+Validate binding in vitro
+
+Outcome 2: No (e.g., RBD domain)
+
+STOP
+
+Option 3: Partial (e.g., S2 domain)
+
+In the case of a partial outcome, then do one of the two following options:
+
+Option 1:
+
+SEARCH (optional)
+
+Sequence database search
+uncharacterized mAb CDRs with partial identity to mAb
+
+DESIGN
+
+Structure-guided mutagenesis of mAb CDRs
+
+Option 2:
+
+DESIGN
+
+Inverse folding (ML/DL) coronavirus mAb on SARS-CoV-2 Spike
+
+After either of these two options, then do the following:
+
+ANALYSIS
+
+Estimate buried surface area (model)
+Estimate interface (model)
+
+Finally, do the following:
+
+WET LAB
+
+Validate binding in vitro (good looking models only)"""
+
+ANTIBODIES_EXPERIMENTAL_CONTEXT = "You have access to experimental collaborators who can perform binding and neutralization assays for 96 antibodies at a time, and they can run these assays two times."
+
+ANTIBODIES_CONTEXTS = (
+    ANTIBODIES_MIND_MAP_CONTEXT,
+    ANTIBODIES_EXPERIMENTAL_CONTEXT,
+)
 
 
 with open("emerald/emerald_experiments_7.3.24.txt", "r") as f:
     ECL_EXPERIMENTS = f.read()
 
 
-ECL_CONTEXT_PROMPT = f"You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs.\n\n{ECL_EXPERIMENTS}."
+ECL_CONTEXT = f"You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs.\n\n{ECL_EXPERIMENTS}."
+
+DRUG_DISCOVERY_CONTEXTS = (
+    ECL_CONTEXT,
+)
 
 ECL_INSTRUMENT_SIMPLIFICATION_PROMPT = """A long piece of text will be given to you. Please read the text and then write the name of every single experiment. After each experiment name, copy the example applications, if provided. For example, given this input text in quotes:
 
