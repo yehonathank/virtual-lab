@@ -17,3 +17,7 @@ pip install -r requirements.txt
 ## Open AI API Key
 
 Save the Open AI API key as the environment variable `OPENAI_API_KEY`.
+
+## Usage
+
+Run one of the notebooks, either `run_antibody_design.ipynb` or `run_drug_discovery.ipynb`.

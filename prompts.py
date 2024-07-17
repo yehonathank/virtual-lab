@@ -55,7 +55,7 @@ Restate the agenda in your own words.
 
 ### Team Member Input
 
-Summarize all of the important points and decisions raised during the conversation. This is to ensure that key details are preserved for future meetings.
+Summarize all of the important points raised by each team member. This is to ensure that key details are preserved for future meetings.
 
 ### Recommendation
 
@@ -97,7 +97,7 @@ def format_summaries(summaries: tuple[str, ...]) -> str:
     return (
         f"Here are summaries of the previous meetings:"
         f"\n\n[begin summary]\n\n"
-        f"{'[end summary]\n\n[begin summary]'.join(summaries)}"
+        f"{'\n\n[end summary]\n\n[begin summary]\n\n'.join(summaries)}"
         f"\n\n[end summary]\n\n"
     )
 
@@ -114,7 +114,7 @@ def format_contexts(contexts: tuple[str, ...]) -> str:
     return (
         f"Here is context for this meeting:"
         f"\n\n[begin context]\n\n"
-        f"{'[end context]\n\n[begin context]'.join(contexts)}"
+        f"{'\n\n[end context]\n\n[begin context]\n\n'.join(contexts)}"
         f"\n\n[end context]\n\n"
     )
 
@@ -442,7 +442,11 @@ ANTIBODIES_CONTEXTS = (
 )
 
 
-with open("emerald/emerald_experiments_7.3.24.txt", "r") as f:
+with open("papers/Efficient evolution of human antibodies from general protein language models.txt") as f:
+    ESM_ANTIBODIES_PAPER = f.read()
+
+
+with open("emerald/emerald_experiments_7.3.24.txt") as f:
     ECL_EXPERIMENTS = f.read()
 
 
