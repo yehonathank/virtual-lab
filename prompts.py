@@ -49,29 +49,34 @@ SYNTHESIS_PROMPT = "synthesize the points raised by each team member, make decis
 
 SUMMARY_PROMPT = "summarize the meeting for future discussions and provide a specific recommendation regarding the agenda based on the discussion"
 
-SUMMARY_STRUCTURE_PROMPT = """### Agenda
 
-Restate the agenda in your own words.
+def summary_structure_prompt(has_agenda_questions: bool) -> str:
+    """"""
+    if has_agenda_questions:
+        agenda_questions_structure = [
+            "### Answers",
+            "For each agenda question, please provide the following:",
+            "Answer: A specific answer to the question based on your recommendation above.",
+            "Justification: A brief explanation of why you provided that answer.",
+        ]
+    else:
+        agenda_questions_structure = []
 
-### Team Member Input
-
-Summarize all of the important points raised by each team member. This is to ensure that key details are preserved for future meetings.
-
-### Recommendation
-
-Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision and choose one option among several that may have been discussed. This decision can conflict with the input of some team members as long as it is well justified. It is essential that you provide a clear, specific, and actionable recommendation. Please justify your recommendation as well.
-
-### Answers
-
-For each agenda question, please provide the following:
-
-Answer: A specific answer to the question based on your recommendation above.
-
-Justification: A brief explanation of why you provided that answer.
-
-### Next Steps
-
-Outline the next steps that the team should take based on the discussion."""
+    return "\n\n".join(
+        [
+            "### Agenda",
+            "Restate the agenda in your own words.",
+            "### Team Member Input",
+            "Summarize all of the important points raised by each team member. This is to ensure that key details are preserved for future meetings.",
+            "### Recommendation",
+            "Provide your expert recommendation regarding the agenda. You should consider the input from each team member, but you must also use your expertise to make a final decision and choose one option among several that may have been discussed. This decision can conflict with the input of some team members as long as it is well justified. It is essential that you provide a clear, specific, and actionable recommendation. Please justify your recommendation as well.",
+        ]
+        + agenda_questions_structure
+        + [
+            "### Next Steps",
+            "Outline the next steps that the team should take based on the discussion.",
+        ]
+    )
 
 
 def format_agenda_questions(agenda_questions: tuple[str, ...]) -> str:
@@ -80,8 +85,12 @@ def format_agenda_questions(agenda_questions: tuple[str, ...]) -> str:
     :param agenda_questions: The agenda questions.
     :return: The formatted agenda questions.
     """
-    return "\n\n".join(
-        f"{i + 1}. {question}" for i, question in enumerate(agenda_questions)
+    if not agenda_questions:
+        return ""
+
+    return (
+        f"Here are the agenda questions:\n\n"
+        f"{'\n\n'.join(f'{i + 1}. {question}' for i, question in enumerate(agenda_questions))}\n\n"
     )
 
 
@@ -146,7 +155,7 @@ def scientific_meeting_start_prompt(
         f"{format_contexts(contexts)}"
         f"{format_summaries(summaries)}"
         f"Today’s agenda is the following:\n\n{agenda}\n\n"
-        f"The agenda questions that must be answered by the end of the meeting are following:\n\n{format_agenda_questions(agenda_questions)}\n\n"
+        f"{format_agenda_questions(agenda_questions)}"
         f"{team_lead} will convene the meeting. "
         f"Then, each team member will provide their thoughts on the discussion one-by-one in the order above. "
         f"After all team members have given their input, {team_lead} will {SYNTHESIS_PROMPT}. "
@@ -206,9 +215,9 @@ def scientific_meeting_team_lead_final_prompt(
     return (
         f"{team_lead}, please {SUMMARY_PROMPT}. "
         f"As a reminder, here is the agenda:\n\n{agenda}\n\n"
-        f"Here are the agenda questions:\n\n{format_agenda_questions(agenda_questions)}\n\n"
+        f"{format_agenda_questions(agenda_questions)}"
         f"Your summary should take the following form.\n\n"
-        f"{SUMMARY_STRUCTURE_PROMPT}"
+        f"{summary_structure_prompt(has_agenda_questions=len(agenda_questions) > 0)}"
     )
 
 
@@ -442,7 +451,9 @@ ANTIBODIES_CONTEXTS = (
 )
 
 
-with open("papers/Efficient evolution of human antibodies from general protein language models.txt") as f:
+with open(
+    "papers/Efficient evolution of human antibodies from general protein language models.txt"
+) as f:
     ESM_ANTIBODIES_PAPER = f.read()
 
 
