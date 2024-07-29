@@ -63,33 +63,54 @@ def run_individual_meeting(
         "max": 0,
     }
 
-    # Get the response
-    chat_completion = client.chat.completions.create(
-        messages=[team_member.message] + [turn["message"] for turn in discussion],
-        model=model,
-        stream=False,
-        temperature=temperature,
-        max_tokens=max_tokens,
-    )
-    response = chat_completion.choices[0].message.content
+    # Loop user-agent interaction
+    while True:
+        # Get the response
+        chat_completion = client.chat.completions.create(
+            messages=[team_member.message] + [turn["message"] for turn in discussion],
+            model=model,
+            stream=False,
+            temperature=temperature,
+            max_tokens=max_tokens,
+        )
+        response = chat_completion.choices[0].message.content
 
-    # Update token counts
-    update_token_counts(
-        token_counts=token_counts,
-        discussion=discussion,
-        response=response,
-    )
+        # Print the response
+        print(f"{team_member.title}: {response}")
 
-    # Add the response to the discussion
-    discussion.append(
-        {
-            "agent": team_member.title,
-            "message": {
-                "role": "assistant",
-                "content": response,
-            },
-        }
-    )
+        # Update token counts
+        update_token_counts(
+            token_counts=token_counts,
+            discussion=discussion,
+            response=response,
+        )
+
+        # Add the response to the discussion
+        discussion.append(
+            {
+                "agent": team_member.title,
+                "message": {
+                    "role": "assistant",
+                    "content": response,
+                },
+            }
+        )
+
+        # Ask user if they want to continue
+        user_input = input("User input (empty to terminate): ")
+        if not user_input:
+            break
+
+        # Add user input to discussion
+        discussion.append(
+            {
+                "agent": "User",
+                "message": {
+                    "role": "user",
+                    "content": user_input,
+                },
+            }
+        )
 
     # Print cost and time
     print_cost_and_time(
