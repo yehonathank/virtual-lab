@@ -12,9 +12,9 @@ PRINCIPAL_INVESTIGATOR = Agent(
 
 SCIENTIFIC_CRITIC = Agent(
     title="Scientific Critic",
-    expertise="providing critical feedback for scientific research on artificial intelligence applied to drug discovery",
-    goal="ensure that proposed research projects are rigorous, detailed, feasible, and scientifically sound",
-    role="provide critical feedback on the research project to remove all flaws and improve its design and push the team to make specific, actionable research decisions",
+    expertise="providing critical feedback for scientific research",
+    goal="ensure that proposed research projects and implementations are rigorous, detailed, feasible, and scientifically sound",
+    role="provide critical feedback to identify and correct all errors and demand that scientific answers that are maximally complete and detailed",
 )
 
 
@@ -246,6 +246,32 @@ def individual_meeting_start_prompt(
         f"{format_summaries(summaries)}"
         f"Today’s agenda is the following:\n\n{agenda}\n\n"
         f"{team_member}, please provide your response to the agenda."
+    )
+
+
+def individual_meeting_critic_prompt(
+    critic: Agent,
+    agent: Agent,
+) -> str:
+    """Generates the intermediate prompt for the critic in an individual meeting.
+
+    :param critic: The critic.
+    :param agent: The agent that the critic is criticizing.
+    """
+    return f"{critic.title}, please critique {agent.title}'s answer, with an emphasis on asking for more detail where detail is lacking, but do not implement the new answer yourself."
+
+
+def individual_meeting_agent_prompt(
+    critic: Agent,
+    agent: Agent,
+) -> str:
+    """Generates the intermediate prompt for the agent in an individual meeting.
+
+    :param critic: The critic.
+    :param agent: The agent.
+    """
+    return (
+        f"{agent.title}, please modify your answer based on {critic.title}'s feedback."
     )
 
 

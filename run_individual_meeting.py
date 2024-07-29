@@ -5,9 +5,15 @@ from pathlib import Path
 from typing import Literal
 
 from openai import OpenAI
+from tqdm import trange, tqdm
 
 from agent import Agent
-from prompts import individual_meeting_start_prompt
+from prompts import (
+    individual_meeting_agent_prompt,
+    individual_meeting_critic_prompt,
+    individual_meeting_start_prompt,
+    SCIENTIFIC_CRITIC,
+)
 from utils import get_summary, print_cost_and_time, save_meeting, update_token_counts
 
 client = OpenAI()
@@ -20,6 +26,7 @@ def run_individual_meeting(
     save_name: str = "discussion",
     summaries: tuple[str, ...] = (),
     contexts: tuple[str, ...] = (),
+    num_critiques: int = 0,
     max_tokens: int | None = None,
     temperature: float = 0.2,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
@@ -32,6 +39,7 @@ def run_individual_meeting(
     :param save_name: The name of the discussion file that will be saved.
     :param summaries: The summaries of previous meetings.
     :param contexts: The contexts for the meeting.
+    :param num_critiques: The number of critiques and agent rewrites.
     :param max_tokens: The maximum number of tokens per response.
     :param temperature: The sampling temperature.
     :param model: The OpenAI model to use.
@@ -40,21 +48,8 @@ def run_individual_meeting(
     # Start timing the meeting
     start_time = time.time()
 
-    # Set up the discussion with the initial prompt
-    discussion = [
-        {
-            "agent": "User",
-            "message": {
-                "role": "user",
-                "content": individual_meeting_start_prompt(
-                    team_member=team_member,
-                    agenda=agenda,
-                    summaries=summaries,
-                    contexts=contexts,
-                ),
-            },
-        },
-    ]
+    # Set up the discussion
+    discussion = []
 
     # Track token counts
     token_counts = {
@@ -63,54 +58,71 @@ def run_individual_meeting(
         "max": 0,
     }
 
-    # Loop user-agent interaction
-    while True:
-        # Get the response
-        chat_completion = client.chat.completions.create(
-            messages=[team_member.message] + [turn["message"] for turn in discussion],
-            model=model,
-            stream=False,
-            temperature=temperature,
-            max_tokens=max_tokens,
-        )
-        response = chat_completion.choices[0].message.content
+    # Loop through critiques plus one final round
+    for round_index in trange(num_critiques + 1, desc="Critiques (+ Final Round)"):
+        # Set up agents with special case for final round (no critique)
+        if round_index == num_critiques:
+            agents = [team_member]
+        else:
+            agents = [team_member, SCIENTIFIC_CRITIC]
 
-        # Print the response
-        print(f"{team_member.title}: {response}")
+        # Loop through agents
+        for agent in tqdm(agents, desc="Agents"):
+            # Add user prompt based on agent and round number
+            if agent == SCIENTIFIC_CRITIC:
+                prompt = individual_meeting_critic_prompt(
+                    critic=SCIENTIFIC_CRITIC, agent=team_member
+                )
+            else:
+                if round_index == 0:
+                    prompt = individual_meeting_start_prompt(
+                        team_member=team_member,
+                        agenda=agenda,
+                        summaries=summaries,
+                        contexts=contexts,
+                    )
+                else:
+                    prompt = individual_meeting_agent_prompt(
+                        critic=SCIENTIFIC_CRITIC, agent=team_member
+                    )
 
-        # Update token counts
-        update_token_counts(
-            token_counts=token_counts,
-            discussion=discussion,
-            response=response,
-        )
+            discussion.append(
+                {
+                    "agent": "User",
+                    "message": {
+                        "role": "user",
+                        "content": prompt,
+                    },
+                }
+            )
 
-        # Add the response to the discussion
-        discussion.append(
-            {
-                "agent": team_member.title,
-                "message": {
-                    "role": "assistant",
-                    "content": response,
-                },
-            }
-        )
+            # Get the response
+            chat_completion = client.chat.completions.create(
+                messages=[agent.message] + [turn["message"] for turn in discussion],
+                model=model,
+                stream=False,
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            response = chat_completion.choices[0].message.content
 
-        # Ask user if they want to continue
-        user_input = input("User input (empty to terminate): ")
-        if not user_input:
-            break
+            # Update token counts
+            update_token_counts(
+                token_counts=token_counts,
+                discussion=discussion,
+                response=response,
+            )
 
-        # Add user input to discussion
-        discussion.append(
-            {
-                "agent": "User",
-                "message": {
-                    "role": "user",
-                    "content": user_input,
-                },
-            }
-        )
+            # Add the response to the discussion
+            discussion.append(
+                {
+                    "agent": agent.title,
+                    "message": {
+                        "role": "assistant",
+                        "content": response,
+                    },
+                }
+            )
 
     # Print cost and time
     print_cost_and_time(
