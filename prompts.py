@@ -258,7 +258,7 @@ def individual_meeting_critic_prompt(
     :param critic: The critic.
     :param agent: The agent that the critic is criticizing.
     """
-    return f"{critic.title}, please critique {agent.title}'s answer, with an emphasis on asking for more detail where detail is lacking, but do not implement the new answer yourself."
+    return f"{critic.title}, please critique {agent.title}'s most recent answer, with an emphasis on asking for more detail where detail is lacking, but do not implement the new answer yourself."
 
 
 def individual_meeting_agent_prompt(
@@ -271,7 +271,7 @@ def individual_meeting_agent_prompt(
     :param agent: The agent.
     """
     return (
-        f"{agent.title}, please modify your answer based on {critic.title}'s feedback."
+        f"{agent.title}, please modify your answer to address all of {critic.title}'s most recent feedback."
     )
 
 
