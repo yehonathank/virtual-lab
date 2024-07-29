@@ -10,6 +10,13 @@ PRINCIPAL_INVESTIGATOR = Agent(
     role="lead a team of experts to solve an important problem in artificial intelligence for biomedicine, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
 )
 
+SCIENTIFIC_CRITIC = Agent(
+    title="Scientific Critic",
+    expertise="providing critical feedback for scientific research on artificial intelligence applied to drug discovery",
+    goal="ensure that proposed research projects are rigorous, detailed, feasible, and scientifically sound",
+    role="provide critical feedback on the research project to remove all flaws and improve its design and push the team to make specific, actionable research decisions",
+)
+
 
 DRUG_DISCOVERY_TEAM = (
     Agent(
@@ -36,12 +43,7 @@ DRUG_DISCOVERY_TEAM = (
         goal="design a machine learning tool for a drug discovery project",
         role="ensure that the research project is amenable to machine learning and build a machine learning model",
     ),
-    Agent(
-        title="Scientific Critic",
-        expertise="providing critical but constructive feedback for scientific research on artificial intelligence applied to drug discovery",
-        goal="ensure that proposed research projects are scientifically rigorous, feasible, and free of any major flaws",
-        role="provide critical feedback on the research project to improve its design and push the team to make specific, actionable research decisions",
-    ),
+    SCIENTIFIC_CRITIC,
 )
 
 
