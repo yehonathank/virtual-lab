@@ -51,7 +51,7 @@ SYNTHESIS_PROMPT = "synthesize the points raised by each team member, make decis
 
 SUMMARY_PROMPT = "summarize the meeting for future discussions and provide a specific recommendation regarding the agenda based on the discussion"
 
-CONSENSUS_PROMPT = "Please read the summaries of multiple separate meetings discussing the same agenda. Based on the summaries, provide a consensus recommendation regarding the agenda in the same format as the individual summaries."
+MERGE_PROMPT = "Please read the summaries of multiple separate meetings about the same agenda. Based on the summaries, provide a single answer that merges the best components of each individual answer. Please use the same format as the individual answers. Additionally, please explain what components of your answer came from each individual answer and why you chose to include them in your answer."
 
 
 def summary_structure_prompt(has_agenda_questions: bool) -> str:
