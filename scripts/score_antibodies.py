@@ -34,52 +34,65 @@ def esm_log_likelihood(
     :param batch_size: The batch size.
     :return: A list of log-likelihood ratios.
     """
-    # Build sequences
-    seqs = [wildtype_seq] + mutant_seqs
-    seq_tuples = list(zip(seqs, seqs))
-
     # Load ESM2 model
     model, alphabet, batch_converter = load_esm_model()
 
-    # Compute ESM2 log-likelihood ratios
-    log_likelihood_ratios = []
+    # Get sequence length
+    seq_len = len(wildtype_seq)
+    assert all(len(seq) == seq_len for seq in mutant_seqs)
 
+    # Compute wildtype log-likelihood
+    _, _, wildtype_tokens = batch_converter([("wildtype", wildtype_seq)])
+    wildtype_tokens = wildtype_tokens.cuda()
+
+    wildtype_logits = model(wildtype_tokens, repr_layers=[33], return_contacts=False)[
+        "logits"
+    ]
+
+    log_probs_wt = torch.nn.functional.log_softmax(wildtype_logits[0], dim=-1)
+    wt_log_likelihood = (
+        log_probs_wt[torch.arange(1, seq_len + 1), wildtype_tokens[0, 1 : seq_len + 1]]
+        .sum()
+        .cpu()
+    )
+
+    # Compute ESM2 log-likelihoods of mutants
     with torch.no_grad():
-        # Iterate over batches of sequences
-        for i in trange(0, len(seq_tuples), batch_size):
+        # Iterate over batches of mutant sequences
+        for i in trange(0, len(mutant_seqs), batch_size):
             # Get batch of sequences
-            batch_protein_seq_tuples = seq_tuples[i : i + batch_size]
-            batch_labels, batch_strs, batch_tokens = batch_converter(
-                batch_protein_seq_tuples
+            batch_seqs = mutant_seqs[i : i + batch_size]
+            _, _, batch_tokens = batch_converter(
+                [("mutant", seq) for seq in batch_seqs]
             )
             batch_tokens = batch_tokens.cuda()
 
             # Compute logits
-            results = model(batch_tokens, repr_layers=[33], return_contacts=False)
-            logits = results["logits"]
+            logits = model(batch_tokens, repr_layers=[33], return_contacts=False)[
+                "logits"
+            ]
 
             # Compute log probabilities
-            log_probs_wt = torch.nn.functional.log_softmax(logits[0], dim=-1)
-            log_probs_mut = torch.nn.functional.log_softmax(logits[1:], dim=-1)
+            log_probs_mut = torch.nn.functional.log_softmax(logits, dim=-1)
 
-            # Adjust sequence length to account for two additional tokens
-            seq_len = len(wildtype_seq)
-            wt_log_likelihood = log_probs_wt[
-                torch.arange(1, seq_len + 1), batch_tokens[0, 1 : seq_len + 1]
-            ].sum()
-
+            # TODO: vectorize
             mut_log_likelihoods = []
             for i in range(len(mutant_seqs)):
-                mut_log_likelihood = log_probs_mut[
-                    i,
-                    torch.arange(1, seq_len + 1),
-                    batch_tokens[i + 1, 1 : seq_len + 1],
-                ].sum()
+                mut_log_likelihood = (
+                    log_probs_mut[
+                        i,
+                        torch.arange(1, seq_len + 1),
+                        batch_tokens[i, 1 : seq_len + 1],
+                    ]
+                    .sum()
+                    .cpu()
+                )
                 mut_log_likelihoods.append(mut_log_likelihood)
 
-        log_likelihood_ratios += [
-            (mut_ll - wt_log_likelihood).cpu().item() for mut_ll in mut_log_likelihoods
-        ]
+    # Compute log-likelihood ratios
+    log_likelihood_ratios = [
+        (mut_ll - wt_log_likelihood).item() for mut_ll in mut_log_likelihoods
+    ]
 
     return log_likelihood_ratios
 
