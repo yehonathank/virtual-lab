@@ -89,7 +89,10 @@ def esm_log_likelihood(
 
             # Compute log-likelihood ratios
             seq_indices = torch.arange(batch_tokens.shape[0])
-            batch_log_likelihood_ratios = log_probs_mut[seq_indices, batch_pos, batch_tokens[batch_pos]] - log_probs_wt[batch_pos, batch_tokens[batch_pos]]
+            batch_log_likelihood_ratios = (
+                log_probs_mut[seq_indices, batch_pos, batch_tokens[batch_pos]]
+                - log_probs_wt[batch_pos, batch_tokens[batch_pos]]
+            )
             log_likelihood_ratios += batch_log_likelihood_ratios.cpu().tolist()
             #
             # mut_log_likelihoods = []
@@ -113,26 +116,6 @@ def esm_log_likelihood(
     return log_likelihood_ratios
 
 
-def create_mutant_seqs(
-    wildtype_seq: str,
-    mutants: list[str],
-) -> list[str]:
-    """Creates mutant sequences given wildtype sequence and mutations.
-
-    :param wildtype_seq: The wildtype sequence.
-    :param mutants: A list of mutations (e.g., P28T).
-    :return: A list of mutant sequences.
-    """
-    # Create mutant sequences
-    mutant_seqs = []
-    for mutant in mutants:
-        pos = int(mutant[1:-1]) - 1
-        mutant_seq = wildtype_seq[:pos] + mutant[-1] + wildtype_seq[pos + 1 :]
-        mutant_seqs.append(mutant_seq)
-
-    return mutant_seqs
-
-
 def score_antibodies(
     wildtype_seq: str,
     mutant_path: Path,
@@ -151,16 +134,10 @@ def score_antibodies(
     # Load mutations
     mutant_seq_df = pd.read_csv(mutant_path)
 
-    # Create mutant sequences
-    mutant_seqs = create_mutant_seqs(
-        wildtype_seq=wildtype_seq,
-        mutants=mutant_seq_df[mutant_column],
-    )
-
     # Score antibodies
     log_likelihood_ratios = esm_log_likelihood(
         wildtype_seq=wildtype_seq,
-        mutant_seqs=mutant_seqs,
+        mutations=mutant_seq_df[mutant_column].tolist(),
         batch_size=batch_size,
     )
 
