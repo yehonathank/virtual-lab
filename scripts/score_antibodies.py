@@ -23,19 +23,29 @@ def load_esm_model() -> tuple[ESM2, Alphabet, BatchConverter]:
 
 def esm_log_likelihood(
     wildtype_seq: str,
-    mutant_seqs: list[str],
+    mutations: list[str],
     batch_size: int = 128,
 ) -> list[float]:
     """Computes ESM log-likelihood ratio between wildtype and mutant sequences.
 
     :param wildtype_seq: The wildtype sequence.
-    :param mutant_seqs: A list of mutant sequences.
-    :param hub_dir: Path to directory where torch hub models are saved.
+    :param mutations: A list of mutations (e.g., P28T).
     :param batch_size: The batch size.
     :return: A list of log-likelihood ratios.
     """
     # Load ESM2 model
     model, alphabet, batch_converter = load_esm_model()
+
+    # Create mutant sequences
+    mutant_seqs = []
+    mutant_pos = []
+    for mutant in mutations:
+        pos = int(mutant[1:-1]) - 1
+        mutant_seq = wildtype_seq[:pos] + mutant[-1] + wildtype_seq[pos + 1 :]
+        mutant_seqs.append(mutant_seq)
+        mutant_pos.append(pos)
+
+    mutant_pos = torch.tensor(mutant_pos)
 
     # Get sequence length
     seq_len = len(wildtype_seq)
@@ -50,20 +60,22 @@ def esm_log_likelihood(
     ]
 
     log_probs_wt = torch.nn.functional.log_softmax(wildtype_logits[0], dim=-1)
-    wt_log_likelihood = (
-        log_probs_wt[torch.arange(1, seq_len + 1), wildtype_tokens[0, 1 : seq_len + 1]]
-        .sum()
-        .cpu()
-    )
+    # wt_log_likelihood = (
+    #     log_probs_wt[torch.arange(1, seq_len + 1), wildtype_tokens[0, 1 : seq_len + 1]]
+    #     .sum()
+    #     .cpu()
+    # )
 
-    # Compute ESM2 log-likelihoods of mutants
+    # Compute ESM2 log-likelihood ratios of mutants
+    log_likelihood_ratios = []
+
     with torch.no_grad():
         # Iterate over batches of mutant sequences
         for i in trange(0, len(mutant_seqs), batch_size):
             # Get batch of sequences
-            batch_seqs = mutant_seqs[i : i + batch_size]
+            batch_pos = mutant_pos[i : i + batch_size].cuda()
             _, _, batch_tokens = batch_converter(
-                [("mutant", seq) for seq in batch_seqs]
+                [("mutant", seq) for seq in mutant_seqs[i : i + batch_size]]
             )
             batch_tokens = batch_tokens.cuda()
 
@@ -75,23 +87,28 @@ def esm_log_likelihood(
             # Compute log probabilities
             log_probs_mut = torch.nn.functional.log_softmax(logits, dim=-1)
 
-            mut_log_likelihoods = []
-            for i in range(batch_tokens.shape[0]):
-                mut_log_likelihood = (
-                    log_probs_mut[
-                        i,
-                        torch.arange(1, seq_len + 1),
-                        batch_tokens[i, 1 : seq_len + 1],
-                    ]
-                    .sum()
-                    .cpu()
-                )
-                mut_log_likelihoods.append(mut_log_likelihood)
+            # Compute log-likelihood ratios
+            seq_indices = torch.arange(batch_tokens.shape[0])
+            batch_log_likelihood_ratios = log_probs_mut[seq_indices, batch_pos, batch_tokens[batch_pos]] - log_probs_wt[batch_pos, batch_tokens[batch_pos]]
+            log_likelihood_ratios += batch_log_likelihood_ratios.cpu().tolist()
+            #
+            # mut_log_likelihoods = []
+            # for seq_index in range(batch_tokens.shape[0]):
+            #     pos = batch_pos[seq_index]
+            #     mut_log_likelihood = (
+            #         log_probs_mut[
+            #             seq_index,
+            #             torch.arange(1, seq_len + 1),
+            #             batch_tokens[seq_index, batch_pos[seq_index]],
+            #         ]
+            #         .cpu()
+            #     )
+            #     mut_log_likelihoods.append(mut_log_likelihood)
 
-    # Compute log-likelihood ratios
-    log_likelihood_ratios = [
-        (mut_ll - wt_log_likelihood).item() for mut_ll in mut_log_likelihoods
-    ]
+    # # Compute log-likelihood ratios
+    # log_likelihood_ratios = [
+    #     (mut_ll - wt_log_likelihood).item() for mut_ll in mut_log_likelihoods
+    # ]
 
     return log_likelihood_ratios
 
