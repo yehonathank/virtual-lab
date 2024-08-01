@@ -41,22 +41,27 @@ def esm_log_likelihood(
         mutant_pos.append(int(mutant[1:-1]) - 1)
         mutant_tokens.append(alphabet.tok_to_idx[mutant[-1]])
 
-    mutant_pos = torch.tensor(mutant_pos).cuda()
-    mutant_tokens = torch.tensor(mutant_tokens).cuda()
+    mutant_pos = torch.tensor(mutant_pos).cuda()  # (num_mutants,)
+    mutant_tokens = torch.tensor(mutant_tokens).cuda()  # (num_mutants,)
 
     # Compute wildtype log-likelihood
-    _, _, wildtype_tokens = batch_converter([("wildtype", wildtype_seq)])
-    wildtype_tokens = wildtype_tokens.cuda()  # (1, seq_len)
+    _, _, batch_wildtype_tokens = batch_converter([("wildtype", wildtype_seq)])
+    batch_wildtype_tokens = batch_wildtype_tokens.cuda()  # (1, seq_len + 2)
+    wildtype_tokens = batch_wildtype_tokens[0, 1 : len(wildtype_seq) + 1]  # (seq_len,)
 
     with torch.no_grad():
         wildtype_logits = model(
-            wildtype_tokens, repr_layers=[33], return_contacts=False
+            batch_wildtype_tokens, repr_layers=[33], return_contacts=False
         )[
             "logits"
-        ]  # (1, seq_len, vocab_size)
+        ]  # (1, seq_len + 2, vocab_size)
+
+        wildtype_logits = wildtype_logits[
+            0, 1 : len(wildtype_seq) + 1, :
+        ]  # (seq_len, vocab_size)
 
     log_probs_wt = torch.nn.functional.log_softmax(
-        wildtype_logits[0], dim=-1
+        wildtype_logits, dim=-1
     )  # (seq_len, vocab_size)
 
     # Compute log-likelihood ratios of mutants
