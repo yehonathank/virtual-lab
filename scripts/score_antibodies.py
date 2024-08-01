@@ -4,16 +4,15 @@ from pathlib import Path
 
 import pandas as pd
 import torch
-from esm import ESM2, Alphabet, BatchConverter, pretrained
-from tqdm import trange
+from esm import Alphabet, BatchConverter, pretrained
 
 
-def load_esm_model() -> tuple[ESM2, Alphabet, BatchConverter]:
-    """Load an ESM2 model and batch converter.
+def load_esm_model() -> tuple[torch.Module, Alphabet, BatchConverter]:
+    """Load an ESM model and batch converter.
 
-    :return: A tuple of a pretrained ESM2 model and a BatchConverter for preparing protein sequences as input.
+    :return: A tuple of a pretrained ESM model and a BatchConverter for preparing protein sequences as input.
     """
-    model, alphabet = pretrained.esm2_t33_650M_UR50D()
+    model, alphabet = pretrained.esm1b_t33_650M_UR50S()
     batch_converter = alphabet.get_batch_converter()
     model.eval()
     model = model.cuda()
@@ -31,7 +30,7 @@ def esm_log_likelihood(
     :param mutations: A list of mutations (e.g., P28T).
     :return: A list of log-likelihood ratios.
     """
-    # Load ESM2 model
+    # Load ESM model
     model, alphabet, batch_converter = load_esm_model()
 
     # Get mutant positions and tokens
