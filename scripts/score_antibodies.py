@@ -84,6 +84,26 @@ def esm_log_likelihood(
     return log_likelihood_ratios
 
 
+def create_mutant_seqs(
+    wildtype_seq: str,
+    mutants: list[str],
+) -> list[str]:
+    """Creates mutant sequences given wildtype sequence and mutations.
+
+    :param wildtype_seq: The wildtype sequence.
+    :param mutants: A list of mutations (e.g., P28T).
+    :return: A list of mutant sequences.
+    """
+    # Create mutant sequences
+    mutant_seqs = []
+    for mutant in mutants:
+        pos = int(mutant[1:-1]) - 1
+        mutant_seq = wildtype_seq[:pos] + mutant[-1] + wildtype_seq[pos + 1 :]
+        mutant_seqs.append(mutant_seq)
+
+    return mutant_seqs
+
+
 def score_antibodies(
     wildtype_seq: str,
     mutant_path: Path,
@@ -100,19 +120,25 @@ def score_antibodies(
     :param batch_size: The batch size.
     """
     # Load mutations
-    mutant_seqs = pd.read_csv(mutant_path)
+    mutant_seq_df = pd.read_csv(mutant_path)
+
+    # Create mutant sequences
+    mutant_seqs = create_mutant_seqs(
+        wildtype_seq=wildtype_seq,
+        mutants=mutant_seq_df[mutant_column],
+    )
 
     # Score antibodies
     log_likelihood_ratios = esm_log_likelihood(
         wildtype_seq=wildtype_seq,
-        mutant_seqs=mutant_seqs[mutant_column],
+        mutant_seqs=mutant_seqs,
         batch_size=batch_size,
     )
 
     # Save results
     save_path.mkdir(parents=True, exist_ok=True)
-    mutant_seqs["log_likelihood_ratio"] = log_likelihood_ratios
-    mutant_seqs.to_csv(save_path, index=False)
+    mutant_seq_df["log_likelihood_ratio"] = log_likelihood_ratios
+    mutant_seq_df.to_csv(save_path, index=False)
 
 
 if __name__ == "__main__":
