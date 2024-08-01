@@ -120,7 +120,7 @@ def score_antibodies(
     )
 
     # Save results
-    save_path.mkdir(parents=True, exist_ok=True)
+    save_path.parent.mkdir(parents=True, exist_ok=True)
     mutant_seq_df["log_likelihood_ratio"] = log_likelihood_ratios
     mutant_seq_df.to_csv(save_path, index=False)
 
