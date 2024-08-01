@@ -85,18 +85,30 @@ def esm_log_likelihood(
 def score_antibodies(
     wildtype_seq: str,
     mutant_path: Path,
-    mutant_column: str,
+    sort_column: str,
     save_path: Path,
+    mutant_column: str = "mutation",
+    top_k: int = 10,
 ) -> None:
     """Score antibodies using ESM log-likelihood.
 
     :param wildtype_seq: The wildtype sequence.
     :param mutant_path: Path to a CSV file containing mutations (of the form P28T).
-    :param mutant_column: The column containing the mutations.
+    :param sort_column: The column to sort the antibodies by.
     :param save_path: Path to save the results.
+    :param mutant_column: The column containing the mutations.
+    :param top_k: The number of top-ranked antibodies to score.
     """
     # Load mutations
     mutant_seq_df = pd.read_csv(mutant_path)
+
+    # Sort mutations
+    mutant_seq_df.sort_values(sort_column, ascending=False, inplace=True)
+
+    # Select top mutations
+    mutant_seq_df = mutant_seq_df.head(top_k)
+
+    print(f"Number of mutations to score = {len(mutant_seq_df)}")
 
     # Score antibodies
     log_likelihood_ratios = esm_log_likelihood(
