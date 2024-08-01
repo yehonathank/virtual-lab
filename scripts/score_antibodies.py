@@ -5,9 +5,10 @@ from pathlib import Path
 import pandas as pd
 import torch
 from esm import Alphabet, BatchConverter, pretrained
+from esm.model.esm1 import ProteinBertModel
 
 
-def load_esm_model() -> tuple[torch.Module, Alphabet, BatchConverter]:
+def load_esm_model() -> tuple[ProteinBertModel, Alphabet, BatchConverter]:
     """Load an ESM model and batch converter.
 
     :return: A tuple of a pretrained ESM model and a BatchConverter for preparing protein sequences as input.
