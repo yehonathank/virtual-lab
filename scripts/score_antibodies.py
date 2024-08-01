@@ -60,11 +60,6 @@ def esm_log_likelihood(
     ]
 
     log_probs_wt = torch.nn.functional.log_softmax(wildtype_logits[0], dim=-1)
-    # wt_log_likelihood = (
-    #     log_probs_wt[torch.arange(1, seq_len + 1), wildtype_tokens[0, 1 : seq_len + 1]]
-    #     .sum()
-    #     .cpu()
-    # )
 
     # Compute ESM2 log-likelihood ratios of mutants
     log_likelihood_ratios = []
@@ -73,7 +68,7 @@ def esm_log_likelihood(
         # Iterate over batches of mutant sequences
         for i in trange(0, len(mutant_seqs), batch_size):
             # Get batch of sequences
-            batch_pos = mutant_pos[i : i + batch_size].cuda()
+            batch_mut_pos = mutant_pos[i : i + batch_size].cuda()
             _, _, batch_tokens = batch_converter(
                 [("mutant", seq) for seq in mutant_seqs[i : i + batch_size]]
             )
@@ -89,29 +84,12 @@ def esm_log_likelihood(
 
             # Compute log-likelihood ratios
             seq_indices = torch.arange(batch_tokens.shape[0])
+            batch_mut_tokens = batch_tokens[seq_indices, batch_mut_pos]
             batch_log_likelihood_ratios = (
-                log_probs_mut[seq_indices, batch_pos, batch_tokens[batch_pos]]
-                - log_probs_wt[batch_pos, batch_tokens[batch_pos]]
+                log_probs_mut[seq_indices, batch_mut_pos, batch_mut_tokens]
+                - log_probs_wt[batch_mut_pos, batch_mut_tokens]
             )
             log_likelihood_ratios += batch_log_likelihood_ratios.cpu().tolist()
-            #
-            # mut_log_likelihoods = []
-            # for seq_index in range(batch_tokens.shape[0]):
-            #     pos = batch_pos[seq_index]
-            #     mut_log_likelihood = (
-            #         log_probs_mut[
-            #             seq_index,
-            #             torch.arange(1, seq_len + 1),
-            #             batch_tokens[seq_index, batch_pos[seq_index]],
-            #         ]
-            #         .cpu()
-            #     )
-            #     mut_log_likelihoods.append(mut_log_likelihood)
-
-    # # Compute log-likelihood ratios
-    # log_likelihood_ratios = [
-    #     (mut_ll - wt_log_likelihood).item() for mut_ll in mut_log_likelihoods
-    # ]
 
     return log_likelihood_ratios
 
