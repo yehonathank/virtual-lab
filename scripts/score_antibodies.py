@@ -75,9 +75,8 @@ def esm_log_likelihood(
             # Compute log probabilities
             log_probs_mut = torch.nn.functional.log_softmax(logits, dim=-1)
 
-            # TODO: vectorize
             mut_log_likelihoods = []
-            for i in range(len(mutant_seqs)):
+            for i in range(batch_tokens.shape[0]):
                 mut_log_likelihood = (
                     log_probs_mut[
                         i,
