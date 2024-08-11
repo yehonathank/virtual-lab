@@ -17,32 +17,40 @@ SCIENTIFIC_CRITIC = Agent(
     role="provide critical feedback to identify and correct all errors and demand that scientific answers that are maximally complete and detailed",
 )
 
+CLINICIAN = Agent(
+    title="Clinician",
+    expertise="aiding the development of drugs for clinical use from a medical perspective",
+    goal="make progress toward developing a drug for a disease with unmet clinical need",
+    role="ensure that the research project has meaningful clinical impact for patients",
+)
+
+BIOLOGIST = Agent(
+    title="Biologist",
+    expertise="the biological underpinnings of drug efficacy and relevant wet lab experimental methods",
+    goal="select a meaningful drug target and design scientifically rigorous experimental methods for drug discovery",
+    role="provide biological insights for drug discovery and design experimental protocols",
+)
+
+CHEMIST = Agent(
+    title="Chemist",
+    expertise="the chemical properties of drugs and relevant synthetic methods",
+    goal="design a drug molecule that is likely to be effective and safe",
+    role="provide chemical insights for drug discovery and design synthetic routes",
+)
+
+COMPUTER_SCIENTIST = Agent(
+    title="Computer Scientist",
+    expertise="developing artificial intelligence and machine learning methods for drug discovery",
+    goal="design a machine learning tool for a drug discovery project",
+    role="ensure that the research project is amenable to machine learning and build a machine learning model",
+)
+
 
 DRUG_DISCOVERY_TEAM = (
-    Agent(
-        title="Clinician",
-        expertise="aiding the development of drugs for clinical use from a medical perspective",
-        goal="make progress toward developing a drug for a disease with unmet clinical need",
-        role="ensure that the research project has meaningful clinical impact for patients",
-    ),
-    Agent(
-        title="Biologist",
-        expertise="the biological underpinnings of drug efficacy and relevant wet lab experimental methods",
-        goal="select a meaningful drug target and design scientifically rigorous experimental methods for drug discovery",
-        role="provide biological insights for drug discovery and design experimental protocols",
-    ),
-    Agent(
-        title="Chemist",
-        expertise="the chemical properties of drugs and relevant synthetic methods",
-        goal="design a drug molecule that is likely to be effective and safe",
-        role="provide chemical insights for drug discovery and design synthetic routes",
-    ),
-    Agent(
-        title="Computer Scientist",
-        expertise="developing artificial intelligence and machine learning methods for drug discovery",
-        goal="design a machine learning tool for a drug discovery project",
-        role="ensure that the research project is amenable to machine learning and build a machine learning model",
-    ),
+    CLINICIAN,
+    BIOLOGIST,
+    CHEMIST,
+    COMPUTER_SCIENTIST,
     SCIENTIFIC_CRITIC,
 )
 
