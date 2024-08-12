@@ -14,7 +14,7 @@ SCIENTIFIC_CRITIC = Agent(
     title="Scientific Critic",
     expertise="providing critical feedback for scientific research",
     goal="ensure that proposed research projects and implementations are rigorous, detailed, feasible, and scientifically sound",
-    role="provide critical feedback to identify and correct all errors and demand that scientific answers that are maximally complete and detailed",
+    role="provide critical feedback to identify and correct all errors and demand that scientific answers that are maximally complete and detailed but simple and not overly complex",
 )
 
 CLINICIAN = Agent(
@@ -163,7 +163,8 @@ def scientific_meeting_start_prompt(
     """
     return (
         f"This is the beginning of a scientific meeting to discuss your research project. "
-        f"This is a meeting with the following team members: {', '.join(team_member.title for team_member in team_members)}.\n\n"
+        f"This is a meeting with the team lead, {team_lead.title}, and the following team members: "
+        f"{', '.join(team_member.title for team_member in team_members)}.\n\n"
         f"{format_contexts(contexts)}"
         f"{format_summaries(summaries)}"
         f"Today’s agenda is the following:\n\n{agenda}\n\n"
@@ -269,7 +270,8 @@ def individual_meeting_critic_prompt(
     return (
         f"{critic.title}, please critique {agent.title}'s most recent answer. "
         "In your critique, focus on suggesting improvements that directly address the agenda. "
-        "Additionally, ask for more detail where detail is lacking, but do not implement the answer yourself."
+        "Prioritize simple solutions over unnecessarily complex ones, but demand more detail where detail is lacking. "
+        "Only provide feedback; do not implement the answer yourself."
     )
 
 

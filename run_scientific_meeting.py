@@ -33,7 +33,8 @@ def run_scientific_meeting(
     max_tokens: int | None = None,
     temperature: float = 0.2,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
-) -> str:
+    return_summary: bool = False,
+) -> str | None:
     """Runs a scientific meeting with LLM agents.
 
     :param team_lead: The team lead.
@@ -48,7 +49,8 @@ def run_scientific_meeting(
     :param max_tokens: The maximum number of tokens per response.
     :param temperature: The sampling temperature.
     :param model: The OpenAI model to use.
-    :return: The summary of the meeting (i.e., the last message).
+    :param return_summary: Whether to return the summary of the meeting.
+    :return: The summary of the meeting (i.e., the last message) if return_summary is True, else None.
     """
     # Start timing the meeting
     start_time = time.time()
@@ -138,8 +140,7 @@ def run_scientific_meeting(
 
             # Get the response
             chat_completion = client.chat.completions.create(
-                messages=[agent.message]
-                + [turn["message"] for turn in discussion],
+                messages=[agent.message] + [turn["message"] for turn in discussion],
                 model=model,
                 stream=False,
                 temperature=temperature,
@@ -183,7 +184,6 @@ def run_scientific_meeting(
         discussion=discussion,
     )
 
-    # Extract summary
-    summary = get_summary(discussion)
-
-    return summary
+    # Optionally, return summary
+    if return_summary:
+        return get_summary(discussion)
