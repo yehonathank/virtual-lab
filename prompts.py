@@ -269,8 +269,9 @@ def individual_meeting_critic_prompt(
     """
     return (
         f"{critic.title}, please critique {agent.title}'s most recent answer. "
-        "In your critique, focus on suggesting improvements that directly address the agenda. "
+        "In your critique, suggest improvements that directly address the agenda and any agenda questions. "
         "Prioritize simple solutions over unnecessarily complex ones, but demand more detail where detail is lacking. "
+        "Additionally, validate whether the answer strictly adheres to the agenda and any agenda questions and provide corrective feedback if it does not. "
         "Only provide feedback; do not implement the answer yourself."
     )
 
