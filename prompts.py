@@ -303,7 +303,7 @@ def individual_meeting_start_prompt(
     :return: The start prompt for the individual meeting.
     """
     return (
-        f"This is the beginning of an individual meeting with {team_member} to discuss your research project. "
+        f"This is the beginning of an individual meeting with {team_member} to discuss your research project.\n\n"
         f"{format_references(contexts, reference_type='context', intro='Here is context for this meeting:')}"
         f"{format_references(summaries, reference_type='summary', intro='Here are summaries of the previous meetings:')}"
         f"Today’s agenda is the following:\n\n{agenda}\n\n"
