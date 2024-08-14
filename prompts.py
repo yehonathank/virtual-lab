@@ -291,6 +291,8 @@ def scientific_meeting_team_lead_final_prompt(
 def individual_meeting_start_prompt(
     team_member: Agent,
     agenda: str,
+    agenda_questions: tuple[str, ...] = (),
+    agenda_rules: tuple[str, ...] = (),
     summaries: tuple[str, ...] = (),
     contexts: tuple[str, ...] = (),
 ) -> str:
@@ -298,6 +300,8 @@ def individual_meeting_start_prompt(
 
     :param team_member: The team member.
     :param agenda: The agenda for the meeting.
+    :param agenda_questions: The agenda questions to answer by the end of the meeting.
+    :param agenda_rules: The rules for the agenda.
     :param summaries: The summaries of previous meetings.
     :param contexts: The contexts for the meeting.
     :return: The start prompt for the individual meeting.
@@ -306,7 +310,9 @@ def individual_meeting_start_prompt(
         f"This is the beginning of an individual meeting with {team_member} to discuss your research project.\n\n"
         f"{format_references(contexts, reference_type='context', intro='Here is context for this meeting:')}"
         f"{format_references(summaries, reference_type='summary', intro='Here are summaries of the previous meetings:')}"
-        f"Today’s agenda is the following:\n\n{agenda}\n\n"
+        f"{format_agenda(agenda)}"
+        f"{format_agenda_questions(agenda_questions)}"
+        f"{format_agenda_rules(agenda_rules)}"
         f"{team_member}, please provide your response to the agenda."
     )
 

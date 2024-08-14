@@ -24,6 +24,8 @@ def run_individual_meeting(
     agenda: str,
     save_dir: Path,
     save_name: str = "discussion",
+    agenda_questions: tuple[str, ...] = (),
+    agenda_rules: tuple[str, ...] = (),
     summaries: tuple[str, ...] = (),
     contexts: tuple[str, ...] = (),
     num_critiques: int = 0,
@@ -38,6 +40,8 @@ def run_individual_meeting(
     :param agenda: The agenda for the meeting.
     :param save_dir: The directory to save the discussion.
     :param save_name: The name of the discussion file that will be saved.
+    :param agenda_questions: The agenda questions to answer by the end of the meeting.
+    :param agenda_rules: The rules for the meeting.
     :param summaries: The summaries of previous meetings.
     :param contexts: The contexts for the meeting.
     :param num_critiques: The number of critiques and agent rewrites.
@@ -80,6 +84,8 @@ def run_individual_meeting(
                     prompt = individual_meeting_start_prompt(
                         team_member=team_member,
                         agenda=agenda,
+                        agenda_questions=agenda_questions,
+                        agenda_rules=agenda_rules,
                         summaries=summaries,
                         contexts=contexts,
                     )
