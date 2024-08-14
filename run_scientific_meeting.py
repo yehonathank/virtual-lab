@@ -100,11 +100,11 @@ def run_scientific_meeting(
     }
 
     # Loop through rounds
-    for round_index in trange(num_rounds + 1, desc="Rounds (+ Summary Round)"):
+    for round_index in trange(num_rounds + 1, desc="Rounds (+ Summary Round)", leave=False):
         round_num = round_index + 1
 
         # Loop through team and illicit their response
-        for agent in tqdm(team, desc="Team"):
+        for agent in tqdm(team, desc="Team", leave=False):
             # Special prompt for team lead
             if agent == team_lead:
                 if round_index == 0:

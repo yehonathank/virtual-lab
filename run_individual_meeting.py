@@ -61,7 +61,7 @@ def run_individual_meeting(
     }
 
     # Loop through critiques plus one final round
-    for round_index in trange(num_critiques + 1, desc="Critiques (+ Final Round)"):
+    for round_index in trange(num_critiques + 1, desc="Critiques (+ Final Round)", leave=False):
         # Set up agents with special case for final round (no critique)
         if round_index == num_critiques:
             agents = [team_member]
@@ -69,7 +69,7 @@ def run_individual_meeting(
             agents = [team_member, SCIENTIFIC_CRITIC]
 
         # Loop through agents
-        for agent in tqdm(agents, desc="Agents"):
+        for agent in tqdm(agents, desc="Agents", leave=False):
             # Add user prompt based on agent and round number
             if agent == SCIENTIFIC_CRITIC:
                 prompt = individual_meeting_critic_prompt(
