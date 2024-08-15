@@ -1,4 +1,3 @@
-import sys
 import argparse
 from typing import List, Tuple
 import torch

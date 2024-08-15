@@ -1,15 +1,7 @@
-#!/usr/bin/env python3
-
 import sys
-import os
 from pyrosetta import init, pose_from_sequence, Pose, get_fa_scorefxn
 from pyrosetta.rosetta.core.import_pose import pose_from_pdb
 from pyrosetta.rosetta.protocols.docking import DockMCMProtocol, setup_foldtree
-from pyrosetta.rosetta.protocols.antibody import AntibodyInfo, CDRNameEnum
-from pyrosetta.rosetta.core.scoring import ScoreFunctionFactory
-from pyrosetta.rosetta.core.pack.task import TaskFactory
-from pyrosetta.rosetta.core.pack.task.operation import RestrictToRepacking
-from pyrosetta.rosetta.protocols.minimization_packing import PackRotamersMover
 from pyrosetta.rosetta.utility import vector1_unsigned_long as Vector1
 import argparse
 
