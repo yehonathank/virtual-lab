@@ -1,7 +1,7 @@
 import argparse
 from typing import List, Tuple
 import torch
-from esm import pretrained
+from esm import Alphabet, pretrained
 import json
 import logging
 
@@ -42,7 +42,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, pretrained.Alphabet]:
+def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, Alphabet]:
     """
     Loads the ESM model for predicting amino acid likelihoods.
 
@@ -51,7 +51,7 @@ def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, pretrained.Alphabe
 
     Returns:
         model (torch.nn.Module): The loaded ESM model.
-        alphabet (pretrained.Alphabet): The model's alphabet for sequence encoding.
+        alphabet (Alphabet): The model's alphabet for sequence encoding.
 
     Raises:
         RuntimeError: If the model fails to load.
@@ -66,13 +66,13 @@ def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, pretrained.Alphabe
         raise RuntimeError(f"Failed to load the ESM model {model_name}: {e}")
 
 
-def encode_sequence(sequence: str, alphabet: pretrained.Alphabet) -> torch.Tensor:
+def encode_sequence(sequence: str, alphabet: Alphabet) -> torch.Tensor:
     """
     Encodes the antibody sequence using the ESM model's alphabet.
 
     Args:
         sequence (str): The antibody sequence to encode.
-        alphabet (pretrained.Alphabet): The alphabet for encoding the sequence.
+        alphabet (Alphabet): The alphabet for encoding the sequence.
 
     Returns:
         torch.Tensor: The encoded sequence.
@@ -93,13 +93,14 @@ def encode_sequence(sequence: str, alphabet: pretrained.Alphabet) -> torch.Tenso
 
 
 def get_amino_acid_likelihoods(
-    model: torch.nn.Module, tokens: torch.Tensor
+    model: torch.nn.Module, alphabet: Alphabet, tokens: torch.Tensor
 ) -> List[Tuple[int, str, float]]:
     """
     Gets the amino acid likelihoods for each position in the sequence.
 
     Args:
         model (torch.nn.Module): The ESM model.
+        alphabet (Alphabet): The model's alphabet.
         tokens (torch.Tensor): The encoded antibody sequence.
 
     Returns:
@@ -114,7 +115,7 @@ def get_amino_acid_likelihoods(
     for position in range(1, logits.size(0) - 1):  # Exclude start and end tokens
         aa_probs = probs[position]
         for idx, prob in enumerate(aa_probs):
-            likelihoods.append((position, model.alphabet.all_toks[idx], prob.item()))
+            likelihoods.append((position, alphabet.all_toks[idx], prob.item()))
     return likelihoods
 
 
@@ -160,7 +161,7 @@ def main():
         tokens = encode_sequence(antibody_sequence, alphabet)
 
         # Get amino acid likelihoods
-        likelihoods = get_amino_acid_likelihoods(model, tokens)
+        likelihoods = get_amino_acid_likelihoods(model, alphabet, tokens)
 
         # Identify high-likelihood mutations
         high_likelihood_mutations = identify_high_likelihood_mutations(
