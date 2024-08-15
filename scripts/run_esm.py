@@ -1,13 +1,15 @@
-import sys
 import argparse
-from typing import List, Tuple, Dict
+from typing import List, Tuple
 import torch
 from esm import Alphabet, pretrained
 import json
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 def parse_args() -> argparse.Namespace:
     """
@@ -17,12 +19,34 @@ def parse_args() -> argparse.Namespace:
     Returns:
         argparse.Namespace: Parsed command-line arguments.
     """
-    parser = argparse.ArgumentParser(description="Identify high-likelihood mutations in antibody sequences using ESM.")
-    parser.add_argument("sequence", type=str, help="The antibody sequence to analyze (e.g., 'QVQLVQSGAEVKKPGASVKVSCKASGYTFTNYGMNWVRQAPGQGLEWMGWISYDGSTNYNPSLKSRLTITRDTSKNQFSLKLSSVTAADTAVYYC').")
-    parser.add_argument("--threshold", type=float, default=0.05, help="Probability threshold for high-likelihood mutations (default: 0.05).")
-    parser.add_argument("--model_name", type=str, default="esm1b_t33_650M_UR50S", help="The ESM model name to load (default: esm1b_t33_650M_UR50S).")
-    parser.add_argument("--top_n", type=int, default=10, help="Number of top mutant sequences to save based on likelihood ratio (default: 10).")
+    parser = argparse.ArgumentParser(
+        description="Identify high-likelihood mutations in antibody sequences using ESM."
+    )
+    parser.add_argument(
+        "sequence",
+        type=str,
+        help="The antibody sequence to analyze (e.g., 'QVQLVQSGAEVKKPGASVKVSCKASGYTFTNYGMNWVRQAPGQGLEWMGWISYDGSTNYNPSLKSRLTITRDTSKNQFSLKLSSVTAADTAVYYC').",
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0.05,
+        help="Probability threshold for high-likelihood mutations (default: 0.05).",
+    )
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="esm1b_t33_650M_UR50S",
+        help="The ESM model name to load (default: esm1b_t33_650M_UR50S).",
+    )
+    parser.add_argument(
+        "--top_n",
+        type=int,
+        default=10,
+        help="Number of top mutant sequences to save based on likelihood ratio (default: 10).",
+    )
     return parser.parse_args()
+
 
 def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, Alphabet]:
     """
@@ -46,6 +70,7 @@ def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, Alphabet]:
     except Exception as e:
         logging.error(f"Failed to load the ESM model {model_name}: {e}")
         raise RuntimeError(f"Failed to load the ESM model {model_name}: {e}")
+
 
 def encode_sequence(sequence: str, alphabet: Alphabet) -> torch.Tensor:
     """
@@ -72,7 +97,10 @@ def encode_sequence(sequence: str, alphabet: Alphabet) -> torch.Tensor:
     _, _, batch_tokens = batch_converter(data)
     return batch_tokens
 
-def get_amino_acid_likelihoods(model: torch.nn.Module, tokens: torch.Tensor, alphabet: Alphabet) -> List[Tuple[int, str, float]]:
+
+def get_amino_acid_likelihoods(
+    model: torch.nn.Module, tokens: torch.Tensor, alphabet: Alphabet
+) -> List[Tuple[int, str, float]]:
     """
     Gets the amino acid likelihoods for each position in the sequence.
 
@@ -96,7 +124,10 @@ def get_amino_acid_likelihoods(model: torch.nn.Module, tokens: torch.Tensor, alp
             likelihoods.append((position, alphabet.all_toks[idx], prob.item()))
     return likelihoods
 
-def identify_high_likelihood_mutations(sequence: str, likelihoods: List[Tuple[int, str, float]], threshold: float) -> List[Tuple[int, str, float, float]]:
+
+def identify_high_likelihood_mutations(
+    sequence: str, likelihoods: List[Tuple[int, str, float]], threshold: float
+) -> List[Tuple[int, str, float, float]]:
     """
     Identifies high-likelihood mutations based on a probability threshold and ensures they are different from the wildtype.
 
@@ -109,15 +140,22 @@ def identify_high_likelihood_mutations(sequence: str, likelihoods: List[Tuple[in
         List[Tuple[int, str, float, float]]: A list of high-likelihood mutations (position, amino acid, likelihood, likelihood ratio).
     """
     high_likelihood_mutations = []
-    wildtype_likelihoods = {pos: prob for pos, aa, prob in likelihoods if aa == sequence[pos - 1]}
+    wildtype_likelihoods = {
+        pos: prob for pos, aa, prob in likelihoods if aa == sequence[pos - 1]
+    }
 
     for pos, aa, prob in likelihoods:
-        if prob >= threshold and aa != sequence[pos - 1] and aa in "ACDEFGHIKLMNPQRSTVWY":
+        if (
+            prob >= threshold
+            and aa != sequence[pos - 1]
+            and aa in "ACDEFGHIKLMNPQRSTVWY"
+        ):
             wildtype_prob = wildtype_likelihoods.get(pos)
             if wildtype_prob and prob > wildtype_prob:
                 likelihood_ratio = prob / wildtype_prob
                 high_likelihood_mutations.append((pos, aa, prob, likelihood_ratio))
     return high_likelihood_mutations
+
 
 def main():
     """
@@ -146,7 +184,9 @@ def main():
         likelihoods = get_amino_acid_likelihoods(model, tokens, alphabet)
 
         # Identify high-likelihood mutations
-        high_likelihood_mutations = identify_high_likelihood_mutations(antibody_sequence, likelihoods, threshold)
+        high_likelihood_mutations = identify_high_likelihood_mutations(
+            antibody_sequence, likelihoods, threshold
+        )
 
         # Sort mutations by likelihood ratio and select top N
         high_likelihood_mutations.sort(key=lambda x: x[3], reverse=True)
@@ -156,9 +196,14 @@ def main():
         output = {
             "sequence": antibody_sequence,
             "top_mutations": [
-                {"position": pos, "amino_acid": aa, "likelihood": likelihood, "likelihood_ratio": ratio}
+                {
+                    "position": pos,
+                    "amino_acid": aa,
+                    "likelihood": likelihood,
+                    "likelihood_ratio": ratio,
+                }
                 for pos, aa, likelihood, ratio in top_mutations
-            ]
+            ],
         }
         print(json.dumps(output, indent=4))
 
@@ -168,6 +213,7 @@ def main():
         logging.error(f"Runtime error: {e}")
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
+
 
 if __name__ == "__main__":
     main()
