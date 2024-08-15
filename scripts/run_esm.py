@@ -7,7 +7,10 @@ import json
 import logging
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 def parse_args() -> argparse.Namespace:
     """
@@ -17,11 +20,28 @@ def parse_args() -> argparse.Namespace:
     Returns:
         argparse.Namespace: Parsed command-line arguments.
     """
-    parser = argparse.ArgumentParser(description="Identify high-likelihood mutations in antibody sequences using ESM.")
-    parser.add_argument("sequence", type=str, help="The antibody sequence to analyze (e.g., 'QVQLVQSGAEVKKPGASVKVSCKASGYTFTNYGMNWVRQAPGQGLEWMGWISYDGSTNYNPSLKSRLTITRDTSKNQFSLKLSSVTAADTAVYYC').")
-    parser.add_argument("--threshold", type=float, default=0.05, help="Probability threshold for high-likelihood mutations (default: 0.05).")
-    parser.add_argument("--model_name", type=str, default="esm1b_t33_650M_UR50S", help="The ESM model name to load (default: esm1b_t33_650M_UR50S).")
+    parser = argparse.ArgumentParser(
+        description="Identify high-likelihood mutations in antibody sequences using ESM."
+    )
+    parser.add_argument(
+        "sequence",
+        type=str,
+        help="The antibody sequence to analyze (e.g., 'QVQLVQSGAEVKKPGASVKVSCKASGYTFTNYGMNWVRQAPGQGLEWMGWISYDGSTNYNPSLKSRLTITRDTSKNQFSLKLSSVTAADTAVYYC').",
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0.05,
+        help="Probability threshold for high-likelihood mutations (default: 0.05).",
+    )
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        default="esm1b_t33_650M_UR50S",
+        help="The ESM model name to load (default: esm1b_t33_650M_UR50S).",
+    )
     return parser.parse_args()
+
 
 def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, pretrained.Alphabet]:
     """
@@ -45,6 +65,7 @@ def load_esm_model(model_name: str) -> Tuple[torch.nn.Module, pretrained.Alphabe
     except Exception as e:
         logging.error(f"Failed to load the ESM model {model_name}: {e}")
         raise RuntimeError(f"Failed to load the ESM model {model_name}: {e}")
+
 
 def encode_sequence(sequence: str, alphabet: pretrained.Alphabet) -> torch.Tensor:
     """
@@ -71,7 +92,10 @@ def encode_sequence(sequence: str, alphabet: pretrained.Alphabet) -> torch.Tenso
     _, _, batch_tokens = batch_converter(data)
     return batch_tokens
 
-def get_amino_acid_likelihoods(model: torch.nn.Module, tokens: torch.Tensor) -> List[Tuple[int, str, float]]:
+
+def get_amino_acid_likelihoods(
+    model: torch.nn.Module, tokens: torch.Tensor
+) -> List[Tuple[int, str, float]]:
     """
     Gets the amino acid likelihoods for each position in the sequence.
 
@@ -94,7 +118,10 @@ def get_amino_acid_likelihoods(model: torch.nn.Module, tokens: torch.Tensor) -> 
             likelihoods.append((position, model.alphabet.all_toks[idx], prob.item()))
     return likelihoods
 
-def identify_high_likelihood_mutations(likelihoods: List[Tuple[int, str, float]], threshold: float) -> List[Tuple[int, str, float]]:
+
+def identify_high_likelihood_mutations(
+    likelihoods: List[Tuple[int, str, float]], threshold: float
+) -> List[Tuple[int, str, float]]:
     """
     Identifies high-likelihood mutations based on a probability threshold.
 
@@ -105,8 +132,11 @@ def identify_high_likelihood_mutations(likelihoods: List[Tuple[int, str, float]]
     Returns:
         List[Tuple[int, str, float]]: A list of high-likelihood mutations (position, amino acid, likelihood).
     """
-    high_likelihood_mutations = [(pos, aa, prob) for pos, aa, prob in likelihoods if prob >= threshold]
+    high_likelihood_mutations = [
+        (pos, aa, prob) for pos, aa, prob in likelihoods if prob >= threshold
+    ]
     return high_likelihood_mutations
+
 
 def main():
     """
@@ -134,7 +164,9 @@ def main():
         likelihoods = get_amino_acid_likelihoods(model, tokens)
 
         # Identify high-likelihood mutations
-        high_likelihood_mutations = identify_high_likelihood_mutations(likelihoods, threshold)
+        high_likelihood_mutations = identify_high_likelihood_mutations(
+            likelihoods, threshold
+        )
 
         # Output the high-likelihood mutations in JSON format
         output = {
@@ -142,7 +174,7 @@ def main():
             "high_likelihood_mutations": [
                 {"position": pos, "amino_acid": aa, "likelihood": likelihood}
                 for pos, aa, likelihood in high_likelihood_mutations
-            ]
+            ],
         }
         print(json.dumps(output, indent=4))
 
