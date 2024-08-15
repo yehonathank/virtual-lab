@@ -1,167 +1,139 @@
+import os
 import sys
-from pyrosetta import init, pose_from_sequence, Pose, get_fa_scorefxn
-from pyrosetta.rosetta.core.import_pose import pose_from_pdb
-from pyrosetta.rosetta.protocols.docking import DockMCMProtocol, setup_foldtree
-from pyrosetta.rosetta.utility import vector1_unsigned_long as Vector1
-import argparse
+import subprocess
+import logging
+from typing import List
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
-def parse_args():
+def run_rosetta_antibody_protocol(
+    antibody_seq: str, antigen_pdb: str, output_dir: str, rosetta_opts: str
+) -> float:
     """
-    Parse command line arguments.
+    Run RosettaAntibody protocol for a given antibody sequence and antigen structure.
+
+    :param antibody_seq: Antibody sequence (string)
+    :param antigen_pdb: Path to the antigen PDB file
+    :param output_dir: Directory to store the output files
+    :param rosetta_opts: Additional options for Rosetta
+    :return: Binding affinity score (float)
     """
-    parser = argparse.ArgumentParser(
-        description="Rank antibody sequences based on binding affinity and structural stability with an antigen.",
-        epilog="Example usage: python script.py -s sequences.txt -a antigen.pdb",
-    )
-    parser.add_argument(
-        "-s",
-        "--sequences",
-        required=True,
-        help="File containing antibody sequences, one per line.",
-    )
-    parser.add_argument(
-        "-a", "--antigen", required=True, help="Antigen structure PDB file."
-    )
-    args = parser.parse_args()
-    return args
-
-
-def load_sequences(file_path: str) -> list:
-    """
-    Load antibody sequences from a file.
-
-    Args:
-        file_path (str): Path to the file containing antibody sequences.
-
-    Returns:
-        list: List of antibody sequences.
-    """
+    # Create a temporary directory for this antibody sequence
     try:
-        with open(file_path, "r") as file:
-            sequences = [line.strip() for line in file if line.strip()]
-        # Validate sequences
-        for seq in sequences:
-            if not all(c in "ACDEFGHIKLMNPQRSTVWY" for c in seq):
-                raise ValueError(f"Invalid sequence detected: {seq}")
-            if not (10 <= len(seq) <= 150):  # Example length check
-                raise ValueError(f"Sequence length out of range: {seq}")
-        return sequences
-    except FileNotFoundError:
-        print(f"Error: The file {file_path} does not exist.")
-        sys.exit(1)
-    except PermissionError:
-        print(f"Error: Permission denied for file {file_path}.")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error reading sequences: {e}")
-        sys.exit(1)
-
-
-def model_antibody(sequence: str) -> Pose:
-    """
-    Model antibody from sequence using Rosetta.
-
-    Args:
-        sequence (str): Antibody sequence.
-
-    Returns:
-        Pose: Pose object of the antibody.
-    """
-    try:
-        pose = pose_from_sequence(sequence)
-        # Placeholder for more sophisticated modeling (e.g., external tools)
-        return pose
-    except Exception as e:
-        print(f"Error modeling antibody with sequence {sequence}: {e}")
-        return None
-
-
-def dock_antibody_with_antigen(antibody_pose: Pose, antigen_pose: Pose) -> float:
-    """
-    Perform docking of antibody and antigen, return binding score.
-
-    Args:
-        antibody_pose (Pose): Pose object of the antibody.
-        antigen_pose (Pose): Pose object of the antigen.
-
-    Returns:
-        float: Docking score indicating binding affinity.
-    """
-    try:
-        complex_pose = antigen_pose.clone()
-        complex_pose.append_pose_by_jump(antibody_pose, antigen_pose.total_residue())
-
-        # Ensure correct fold tree setup
-        setup_foldtree(complex_pose, "A_B", Vector1([1]))
-
-        # Docking protocol
-        dock_protocol = DockMCMProtocol()
-        dock_protocol.set_scorefxn(get_fa_scorefxn())
-        dock_protocol.apply(complex_pose)
-
-        # Calculate docking score
-        score = get_fa_scorefxn()(complex_pose)
-        return score
-    except Exception as e:
-        print(f"Error in docking antibody with antigen: {e}")
+        seq_dir = os.path.join(output_dir, antibody_seq)
+        os.makedirs(seq_dir, exist_ok=True)
+    except OSError as e:
+        logging.error(f"Error creating directory {seq_dir}: {e}")
         return float("inf")
 
-
-def main():
-    """
-    Main function to rank antibody sequences based on binding affinity and structural stability with an antigen.
-    """
-    # Initialize PyRosetta
-    init(options="-mute all")
-
-    # Parse command line arguments
-    args = parse_args()
-    sequences_file = args.sequences
-    antigen_file = args.antigen
-
-    # Load antibody sequences
-    sequences = load_sequences(sequences_file)
-
-    # Load antigen structure
-    antigen_pose = Pose()
-    pose_from_pdb(antigen_pose, antigen_file)
-
-    # Rank antibodies by docking score
-    ranked_antibodies = []
-    for sequence in sequences:
-        antibody_pose = model_antibody(sequence)
-        if antibody_pose is None:
-            continue
-        score = dock_antibody_with_antigen(antibody_pose, antigen_pose)
-        ranked_antibodies.append((sequence, score))
-
-    # Sort by score (lower score indicates better binding)
-    ranked_antibodies.sort(key=lambda x: x[1])
-
-    # Print ranked antibodies
-    print("Ranked Antibodies (lower score is better):")
-    for idx, (seq, score) in enumerate(ranked_antibodies, start=1):
-        print(f"Rank {idx}: Sequence: {seq}, Score: {score}")
-
-
-def validate_antibody_structure(antibody_pose: Pose) -> bool:
-    """
-    Validate the modeled antibody structure.
-
-    Args:
-        antibody_pose (Pose): Pose object of the antibody.
-
-    Returns:
-        bool: True if the structure is valid, False otherwise.
-    """
+    # Write sequence to a fasta file
+    fasta_file = os.path.join(seq_dir, "antibody.fasta")
     try:
-        # Placeholder for validation logic (e.g., checking for clashes, realistic torsion angles)
-        return True  # Placeholder
-    except Exception as e:
-        print(f"Error validating antibody structure: {e}")
-        return False
+        with open(fasta_file, "w") as f:
+            f.write(f">antibody\n{antibody_seq}\n")
+    except IOError as e:
+        logging.error(f"Error writing FASTA file {fasta_file}: {e}")
+        return float("inf")
+
+    # Define the RosettaAntibody command
+    rosetta_command = [
+        "rosetta_scripts.default.linuxgccrelease",
+        "-parser:protocol",
+        "antibody_design.xml",
+        "-parser:script_vars",
+        f"antibody_fasta={fasta_file}",
+        f"antigen_pdb={antigen_pdb}",
+    ] + rosetta_opts.split()
+
+    try:
+        # Run the Rosetta command
+        process = subprocess.run(
+            rosetta_command, cwd=seq_dir, capture_output=True, text=True, check=True
+        )
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Error running RosettaScript for {antibody_seq}: {e.stderr}")
+        return float("inf")  # Return a high score to indicate failure
+
+    # Parse the output score
+    score_file = os.path.join(seq_dir, "score.sc")
+    try:
+        with open(score_file, "r") as f:
+            lines = f.readlines()
+            if len(lines) > 1:
+                header = lines[0].split()
+                score_index = header.index(
+                    "total_score"
+                )  # Dynamically find the score column
+                score = float(lines[1].split()[score_index])
+            else:
+                score = float("inf")
+    except (FileNotFoundError, IndexError, ValueError) as e:
+        logging.error(f"Error parsing score for {antibody_seq}: {e}")
+        score = float("inf")
+
+    return score
+
+
+def rank_antibodies(
+    antibody_seqs: List[str], antigen_pdb: str, output_dir: str, rosetta_opts: str
+) -> List[str]:
+    """
+    Rank antibody sequences based on their binding affinity and structural stability.
+
+    :param antibody_seqs: List of antibody sequences
+    :param antigen_pdb: Path to the antigen PDB file
+    :param output_dir: Directory to store the output files
+    :param rosetta_opts: Additional options for Rosetta
+    :return: List of antibody sequences ranked by binding affinity
+    """
+    scores = {}
+    for seq in antibody_seqs:
+        score = run_rosetta_antibody_protocol(
+            seq, antigen_pdb, output_dir, rosetta_opts
+        )
+        scores[seq] = score
+        if score == float("inf"):
+            logging.info(f"Skipping sequence {seq} due to errors.")
+
+    # Sort sequences by their scores
+    ranked_sequences = sorted(scores, key=scores.get)
+    return ranked_sequences
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Rank antibody sequences based on binding affinity using RosettaAntibody."
+    )
+    parser.add_argument(
+        "--antibody_seqs",
+        type=str,
+        nargs="+",
+        required=True,
+        help="List of antibody sequences",
+    )
+    parser.add_argument(
+        "--antigen_pdb", type=str, required=True, help="Path to the antigen PDB file"
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        required=True,
+        help="Directory to store the output files",
+    )
+    parser.add_argument(
+        "--rosetta_opts", type=str, default="", help="Additional options for Rosetta"
+    )
+
+    args = parser.parse_args()
+
+    ranked_sequences = rank_antibodies(
+        args.antibody_seqs, args.antigen_pdb, args.output_dir, args.rosetta_opts
+    )
+    logging.info("Ranked Antibody Sequences:")
+    for rank, seq in enumerate(ranked_sequences, start=1):
+        print(f"{rank}. {seq}")

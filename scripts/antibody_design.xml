@@ -1,0 +1,33 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+        <ScoreFunction name="ref15" weights="ref15.wts"/>
+    </SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+        <CDR name="cdr_region"/>
+        <AntibodyRegion name="antigen_interface" use_antigen_interface="1"/>
+    </RESIDUE_SELECTORS>
+
+    <TASKOPERATIONS>
+        <OperateOnResidueSubset name="restrict_cdrs" selector="cdr_region">
+            <PreventRepackingRLT/>
+        </OperateOnResidueSubset>
+        <OperateOnResidueSubset name="restrict_interface" selector="antigen_interface">
+            <RestrictToRepacking/>
+        </OperateOnResidueSubset>
+    </TASKOPERATIONS>
+
+    <MOVERS>
+        <FastDesign name="design_cdrs" scorefxn="ref15" task_operations="restrict_cdrs,restrict_interface">
+            <MoveMap name="movemap" bb="0" chi="1"/>
+            <!-- Justification: 5 iterations are chosen based on typical antibody design protocols to balance computational cost and thoroughness of design. -->
+            <iterations cycles="5"/>
+        </FastDesign>
+    </MOVERS>
+
+    <PROTOCOLS>
+        <Add mover_name="design_cdrs"/>
+    </PROTOCOLS>
+
+    <OUTPUT scorefxn="ref15"/>
+</ROSETTASCRIPTS>
