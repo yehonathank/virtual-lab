@@ -4,10 +4,57 @@ import json
 from pathlib import Path
 
 import tiktoken
+from openai import OpenAI
 from openai.pagination import SyncCursorPage
 from openai.types.beta.threads import Message
 
 from constants import MODEL_TO_INPUT_PRICE_PER_TOKEN, MODEL_TO_OUTPUT_PRICE_PER_TOKEN
+
+
+def get_messages(client: OpenAI, thread_id: str) -> list[dict]:
+    """Gets messages from a thread.
+
+    :param client: The OpenAI client.
+    :param thread_id: The ID of the thread to get messages from.
+    :return: A list of messages.
+    """
+    # Set up
+    messages = []
+    last_message = None
+    params = {
+        "thread_id": thread_id,
+        "limit": 100,
+        "order": "asc",
+    }
+
+    # Get all messages from the thread page by page
+    while True:
+        # Set up params
+        if last_message is not None:
+            params["after"] = last_message["id"]
+        else:
+            del params["after"]
+
+        # Get page of messages
+        new_messages = client.beta.threads.messages.list(**params)
+
+        # Convert messages to dictionary
+        new_messages: list[dict] = new_messages.to_dict()["data"]
+
+        # Append new messages
+        messages += new_messages
+
+        # Break if no more messages
+        if len(new_messages) < params["limit"]:
+            break
+
+        # Get last message
+        last_message = messages[-1]
+
+    # Verify all message content is length 1
+    assert all(len(message["content"]) == 1 for message in messages)
+
+    return messages
 
 
 def count_tokens(string: str, encoding_name: str = "cl100k_base") -> int:

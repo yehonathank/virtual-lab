@@ -16,7 +16,13 @@ from prompts import (
     scientific_meeting_team_lead_final_prompt,
     scientific_meeting_team_member_prompt,
 )
-from utils import get_summary, print_cost_and_time, save_meeting, update_token_counts
+from utils import (
+    convert_messages_to_discussion,
+    count_discussion_tokens,
+    get_summary,
+    print_cost_and_time,
+    save_meeting,
+)
 
 client = OpenAI()
 
@@ -32,7 +38,6 @@ def run_scientific_meeting(
     summaries: tuple[str, ...] = (),
     contexts: tuple[str, ...] = (),
     num_rounds: int = 3,
-    max_tokens: int | None = None,
     temperature: float = CONSISTENT_TEMPERATURE,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
     return_summary: bool = False,
@@ -49,7 +54,6 @@ def run_scientific_meeting(
     :param summaries: The summaries of previous meetings.
     :param contexts: The contexts for the meeting.
     :param num_rounds: The number of rounds of discussion.
-    :param max_tokens: The maximum number of tokens per response.
     :param temperature: The sampling temperature.
     :param model: The OpenAI model to use.
     :param return_summary: Whether to return the summary of the meeting.
@@ -73,39 +77,46 @@ def run_scientific_meeting(
     # Set up team
     team = [team_lead] + list(team_members)
 
-    # Set up the discussion with the initial prompt
-    discussion = [
-        {
-            "agent": "User",
-            "message": {
-                "role": "user",
-                "content": scientific_meeting_start_prompt(
-                    team_lead=team_lead,
-                    team_members=team_members,
-                    agenda=agenda,
-                    agenda_questions=agenda_questions,
-                    agenda_rules=agenda_rules,
-                    summaries=summaries,
-                    contexts=contexts,
-                    num_rounds=num_rounds,
-                ),
-            },
-        },
-    ]
-
-    # Track token counts
-    token_counts = {
-        "input": 0,
-        "output": 0,
-        "max": 0,
+    # Set up assistants
+    agent_to_assistant = {
+        agent: client.beta.assistants.create(
+            name=agent.title,
+            instructions=agent.prompt,
+            model=model,
+        )
+        for agent in team
     }
 
+    # Map assistant IDs to agents
+    assistant_id_to_title = {
+        assistant.id: agent.title for agent, assistant in agent_to_assistant.items()
+    }
+
+    # Set up the thread
+    thread = client.beta.threads.create()
+
+    # Set up the discussion with the initial prompt
+    client.beta.threads.messages.create(
+        thread_id=thread.id,
+        role="user",
+        content=scientific_meeting_start_prompt(
+            team_lead=team_lead,
+            team_members=team_members,
+            agenda=agenda,
+            agenda_questions=agenda_questions,
+            agenda_rules=agenda_rules,
+            summaries=summaries,
+            contexts=contexts,
+            num_rounds=num_rounds,
+        ),
+    )
+
     # Loop through rounds
-    for round_index in trange(num_rounds + 1, desc="Rounds (+ Summary Round)", leave=False):
+    for round_index in trange(num_rounds + 1, desc="Rounds (+ Summary Round)"):
         round_num = round_index + 1
 
-        # Loop through team and illicit their response
-        for agent in tqdm(team, desc="Team", leave=False):
+        # Loop through team and elicit responses
+        for agent in tqdm(team, desc="Team"):
             # Special prompt for team lead
             if agent == team_lead:
                 if round_index == 0:
@@ -132,48 +143,39 @@ def run_scientific_meeting(
                     team_member=agent, round_num=round_num, num_rounds=num_rounds
                 )
 
-            # Add prompt to discussion along with team member meta prompt
-            discussion.append(
-                {
-                    "agent": "User",
-                    "message": {
-                        "role": "user",
-                        "content": prompt,
-                    },
-                }
+            # Create message from user to agent
+            client.beta.threads.messages.create(
+                thread_id=thread.id,
+                role="user",
+                content=prompt,
             )
 
-            # Get the response
-            chat_completion = client.chat.completions.create(
-                messages=[agent.message] + [turn["message"] for turn in discussion],
+            # Run the agent
+            run = client.beta.threads.runs.create_and_poll(
+                thread_id=thread.id,
+                assistant_id=agent_to_assistant[agent].id,
                 model=model,
-                stream=False,
                 temperature=temperature,
-                max_tokens=max_tokens,
-            )
-            response = chat_completion.choices[0].message.content
-
-            # Update token counts
-            update_token_counts(
-                token_counts=token_counts,
-                discussion=discussion,
-                response=response,
             )
 
-            # Add the response to the discussion
-            discussion.append(
-                {
-                    "agent": agent.title,
-                    "message": {
-                        "role": "assistant",
-                        "content": response,
-                    },
-                }
-            )
+            # Check run status
+            if run.status != "completed":
+                raise ValueError(f"Run failed: {run.status}")
 
             # If summary round, only team lead responds
             if round_index == num_rounds:
                 break
+
+    # Get messages from the discussion
+    messages = client.beta.threads.messages.list(thread_id=thread.id)
+
+    # Convert messages to discussion format
+    discussion = convert_messages_to_discussion(
+        messages=messages, assistant_id_to_title=assistant_id_to_title
+    )
+
+    # Count discussion tokens
+    token_counts = count_discussion_tokens(discussion=discussion)
 
     # Print cost and time
     print_cost_and_time(

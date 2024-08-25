@@ -51,7 +51,6 @@ def run_individual_meeting(
     :param summaries: The summaries of previous meetings.
     :param contexts: The contexts for the meeting.
     :param num_critiques: The number of critiques and agent rewrites.
-    :param max_tokens: The maximum number of tokens per response.
     :param temperature: The sampling temperature.
     :param model: The OpenAI model to use.
     :param return_summary: Whether to return the summary of the meeting.
@@ -60,24 +59,21 @@ def run_individual_meeting(
     # Start timing the meeting
     start_time = time.time()
 
+    # Set up team
+    team = [team_member] + [SCIENTIFIC_CRITIC]
+
     # Set up the assistants
     agent_to_assistant = {
-        team_member: client.beta.assistants.create(
-            name=team_member.title,
-            instructions=team_member.prompt,
-            # tools=[{"type": "code_interpreter"}],
+        agent: client.beta.assistants.create(
+            name=agent.title,
+            instructions=agent.prompt,
             model=model,
-        ),
-        SCIENTIFIC_CRITIC: client.beta.assistants.create(
-            name=SCIENTIFIC_CRITIC.title,
-            instructions=SCIENTIFIC_CRITIC.prompt,
-            # tools=[{"type": "code_interpreter"}],
-            model=model,
-        ),
+        )
+        for agent in team
     }
 
     # Map assistant IDs to agents
-    assistant_id_to_agent_title = {
+    assistant_id_to_title = {
         assistant.id: agent.title for agent, assistant in agent_to_assistant.items()
     }
 
@@ -85,18 +81,10 @@ def run_individual_meeting(
     thread = client.beta.threads.create()
 
     # Loop through critiques plus one final round
-    for round_index in trange(
-        num_critiques + 1, desc="Critiques (+ Final Round)", leave=False
-    ):
-        # Set up agents with special case for final round (no critique)
-        if round_index == num_critiques:
-            agents = [team_member]
-        else:
-            agents = [team_member, SCIENTIFIC_CRITIC]
-
-        # Loop through agents
-        for agent in tqdm(agents, desc="Agents", leave=False):
-            # Add user prompt based on agent and round number
+    for round_index in trange(num_critiques + 1, desc="Critiques (+ Final Round)"):
+        # Loop through team and elicit responses
+        for agent in tqdm(team, desc="Team"):
+            # Prompt based on agent and round number
             if agent == SCIENTIFIC_CRITIC:
                 prompt = individual_meeting_critic_prompt(
                     critic=SCIENTIFIC_CRITIC, agent=team_member
@@ -135,12 +123,16 @@ def run_individual_meeting(
             if run.status != "completed":
                 raise ValueError(f"Run failed: {run.status}")
 
+            # If summary round, only team member responds
+            if round_index == num_critiques:
+                break
+
     # Get messages from the discussion
     messages = client.beta.threads.messages.list(thread_id=thread.id)
 
     # Convert messages to discussion format
     discussion = convert_messages_to_discussion(
-        messages=messages, assistant_id_to_title=assistant_id_to_agent_title
+        messages=messages, assistant_id_to_title=assistant_id_to_title
     )
 
     # Count discussion tokens
