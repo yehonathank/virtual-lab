@@ -8,6 +8,7 @@ from openai import OpenAI
 from tqdm import trange, tqdm
 
 from agent import Agent
+from constants import CONSISTENT_TEMPERATURE
 from prompts import (
     individual_meeting_agent_prompt,
     individual_meeting_critic_prompt,
@@ -30,7 +31,7 @@ def run_individual_meeting(
     contexts: tuple[str, ...] = (),
     num_critiques: int = 0,
     max_tokens: int | None = None,
-    temperature: float = 0.2,
+    temperature: float = CONSISTENT_TEMPERATURE,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
     return_summary: bool = False,
 ) -> str:
