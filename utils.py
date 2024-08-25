@@ -5,8 +5,6 @@ from pathlib import Path
 
 import tiktoken
 from openai import OpenAI
-from openai.pagination import SyncCursorPage
-from openai.types.beta.threads import Message
 
 from constants import MODEL_TO_INPUT_PRICE_PER_TOKEN, MODEL_TO_OUTPUT_PRICE_PER_TOKEN
 
@@ -32,7 +30,7 @@ def get_messages(client: OpenAI, thread_id: str) -> list[dict]:
         # Set up params
         if last_message is not None:
             params["after"] = last_message["id"]
-        else:
+        elif "after" in params:
             del params["after"]
 
         # Get page of messages
@@ -43,6 +41,8 @@ def get_messages(client: OpenAI, thread_id: str) -> list[dict]:
 
         # Append new messages
         messages += new_messages
+
+        print(f"Got {len(new_messages)} messages")
 
         # Break if no more messages
         if len(new_messages) < params["limit"]:
@@ -155,7 +155,7 @@ def print_cost_and_time(
 
 
 def convert_messages_to_discussion(
-    messages: SyncCursorPage[Message], assistant_id_to_title: dict[str, str]
+    messages: list[dict], assistant_id_to_title: dict[str, str]
 ) -> list[dict[str, str]]:
     """Converts OpenAI messages into discussion format (list of message dictionaries).
 
@@ -163,14 +163,7 @@ def convert_messages_to_discussion(
     :param assistant_id_to_title: A dictionary mapping assistant IDs to titles.
     :return: The discussion format (list of message dictionaries).
     """
-    # Convert messages to dictionary in forward order
-    messages = messages.to_dict()["data"][::-1]
-
-    # Verify all message content is length 1
-    assert all(len(message["content"]) == 1 for message in messages)
-
-    # Convert message format to discussion format
-    discussion = [
+    return [
         {
             "agent": (
                 assistant_id_to_title[message["assistant_id"]]
@@ -181,8 +174,6 @@ def convert_messages_to_discussion(
         }
         for message in messages
     ]
-
-    return discussion
 
 
 def get_summary(discussion: list[dict[str, str]]) -> str:

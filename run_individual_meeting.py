@@ -18,6 +18,7 @@ from prompts import (
 from utils import (
     convert_messages_to_discussion,
     count_discussion_tokens,
+    get_messages,
     get_summary,
     print_cost_and_time,
     save_meeting,
@@ -128,7 +129,7 @@ def run_individual_meeting(
                 break
 
     # Get messages from the discussion
-    messages = client.beta.threads.messages.list(thread_id=thread.id)
+    messages = get_messages(client=client, thread_id=thread.id)
 
     # Convert messages to discussion format
     discussion = convert_messages_to_discussion(
