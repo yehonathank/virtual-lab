@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 
 import tiktoken
+from openai.pagination import SyncCursorPage
+from openai.types.beta.threads import Message
 
 from constants import MODEL_TO_INPUT_PRICE_PER_TOKEN, MODEL_TO_OUTPUT_PRICE_PER_TOKEN
 
@@ -43,6 +45,30 @@ def update_token_counts(
     )
 
 
+def count_discussion_tokens(
+    discussion: list[dict[str, str]],
+) -> dict[str, int]:
+    """Counts the number of tokens in a discussion.
+
+    :param discussion: The discussion to count tokens in.
+    :return: A dictionary of token counts.
+    """
+    token_counts = {
+        "input": 0,
+        "output": 0,
+        "max": 0,
+    }
+
+    for index, turn in enumerate(discussion):
+        update_token_counts(
+            token_counts=token_counts,
+            discussion=discussion[:index],
+            response=turn["message"],
+        )
+
+    return token_counts
+
+
 def compute_token_cost(
     model: str, input_token_count: int, output_token_count: int
 ) -> float:
@@ -79,6 +105,37 @@ def print_cost_and_time(
     # Print cost and time
     print(f"Cost: ${cost:.2f}")
     print(f"Time: {int(elapsed_time // 60)}:{int(elapsed_time % 60):02d}")
+
+
+def convert_messages_to_discussion(
+    messages: SyncCursorPage[Message], assistant_id_to_title: dict[str, str]
+) -> list[dict[str, str]]:
+    """Converts OpenAI messages into discussion format (list of message dictionaries).
+
+    :param messages: The messages to convert.
+    :param assistant_id_to_title: A dictionary mapping assistant IDs to titles.
+    :return: The discussion format (list of message dictionaries).
+    """
+    # Convert messages to dictionary in forward order
+    messages = messages.to_dict()["data"][::-1]
+
+    # Verify all message content is length 1
+    assert all(len(message["content"]) == 1 for message in messages)
+
+    # Convert message format to discussion format
+    discussion = [
+        {
+            "agent": (
+                assistant_id_to_title[message["assistant_id"]]
+                if message["assistant_id"] is not None
+                else "User"
+            ),
+            "message": message["content"][0]["text"]["value"],
+        }
+        for message in messages
+    ]
+
+    return discussion
 
 
 def get_summary(discussion: list[dict[str, str]]) -> str:

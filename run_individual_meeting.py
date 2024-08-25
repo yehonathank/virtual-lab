@@ -15,7 +15,13 @@ from prompts import (
     individual_meeting_start_prompt,
     SCIENTIFIC_CRITIC,
 )
-from utils import get_summary, print_cost_and_time, save_meeting, update_token_counts
+from utils import (
+    convert_messages_to_discussion,
+    count_discussion_tokens,
+    get_summary,
+    print_cost_and_time,
+    save_meeting,
+)
 
 client = OpenAI()
 
@@ -30,7 +36,6 @@ def run_individual_meeting(
     summaries: tuple[str, ...] = (),
     contexts: tuple[str, ...] = (),
     num_critiques: int = 0,
-    max_tokens: int | None = None,
     temperature: float = CONSISTENT_TEMPERATURE,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
     return_summary: bool = False,
@@ -131,46 +136,15 @@ def run_individual_meeting(
                 raise ValueError(f"Run failed: {run.status}")
 
     # Get messages from the discussion
-    messages = client.beta.threads.messages.list(thread_id=thread.id).to_dict()["data"][::-1]
+    messages = client.beta.threads.messages.list(thread_id=thread.id)
 
-    # Verify all message content is length 1
-    assert all(len(message["content"]) == 1 for message in messages)
+    # Convert messages to discussion format
+    discussion = convert_messages_to_discussion(
+        messages=messages, assistant_id_to_title=assistant_id_to_agent_title
+    )
 
-    # Track token counts
-    token_counts = {
-        "input": 0,
-        "output": 0,
-        "max": 0,
-    }
-
-    # Convert message format to discussion format and count tokens
-    discussion = []
-
-    for message in messages:
-        # Get agent title
-        agent_title = (
-            assistant_id_to_agent_title[message["assistant_id"]]
-            if message["assistant_id"] is not None
-            else "User"
-        )
-
-        # Get message content
-        message_content = message["content"][0]["text"]["value"]
-
-        # Update token counts
-        update_token_counts(
-            token_counts=token_counts,
-            discussion=discussion,
-            response=message_content,
-        )
-
-        # Append to discussion
-        discussion.append(
-            {
-                "agent": agent_title,
-                "message": message_content,
-            }
-        )
+    # Count discussion tokens
+    token_counts = count_discussion_tokens(discussion=discussion)
 
     # Print cost and time
     print_cost_and_time(
