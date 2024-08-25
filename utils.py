@@ -23,7 +23,7 @@ def count_tokens(string: str, encoding_name: str = "cl100k_base") -> int:
 
 def update_token_counts(
     token_counts: dict[str, int],
-    discussion: list[dict[str, dict[str, str]]],
+    discussion: list[dict[str, str]],
     response: str,
 ) -> None:
     """Updates the token counts (in place) with a discussion and response.
@@ -32,9 +32,7 @@ def update_token_counts(
     :param discussion: The discussion to update the token counts with.
     :param response: The response to update the token counts with.
     """
-    new_input_token_count = sum(
-        count_tokens(turn["message"]["content"]) for turn in discussion
-    )
+    new_input_token_count = sum(count_tokens(turn["message"]) for turn in discussion)
     new_output_token_count = count_tokens(response)
 
     token_counts["input"] += new_input_token_count
@@ -83,13 +81,13 @@ def print_cost_and_time(
     print(f"Time: {int(elapsed_time // 60)}:{int(elapsed_time % 60):02d}")
 
 
-def get_summary(discussion: list[dict[str, dict[str, str]]]) -> str:
+def get_summary(discussion: list[dict[str, str]]) -> str:
     """Get the summary from a discussion.
 
     :param discussion: The discussion to extract the summary from.
     :return: The summary.
     """
-    return discussion[-1]["message"]["content"]
+    return discussion[-1]["message"]
 
 
 def load_summaries(discussion_paths: list[Path]) -> tuple[str, ...]:
@@ -108,7 +106,7 @@ def load_summaries(discussion_paths: list[Path]) -> tuple[str, ...]:
 
 
 def save_meeting(
-    save_dir: Path, save_name: str, discussion: list[dict[str, dict[str, str]]]
+    save_dir: Path, save_name: str, discussion: list[dict[str, str]]
 ) -> None:
     """Save a meeting discussion to JSON and Markdown files.
 
@@ -126,4 +124,4 @@ def save_meeting(
     # Save the discussion as Markdown
     with open(save_dir / f"{save_name}.md", "w") as file:
         for turn in discussion:
-            file.write(f"## {turn['agent']}\n\n{turn['message']['content']}\n\n")
+            file.write(f"## {turn['agent']}\n\n{turn['message']}\n\n")

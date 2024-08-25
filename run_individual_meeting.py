@@ -55,18 +55,34 @@ def run_individual_meeting(
     # Start timing the meeting
     start_time = time.time()
 
-    # Set up the discussion
-    discussion = []
-
-    # Track token counts
-    token_counts = {
-        "input": 0,
-        "output": 0,
-        "max": 0,
+    # Set up the assistants
+    agent_to_assistant = {
+        team_member: client.beta.assistants.create(
+            name=team_member.title,
+            instructions=team_member.prompt,
+            # tools=[{"type": "code_interpreter"}],
+            model=model,
+        ),
+        SCIENTIFIC_CRITIC: client.beta.assistants.create(
+            name=SCIENTIFIC_CRITIC.title,
+            instructions=SCIENTIFIC_CRITIC.prompt,
+            # tools=[{"type": "code_interpreter"}],
+            model=model,
+        ),
     }
 
+    # Map assistant IDs to agents
+    assistant_id_to_agent_title = {
+        assistant.id: agent.title for agent, assistant in agent_to_assistant.items()
+    }
+
+    # Set up the thread
+    thread = client.beta.threads.create()
+
     # Loop through critiques plus one final round
-    for round_index in trange(num_critiques + 1, desc="Critiques (+ Final Round)", leave=False):
+    for round_index in trange(
+        num_critiques + 1, desc="Critiques (+ Final Round)", leave=False
+    ):
         # Set up agents with special case for final round (no critique)
         if round_index == num_critiques:
             agents = [team_member]
@@ -95,43 +111,66 @@ def run_individual_meeting(
                         critic=SCIENTIFIC_CRITIC, agent=team_member
                     )
 
-            discussion.append(
-                {
-                    "agent": "User",
-                    "message": {
-                        "role": "user",
-                        "content": prompt,
-                    },
-                }
+            # Create message from user to agent
+            client.beta.threads.messages.create(
+                thread_id=thread.id,
+                role="user",
+                content=prompt,
             )
 
-            # Get the response
-            chat_completion = client.chat.completions.create(
-                messages=[agent.message] + [turn["message"] for turn in discussion],
+            # Run the agent
+            run = client.beta.threads.runs.create_and_poll(
+                thread_id=thread.id,
+                assistant_id=agent_to_assistant[agent].id,
                 model=model,
-                stream=False,
                 temperature=temperature,
-                max_tokens=max_tokens,
-            )
-            response = chat_completion.choices[0].message.content
-
-            # Update token counts
-            update_token_counts(
-                token_counts=token_counts,
-                discussion=discussion,
-                response=response,
             )
 
-            # Add the response to the discussion
-            discussion.append(
-                {
-                    "agent": agent.title,
-                    "message": {
-                        "role": "assistant",
-                        "content": response,
-                    },
-                }
-            )
+            # Check run status
+            if run.status != "completed":
+                raise ValueError(f"Run failed: {run.status}")
+
+    # Get messages from the discussion
+    messages = client.beta.threads.messages.list(thread_id=thread.id).to_dict()["data"][::-1]
+
+    # Verify all message content is length 1
+    assert all(len(message["content"]) == 1 for message in messages)
+
+    # Track token counts
+    token_counts = {
+        "input": 0,
+        "output": 0,
+        "max": 0,
+    }
+
+    # Convert message format to discussion format and count tokens
+    discussion = []
+
+    for message in messages:
+        # Get agent title
+        agent_title = (
+            assistant_id_to_agent_title[message["assistant_id"]]
+            if message["assistant_id"] is not None
+            else "User"
+        )
+
+        # Get message content
+        message_content = message["content"][0]["text"]["value"]
+
+        # Update token counts
+        update_token_counts(
+            token_counts=token_counts,
+            discussion=discussion,
+            response=message_content,
+        )
+
+        # Append to discussion
+        discussion.append(
+            {
+                "agent": agent_title,
+                "message": message_content,
+            }
+        )
 
     # Print cost and time
     print_cost_and_time(
