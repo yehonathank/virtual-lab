@@ -5,8 +5,44 @@ from pathlib import Path
 
 import tiktoken
 from openai import OpenAI
+from openai.types.beta.threads.run import Run
 
-from constants import MODEL_TO_INPUT_PRICE_PER_TOKEN, MODEL_TO_OUTPUT_PRICE_PER_TOKEN
+from constants import (
+    MODEL_TO_INPUT_PRICE_PER_TOKEN,
+    MODEL_TO_OUTPUT_PRICE_PER_TOKEN,
+    PUBMED_TOOL_NAME,
+)
+
+
+def run_tools(run: Run) -> list[dict[str, str]]:
+    """Runs the tools in a required action.
+
+    :param run: The run to run tools for.
+    :return: A list of tool outputs.
+    """
+    # Define the list to store tool outputs
+    tool_outputs = []
+
+    # Loop through each tool in the required action and run it
+    for tool in run.required_action.submit_tool_outputs.tool_calls:
+        if tool.function.name == PUBMED_TOOL_NAME:
+            # Extract the query from the tool arguments
+            arguments = json.loads(tool.function.arguments)
+            query = arguments["query"]
+            print(query)
+
+            # Run the tool and append the output to the list of tool outputs
+            tool_outputs.append(
+                {
+                    "tool_call_id": tool.id,
+                    "output": "Efficient evolution of human antibodies from general protein language models: "
+                    "The most important paper on ESM for antibody design.",
+                }
+            )
+        else:
+            raise ValueError(f"Unknown tool: {tool.function.name}")
+
+    return tool_outputs
 
 
 def get_messages(client: OpenAI, thread_id: str) -> list[dict]:
@@ -41,8 +77,6 @@ def get_messages(client: OpenAI, thread_id: str) -> list[dict]:
 
         # Append new messages
         messages += new_messages
-
-        print(f"Got {len(new_messages)} messages")
 
         # Break if no more messages
         if len(new_messages) < params["limit"]:

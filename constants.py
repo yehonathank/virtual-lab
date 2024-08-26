@@ -12,3 +12,22 @@ MODEL_TO_OUTPUT_PRICE_PER_TOKEN = {
 
 CONSISTENT_TEMPERATURE = 0.2
 CREATIVE_TEMPERATURE = 0.8
+
+PUBMED_TOOL_NAME = "pubmed_search"
+PUBMED_TOOL_DESCRIPTION = {
+    "type": "function",
+    "function": {
+        "name": PUBMED_TOOL_NAME,
+        "description": "Get full text biomedical and life sciences articles from PubMed Central",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "The search query to use to search PubMed Central for scientific articles.",
+                },
+            },
+            "required": ["query"],
+        },
+    },
+}

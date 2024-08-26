@@ -8,7 +8,7 @@ from openai import OpenAI
 from tqdm import trange, tqdm
 
 from agent import Agent
-from constants import CONSISTENT_TEMPERATURE
+from constants import CONSISTENT_TEMPERATURE, PUBMED_TOOL_DESCRIPTION
 from prompts import (
     individual_meeting_agent_prompt,
     individual_meeting_critic_prompt,
@@ -21,6 +21,7 @@ from utils import (
     get_messages,
     get_summary,
     print_cost_and_time,
+    run_tools,
     save_meeting,
 )
 
@@ -68,6 +69,7 @@ def run_individual_meeting(
         agent: client.beta.assistants.create(
             name=agent.title,
             instructions=agent.prompt,
+            tools=[PUBMED_TOOL_DESCRIPTION],
             model=model,
         )
         for agent in team
@@ -119,6 +121,16 @@ def run_individual_meeting(
                 model=model,
                 temperature=temperature,
             )
+
+            # Check if run requires action
+            if run.status == "requires_action":
+                # Run the tools
+                tool_outputs = run_tools(run=run)
+
+                # Submit the tool outputs
+                run = client.beta.threads.runs.submit_tool_outputs_and_poll(
+                    thread_id=thread.id, run_id=run.id, tool_outputs=tool_outputs
+                )
 
             # Check run status
             if run.status != "completed":
