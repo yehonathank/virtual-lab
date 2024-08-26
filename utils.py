@@ -1,8 +1,10 @@
 """Contains useful utility functions."""
 
 import json
+import urllib.parse
 from pathlib import Path
 
+import requests
 import tiktoken
 from openai import OpenAI
 from openai.types.beta.threads.run import Run
@@ -12,6 +14,40 @@ from constants import (
     MODEL_TO_OUTPUT_PRICE_PER_TOKEN,
     PUBMED_TOOL_NAME,
 )
+
+
+def run_pubmed_search(query: str) -> str:
+    """Runs a PubMed search, returning the full text of the top matching article.
+
+    :param query: The query to search PubMed with.
+    :return: The full text of the top matching article.
+    """
+    # Perform PubMed Central search for query to get PMC ID
+    search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term={urllib.parse.quote_plus(query)}&retmode=json"
+    response = requests.get(search_url)
+    response.raise_for_status()
+    pmc_id = response.json()["esearchresult"]["idlist"][0]
+
+    # Get full text of article from PMC ID in JSON form
+    text_url = f"https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_JSON/PMC{pmc_id}/unicode"
+    response = requests.get(text_url)
+    response.raise_for_status()
+    article = response.json()
+
+    # Check if article is valid
+    if len(article) != 1 or len(article[0]["documents"]) != 1:
+        raise ValueError("Expected exactly one article")
+
+    # Get full text of article (excluding references)
+    document = article[0]["documents"][0]
+
+    full_text = "\n".join(
+        f"{passage['infons']['section_type']} ({passage['infons']['type']}): {passage['text']}"
+        for passage in document["passages"]
+        if passage["infons"]["section_type"] != "REF"
+    )
+
+    return full_text
 
 
 def run_tools(run: Run) -> list[dict[str, str]]:
@@ -29,14 +65,12 @@ def run_tools(run: Run) -> list[dict[str, str]]:
             # Extract the query from the tool arguments
             arguments = json.loads(tool.function.arguments)
             query = arguments["query"]
-            print(query)
 
             # Run the tool and append the output to the list of tool outputs
             tool_outputs.append(
                 {
                     "tool_call_id": tool.id,
-                    "output": "Efficient evolution of human antibodies from general protein language models: "
-                    "The most important paper on ESM for antibody design.",
+                    "output": run_pubmed_search(query=query),
                 }
             )
         else:
