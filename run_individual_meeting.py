@@ -69,7 +69,7 @@ def run_individual_meeting(
         agent: client.beta.assistants.create(
             name=agent.title,
             instructions=agent.prompt,
-            tools=[PUBMED_TOOL_DESCRIPTION],
+            # tools=[PUBMED_TOOL_DESCRIPTION],  # TODO: turn on PubMed search
             model=model,
         )
         for agent in team

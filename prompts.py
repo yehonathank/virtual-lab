@@ -556,12 +556,6 @@ ANTIBODIES_CONTEXTS = (
 )
 
 
-with open(
-    "papers/Efficient evolution of human antibodies from general protein language models.txt"
-) as f:
-    ESM_ANTIBODIES_PAPER = f.read()
-
-
 with open("emerald/emerald_experiments_7.3.24.txt") as f:
     ECL_EXPERIMENTS = f.read()
 
