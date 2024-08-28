@@ -27,8 +27,6 @@ from utils import (
     save_meeting,
 )
 
-client = OpenAI()
-
 
 def run_scientific_meeting(
     team_lead: Agent,
@@ -64,6 +62,9 @@ def run_scientific_meeting(
     """
     # Start timing the meeting
     start_time = time.time()
+
+    # Set up client
+    client = OpenAI()
 
     # Ensure team members is non-empty
     if len(team_members) == 0:

@@ -26,8 +26,6 @@ from utils import (
     save_meeting,
 )
 
-client = OpenAI()
-
 
 def run_individual_meeting(
     team_member: Agent,
@@ -61,6 +59,9 @@ def run_individual_meeting(
     """
     # Start timing the meeting
     start_time = time.time()
+
+    # Set up client
+    client = OpenAI()
 
     # Set up team
     team = [team_member] + [SCIENTIFIC_CRITIC]

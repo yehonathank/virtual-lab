@@ -39,11 +39,11 @@ def run_pubmed_search(query: str, num_articles: int = 3, verbose: bool = True) -
 
     # Loop through top articles
     full_texts = []
+    pmc_ids_used = []
 
-    article_count = 0
     for pmc_id in pmc_ids:
         # Break if reached desired number of articles
-        if article_count >= num_articles:
+        if len(pmc_ids_used) >= num_articles:
             break
 
         # Get full text of article from PMC ID in JSON form
@@ -74,15 +74,15 @@ def run_pubmed_search(query: str, num_articles: int = 3, verbose: bool = True) -
         )
 
         full_texts.append(full_text)
-        article_count += 1
+        pmc_ids_used.append(pmc_id)
 
-    # Note if not enough articles found
-    if article_count < num_articles:
+    # Print articles found
+    article_count = len(full_texts)
+
+    if verbose:
         print(
-            f"Warning: Only found {article_count} articles on PubMed Central ({num_articles} requested)"
+            f"Found {article_count} articles on PubMed Central: {', '.join(pmc_ids_used)}"
         )
-    else:
-        print(f"Found {article_count} articles on PubMed Central")
 
     # Combine full texts
     combined_text = format_references(
