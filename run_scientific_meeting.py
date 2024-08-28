@@ -19,6 +19,7 @@ from prompts import (
 from utils import (
     convert_messages_to_discussion,
     count_discussion_tokens,
+    count_tokens,
     get_messages,
     get_summary,
     print_cost_and_time,
@@ -84,7 +85,7 @@ def run_scientific_meeting(
         agent: client.beta.assistants.create(
             name=agent.title,
             instructions=agent.prompt,
-            # tools=[PUBMED_TOOL_DESCRIPTION],  # TODO: turn on PubMed search
+            tools=[PUBMED_TOOL_DESCRIPTION],
             model=model,
         )
         for agent in team
@@ -94,6 +95,9 @@ def run_scientific_meeting(
     assistant_id_to_title = {
         assistant.id: agent.title for agent, assistant in agent_to_assistant.items()
     }
+
+    # Set up tool token count
+    tool_token_count = 0
 
     # Set up the thread
     thread = client.beta.threads.create()
@@ -166,6 +170,11 @@ def run_scientific_meeting(
                 # Run the tools
                 tool_outputs = run_tools(run=run)
 
+                # Update tool token count
+                tool_token_count += sum(
+                    count_tokens(tool_output["output"]) for tool_output in tool_outputs
+                )
+
                 # Submit the tool outputs
                 run = client.beta.threads.runs.submit_tool_outputs_and_poll(
                     thread_id=thread.id, run_id=run.id, tool_outputs=tool_outputs
@@ -189,6 +198,9 @@ def run_scientific_meeting(
 
     # Count discussion tokens
     token_counts = count_discussion_tokens(discussion=discussion)
+
+    # Add tool token count to total token count
+    token_counts["tool"] = tool_token_count
 
     # Print cost and time
     print_cost_and_time(

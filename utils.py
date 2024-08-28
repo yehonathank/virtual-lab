@@ -14,40 +14,84 @@ from constants import (
     MODEL_TO_OUTPUT_PRICE_PER_TOKEN,
     PUBMED_TOOL_NAME,
 )
+from prompts import format_references
 
 
-def run_pubmed_search(query: str) -> str:
+def run_pubmed_search(query: str, num_articles: int = 3, verbose: bool = True) -> str:
     """Runs a PubMed search, returning the full text of the top matching article.
 
     :param query: The query to search PubMed with.
+    :param num_articles: The number of articles to search for.
+    :param verbose: Whether to print verbose output.
     :return: The full text of the top matching article.
     """
+    # Print search query
+    if verbose:
+        print(
+            f'Searching PubMed Central for {num_articles} articles with query: "{query}"'
+        )
+
     # Perform PubMed Central search for query to get PMC ID
-    search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term={urllib.parse.quote_plus(query)}&retmode=json"
+    search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term={urllib.parse.quote_plus(query)}&retmax={2 * num_articles}&retmode=json&sort=relevance"
     response = requests.get(search_url)
     response.raise_for_status()
-    pmc_id = response.json()["esearchresult"]["idlist"][0]
+    pmc_ids = response.json()["esearchresult"]["idlist"]
 
-    # Get full text of article from PMC ID in JSON form
-    text_url = f"https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_JSON/PMC{pmc_id}/unicode"
-    response = requests.get(text_url)
-    response.raise_for_status()
-    article = response.json()
+    # Loop through top articles
+    full_texts = []
 
-    # Check if article is valid
-    if len(article) != 1 or len(article[0]["documents"]) != 1:
-        raise ValueError("Expected exactly one article")
+    article_count = 0
+    for pmc_id in pmc_ids:
+        # Break if reached desired number of articles
+        if article_count >= num_articles:
+            break
 
-    # Get full text of article (excluding references)
-    document = article[0]["documents"][0]
+        # Get full text of article from PMC ID in JSON form
+        text_url = f"https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_JSON/PMC{pmc_id}/unicode"
+        response = requests.get(text_url)
+        response.raise_for_status()
 
-    full_text = "\n".join(
-        f"{passage['infons']['section_type']} ({passage['infons']['type']}): {passage['text']}"
-        for passage in document["passages"]
-        if passage["infons"]["section_type"] != "REF"
+        try:
+            article = response.json()
+        except json.JSONDecodeError:
+            if verbose:
+                print(
+                    f'Warning: Error decoding JSON for PMC ID {pmc_id}, "{response.text}"'
+                )
+            continue
+
+        # Check if article is valid
+        if len(article) != 1 or len(article[0]["documents"]) != 1:
+            raise ValueError("Expected exactly one article")
+
+        # Get full text of article (excluding references)
+        document = article[0]["documents"][0]
+
+        full_text = "\n".join(
+            f"{passage['infons']['section_type']} ({passage['infons']['type']}): {passage['text']}"
+            for passage in document["passages"]
+            if passage["infons"]["section_type"] != "REF"
+        )
+
+        full_texts.append(full_text)
+        article_count += 1
+
+    # Note if not enough articles found
+    if article_count < num_articles:
+        print(
+            f"Warning: Only found {article_count} articles on PubMed Central ({num_articles} requested)"
+        )
+    else:
+        print(f"Found {article_count} articles on PubMed Central")
+
+    # Combine full texts
+    combined_text = format_references(
+        references=tuple(full_texts),
+        reference_type="paper",
+        intro=f'Here are the top {article_count} articles on PubMed Central for the query "{query}":',
     )
 
-    return full_text
+    return combined_text
 
 
 def run_tools(run: Run) -> list[dict[str, str]]:
@@ -65,12 +109,13 @@ def run_tools(run: Run) -> list[dict[str, str]]:
             # Extract the query from the tool arguments
             arguments = json.loads(tool.function.arguments)
             query = arguments["query"]
+            num_articles = arguments["num_articles"]
 
             # Run the tool and append the output to the list of tool outputs
             tool_outputs.append(
                 {
                     "tool_call_id": tool.id,
-                    "output": run_pubmed_search(query=query),
+                    "output": run_pubmed_search(query=query, num_articles=num_articles),
                 }
             )
         else:
@@ -208,12 +253,13 @@ def print_cost_and_time(
     # Print token counts
     print(f"Input token count: {token_counts['input']:,}")
     print(f"Output token count: {token_counts['output']:,}")
+    print(f"Tool token count: {token_counts['tool']:,}")
     print(f"Max token length: {token_counts['max']:,}")
 
     # Compute cost
     cost = compute_token_cost(
         model=model,
-        input_token_count=token_counts["input"],
+        input_token_count=token_counts["input"] + token_counts["tool"],
         output_token_count=token_counts["output"],
     )
 
