@@ -39,6 +39,7 @@ def run_individual_meeting(
     num_critiques: int = 0,
     temperature: float = CONSISTENT_TEMPERATURE,
     model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
+    pubmed_search: bool = False,
     return_summary: bool = False,
 ) -> str:
     """Runs an individual meeting with an LLM agent.
@@ -54,6 +55,7 @@ def run_individual_meeting(
     :param num_critiques: The number of critiques and agent rewrites.
     :param temperature: The sampling temperature.
     :param model: The OpenAI model to use.
+    :param pubmed_search: Whether to include a PubMed search tool.
     :param return_summary: Whether to return the summary of the meeting.
     :return: The summary of the meeting (i.e., the last message) if return_summary is True, else None.
     """
@@ -66,13 +68,16 @@ def run_individual_meeting(
     # Set up team
     team = [team_member] + [SCIENTIFIC_CRITIC]
 
+    # Set up tools
+    assistant_params = {"tools": [PUBMED_TOOL_DESCRIPTION]} if pubmed_search else {}
+
     # Set up the assistants
     agent_to_assistant = {
         agent: client.beta.assistants.create(
             name=agent.title,
             instructions=agent.prompt,
-            tools=[PUBMED_TOOL_DESCRIPTION],
             model=model,
+            **assistant_params,
         )
         for agent in team
     }
