@@ -185,8 +185,8 @@ def format_references(
     return f"{intro}\n\n{'\n\n'.join(formatted_references)}\n\n"
 
 
-# Scientific meeting prompts
-def scientific_meeting_start_prompt(
+# Team meeting prompts
+def team_meeting_start_prompt(
     team_lead: Agent,
     team_members: tuple[Agent, ...],
     agenda: str,
@@ -196,7 +196,7 @@ def scientific_meeting_start_prompt(
     contexts: tuple[str, ...] = (),
     num_rounds: int = 1,
 ) -> str:
-    """Generates the start prompt for a scientific meeting.
+    """Generates the start prompt for a tean meeting.
 
     :param team_lead: The team lead.
     :param team_members: The team members.
@@ -206,10 +206,10 @@ def scientific_meeting_start_prompt(
     :param summaries: The summaries of previous meetings.
     :param contexts: The contexts for the meeting.
     :param num_rounds: The number of rounds of discussion.
-    :return: The start prompt for the scientific meeting.
+    :return: The start prompt for the tean meeting.
     """
     return (
-        f"This is the beginning of a scientific meeting to discuss your research project. "
+        f"This is the beginning of a team meeting to discuss your research project. "
         f"This is a meeting with the team lead, {team_lead.title}, and the following team members: "
         f"{', '.join(team_member.title for team_member in team_members)}.\n\n"
         f"{format_references(contexts, reference_type='context', intro='Here is context for this meeting:')}"
@@ -224,8 +224,8 @@ def scientific_meeting_start_prompt(
     )
 
 
-def scientific_meeting_team_lead_initial_prompt(team_lead: Agent) -> str:
-    """Generates the initial prompt for the team lead in a scientific meeting.
+def team_meeting_team_lead_initial_prompt(team_lead: Agent) -> str:
+    """Generates the initial prompt for the team lead in a team meeting.
 
     :param team_lead: The team lead.
     :return: The initial prompt for the team lead.
@@ -233,10 +233,10 @@ def scientific_meeting_team_lead_initial_prompt(team_lead: Agent) -> str:
     return f"{team_lead}, please provide your initial thoughts on the agenda as well as any questions you have to guide the discussion among the team members."
 
 
-def scientific_meeting_team_member_prompt(
+def team_meeting_team_member_prompt(
     team_member: Agent, round_num: int, num_rounds: int
 ) -> str:
-    """Generates the prompt for a team member in a scientific meeting.
+    """Generates the prompt for a team member in a team meeting.
 
     :param team_member: The team member.
     :param round_num: The current round number.
@@ -250,10 +250,10 @@ def scientific_meeting_team_member_prompt(
     )
 
 
-def scientific_meeting_team_lead_intermediate_prompt(
+def team_meeting_team_lead_intermediate_prompt(
     team_lead: Agent, round_num: int, num_rounds: int
 ) -> str:
-    """Generates the intermediate prompt for the team lead in a scientific meeting at the end of a round of discussion.
+    """Generates the intermediate prompt for the team lead in a team meeting at the end of a round of discussion.
 
     :param team_lead: The team lead.
     :param round_num: The current round number.
@@ -263,13 +263,13 @@ def scientific_meeting_team_lead_intermediate_prompt(
     return f"This concludes round {round_num} of {num_rounds} of discussion. {team_lead}, please {SYNTHESIS_PROMPT}."
 
 
-def scientific_meeting_team_lead_final_prompt(
+def team_meeting_team_lead_final_prompt(
     team_lead: Agent,
     agenda: str,
     agenda_questions: tuple[str, ...] = (),
     agenda_rules: tuple[str, ...] = (),
 ) -> str:
-    """Generates the final prompt for the team lead in a scientific meeting to summarize the discussion.
+    """Generates the final prompt for the team lead in a team meeting to summarize the discussion.
 
     :param team_lead: The team lead.
     :param agenda: The agenda for the meeting.
