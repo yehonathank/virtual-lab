@@ -239,6 +239,12 @@ def compute_token_cost(
     :param output_token_count: The number of tokens in the output.
     :return: The token cost of the model.
     """
+    if (
+        model not in MODEL_TO_INPUT_PRICE_PER_TOKEN
+        or model not in MODEL_TO_OUTPUT_PRICE_PER_TOKEN
+    ):
+        raise ValueError(f'Cost of model "{model}" not known')
+
     return (
         input_token_count * MODEL_TO_INPUT_PRICE_PER_TOKEN[model]
         + output_token_count * MODEL_TO_OUTPUT_PRICE_PER_TOKEN[model]
@@ -256,15 +262,18 @@ def print_cost_and_time(
     print(f"Tool token count: {token_counts['tool']:,}")
     print(f"Max token length: {token_counts['max']:,}")
 
-    # Compute cost
-    cost = compute_token_cost(
-        model=model,
-        input_token_count=token_counts["input"] + token_counts["tool"],
-        output_token_count=token_counts["output"],
-    )
+    # Compute and print cost
+    try:
+        cost = compute_token_cost(
+            model=model,
+            input_token_count=token_counts["input"] + token_counts["tool"],
+            output_token_count=token_counts["output"],
+        )
+        print(f"Cost: ${cost:.2f}")
+    except ValueError as e:
+        print(f"Warning: {e}")
 
-    # Print cost and time
-    print(f"Cost: ${cost:.2f}")
+    # Print time
     print(f"Time: {int(elapsed_time // 60)}:{int(elapsed_time % 60):02d}")
 
 

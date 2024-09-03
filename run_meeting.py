@@ -46,7 +46,7 @@ def run_meeting(
     contexts: tuple[str, ...] = (),
     num_rounds: int = 0,
     temperature: float = CONSISTENT_TEMPERATURE,
-    model: Literal["gpt-4o", "gpt-3.5-turbo"] = "gpt-4o",
+    model: str = "gpt-4o-2024-08-06",
     pubmed_search: bool = False,
     return_summary: bool = False,
 ) -> str:
