@@ -41,7 +41,13 @@ done
 To convert the ESM-designed mutated nanobody sequences to AlphaFold-Multimer nanobody-spike sequence inputs, use the following command:
 
 ```bash
-TODO
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
+    --spike_sequences_path nanobody_design/sequences/spike.csv \
+    --nanobody_sequences_path nanobody_design/designed/esm/${NANOBODY}.csv \
+    --save_dir nanobody_design/designed/alphafold/sequences/${NANOBODY}
+done
 ````
 
 
