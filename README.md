@@ -1,6 +1,6 @@
 # Virtual Lab
 
-This repository contains code related to building a virtual lab with large language model agents.
+This repository contains code related to building a virtual lab with large language model (LLM) agents.
 
 ## Installation
 
@@ -20,4 +20,6 @@ Save the Open AI API key as the environment variable `OPENAI_API_KEY`.
 
 ## Usage
 
-Run one of the notebooks, either `run_antibody_design.ipynb` or `run_drug_discovery.ipynb`.
+Run one of the notebooks, either `run_nanobody_design.ipynb` or `run_drug_discovery.ipynb`.
+
+TODO: set up as a Python package and move the ipynb notebooks into their relevant directories.
