@@ -1,0 +1,2 @@
+biopython==1.82
+transformers==4.44.2
