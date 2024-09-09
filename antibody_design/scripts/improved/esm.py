@@ -2,6 +2,25 @@ import argparse
 from transformers import EsmForMaskedLM, EsmTokenizer
 import torch
 from typing import List, Tuple
+from torch.utils.data import DataLoader, Dataset
+from tqdm import tqdm
+
+class MutationDataset(Dataset):
+    def __init__(self, seq: str, amino_acids: str):
+        self.seq = seq
+        self.amino_acids = amino_acids
+        self.mutations = [
+            (pos, aa) for pos in range(len(seq))
+            for aa in amino_acids if seq[pos] != aa
+        ]
+
+    def __len__(self):
+        return len(self.mutations)
+
+    def __getitem__(self, idx):
+        pos, aa = self.mutations[idx]
+        mutated_sequence = self.seq[:pos] + aa + self.seq[pos + 1:]
+        return pos, self.seq[pos], aa, mutated_sequence
 
 def parse_arguments() -> Tuple[str, int, int]:
     """Parse command-line arguments to get the nanobody sequence, display limit, and batch size.
@@ -12,7 +31,7 @@ def parse_arguments() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser(description='Identify promising point mutations in a nanobody sequence using ESM log-likelihoods.')
     parser.add_argument('nanobody_sequence', type=str, help='The amino acid sequence of the nanobody in single-letter code.')
     parser.add_argument('--top-n', type=int, default=10, help='Number of top mutations to display (default: 10). Must be a positive integer.')
-    parser.add_argument('--batch-size', type=int, default=32, help='Batch size for processing mutations (default: 32). Must be a positive integer.')
+    parser.add_argument('--batch-size', type=int, default=16, help='Batch size for mutant log-likelihood calculations (default: 16). Must be a positive integer.')
     args = parser.parse_args()
 
     # Validate inputs
@@ -38,32 +57,36 @@ def compute_log_likelihood_ratios(seq: str, model, tokenizer, batch_size: int) -
         List[Tuple[int, str, str, float]]: A list of tuples containing position, original amino acid, mutated amino acid, and log-likelihood ratio.
     """
     try:
-        encoded_input = tokenizer(seq, return_tensors='pt', add_special_tokens=True)
-        original_output = model(**encoded_input)
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model.to(device)
+        model.eval()
+
+        encoded_input = tokenizer(seq, return_tensors='pt', add_special_tokens=True).to(device)
+        with torch.no_grad():
+            original_output = model(**encoded_input)
 
         log_likelihoods = []
         amino_acids = 'ACDEFGHIKLMNPQRSTVWY'
-        mutation_batches = []
+        dataset = MutationDataset(seq, amino_acids)
+        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=False)
 
-        for pos in range(1, len(seq) + 1):  # Skip [CLS] token which is at index 0
-            for aa in amino_acids:
-                if seq[pos - 1] == aa:
-                    continue
+        for batch in tqdm(dataloader, desc="Calculating log-likelihoods"):
+            positions, original_aas, mutated_aas, mutated_sequences = batch
+            mutated_inputs = tokenizer(list(mutated_sequences), return_tensors='pt', padding=True, truncation=True, add_special_tokens=True).to(device)
 
-                mutated_sequence = seq[:pos - 1] + aa + seq[pos:]
-                mutation_batches.append((pos, seq[pos - 1], aa, mutated_sequence))
+            with torch.no_grad():
+                mutated_outputs = model(**mutated_inputs)
 
-        # Process mutations in batches
-        for i in range(0, len(mutation_batches), batch_size):
-            batch = mutation_batches[i:i + batch_size]
-            mutated_inputs = tokenizer([mut[3] for mut in batch], return_tensors='pt', padding=True, truncation=True, add_special_tokens=True)
-            mutated_outputs = model(**mutated_inputs)
+            for i in range(len(positions)):
+                pos = positions[i].item()
+                original_aa = original_aas[i]
+                mutated_aa = mutated_aas[i]
 
-            for j, (pos, original_aa, mutated_aa, _) in enumerate(batch):
-                original_ll = original_output.logits[0, pos, tokenizer.convert_tokens_to_ids(original_aa)].item()
-                mutated_ll = mutated_outputs.logits[j, pos, tokenizer.convert_tokens_to_ids(mutated_aa)].item()
+                original_ll = original_output.logits[0, pos + 1, tokenizer.convert_tokens_to_ids(original_aa)].item()
+                mutated_ll = mutated_outputs.logits[i, pos + 1, tokenizer.convert_tokens_to_ids(mutated_aa)].item()
                 ll_ratio = mutated_ll - original_ll
-                log_likelihoods.append((pos, original_aa, mutated_aa, ll_ratio))
+
+                log_likelihoods.append((pos + 1, original_aa, mutated_aa, ll_ratio))
 
         return sorted(log_likelihoods, key=lambda x: x[3], reverse=True)
     except Exception as e:
