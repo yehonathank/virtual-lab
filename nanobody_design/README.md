@@ -37,3 +37,5 @@ To run the Rosetta model, use the following command:
 ```bash
 python nanobody_design/scripts/improved/rosetta.py
 ```
+
+TODO: subsequent rounds
