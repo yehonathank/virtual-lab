@@ -112,7 +112,7 @@ def process_directory(directory: str, nanobody_chain_id: str, antigen_chain_id: 
         distance_threshold (float): Distance threshold for defining interface residues.
         output_file (str): Path to the output CSV file.
     """
-    pdb_files = list(Path(directory).glob('**/*unrelaxed_rank_001*.pdb'))
+    pdb_files = sorted(Path(directory).glob('**/*unrelaxed_rank_001*.pdb'))
     if not pdb_files:
         logging.error(f"No PDB files found in the directory '{directory}'.")
         return
@@ -154,4 +154,5 @@ def main():
     process_directory(args.directory, args.nanobody_chain_id, args.antigen_chain_id, args.distance_threshold, args.output_file)
 
 if __name__ == '__main__':
+    """Example usage: python antibody_design/scripts/human_fixes/alphafold.py nanobody_analysis/structures/ A B test.csv"""
     main()
