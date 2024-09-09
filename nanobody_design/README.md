@@ -19,7 +19,15 @@ Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobod
 To run the ESM model, use the following command:
 
 ```bash
-python nanobody_design/scripts/improved/esm.py
+mkdir -p nanobody_design/designed/esm
+
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/improved/esm.py \
+    nanobody_design/sequences/nanobodies.csv \
+    ${NANOBODY} \
+    --output_csv nanobody_design/designed/esm/${NANOBODY}.csv
+done
 ```
 
 ## AlphaFold-Multimer
