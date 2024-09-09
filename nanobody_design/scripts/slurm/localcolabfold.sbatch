@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --array=0-27
+#SBATCH --array=0-39
 #SBATCH --partition=jamesz,sfgf,gpu
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/localcolabfold/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/localcolabfold/%a.err
@@ -28,20 +28,21 @@ conda activate localcolabfold
 
 cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
-mkdir -p nanobody_design/designed/alphafold/structures
-
 experiments=()
 
-for FILE in nanobody_design/designed/alphafold/sequences/*.fasta
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+for FILE in nanobody_design/designed/alphafold/sequences/${NANOBODY}/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
-experiments+=("colabfold_batch $FILE nanobody_design/designed/alphafold/structures/$NAME")
+experiments+=("colabfold_batch $FILE nanobody_design/designed/alphafold/structures/${NANOBODY}/$NAME")
+done
 done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}
 echo "Task ID = $SLURM_ARRAY_TASK_ID"
 echo "Number of experiments = ${#experiments[@]}"
-echo $command
+echo "$command"
 time (eval "$command")
 
 echo "Done"

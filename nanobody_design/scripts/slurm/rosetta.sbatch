@@ -38,7 +38,7 @@ InterfaceAnalyzer.default.linuxgccrelease -s ${ID}_relax/${ID}_0001.pdb -interfa
 command=${experiments[SLURM_ARRAY_TASK_ID]}
 echo "Task ID = $SLURM_ARRAY_TASK_ID"
 echo "Number of experiments = ${#experiments[@]}"
-echo $command
+echo "$command"
 time (eval "$command")
 
 echo "Done"
