@@ -1,0 +1,32 @@
+<ROSETTASCRIPTS>
+    <SCOREFXNS>
+        <!-- The ref15.wts score function is chosen for its balance of speed and accuracy in interface energy calculations.
+             This score function is known to provide reliable results for protein-protein interactions. -->
+        <ScoreFunction name="ref15" weights="ref15.wts"/>
+    </SCOREFXNS>
+
+    <RESIDUE_SELECTORS>
+        <!-- Chains are set as variables, allowing flexibility in specifying which chains are antibody and antigen.
+             Users can specify the chains via script variables, ensuring adaptability to different PDB files. -->
+        <Chain name="antibody_chain" chains="%%antibody_chain%%"/>
+        <Chain name="antigen_chain" chains="%%antigen_chain%%"/>
+    </RESIDUE_SELECTORS>
+
+    <FILTERS>
+        <!-- InterfaceEnergy filter calculates the binding energy by evaluating interactions across the interface.
+             The jump index '1' is typically the first interface in Rosetta's jump definitions. -->
+        <InterfaceEnergy name="binding_energy" scorefxn="ref15" jump="1" threshold="0"/>
+    </FILTERS>
+
+    <MOVERS>
+        <!-- Prepack mover aims to relax the side chains at the interface to potentially yield more accurate energy calculations. -->
+        <PackRotamersMover name="prepack" scorefxn="ref15" task_operations="restrict_to_interface"/>
+    </MOVERS>
+
+    <PROTOCOLS>
+        <Add mover="prepack"/>
+        <Add filter="binding_energy"/>
+    </PROTOCOLS>
+
+    <OUTPUT scorefxn="ref15"/>
+</ROSETTASCRIPTS>
