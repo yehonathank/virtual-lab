@@ -45,6 +45,7 @@ for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --spike_sequences_path nanobody_design/sequences/spike.csv \
+    --spike_name KP3 \
     --nanobody_sequences_path nanobody_design/designed/esm/${NANOBODY}.csv \
     --save_dir nanobody_design/designed/alphafold/sequences/${NANOBODY} \
     --top_n 10

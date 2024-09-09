@@ -1,4 +1,4 @@
-"""Convert ESM mutated nanobody sequences spike-nanobody sequences for input to AlphaFold."""
+"""Converts ESM mutated nanobody sequences to spike-nanobody sequences for input to AlphaFold."""
 
 from pathlib import Path
 
@@ -11,6 +11,7 @@ from Bio.SeqRecord import SeqRecord
 
 def esm_to_alphafold(
     spike_sequences_path: Path,
+    spike_name: str,
     nanobody_sequences_path: Path,
     save_dir: Path,
     top_n: int = 10,
@@ -22,9 +23,10 @@ def esm_to_alphafold(
     nanobody_mutated_aa_col: str = "mutated_aa",
     nanobody_llr_col: str = "log_likelihood_ratio",
 ) -> None:
-    """Convert ESM mutated nanobody sequences spike-nanobody sequences for input to AlphaFold
+    """Converts ESM mutated nanobody sequences to spike-nanobody sequences for input to AlphaFold.
 
     :param spike_sequences_path: Path to a CSV file containing spike protein sequences.
+    :param spike_name: Name of the spike protein.
     :param nanobody_sequences_path: Path to a CSV file containing mutated nanobody sequences from ESM.
     :param save_dir: Directory to save the paired nanobody-spike sequences for input to AlphaFold.
     :param top_n: Number of top mutations to display.
@@ -40,6 +42,15 @@ def esm_to_alphafold(
     spike = pd.read_csv(spike_sequences_path)
     nanobody = pd.read_csv(nanobody_sequences_path)
 
+    # Get spike sequence and name
+    spike = spike[spike[spike_name_col] == spike_name]
+
+    if len(spike) != 1:
+        raise ValueError(f"Invalid spike name '{spike_name}'.")
+
+    spike_seq = spike[spike_sequence_col].iloc[0]
+    spike_name = spike[spike_name_col].iloc[0]
+
     # Limit the number of top mutations to display
     nanobody = nanobody.sort_values(by=nanobody_llr_col, ascending=False).head(top_n)
 
@@ -49,12 +60,8 @@ def esm_to_alphafold(
     # Make save directory
     save_dir.mkdir(parents=True, exist_ok=True)
 
-    # Pair spike protein sequences with nanobody sequences
-    for spike_index, nanobody_index in product(range(len(spike)), range(len(nanobody))):
-        # Get spike sequence and name
-        spike_seq = spike[spike_sequence_col].iloc[spike_index]
-        spike_name = spike[spike_name_col].iloc[spike_index]
-
+    # Pair spike-nanobody sequences
+    for nanobody_index in range(len(nanobody)):
         # Get nanobody sequence and name
         nanobody_seq = nanobody[nanobody_sequence_col].iloc[nanobody_index]
         nanobody_position = nanobody[nanobody_pos_col].iloc[nanobody_index]
