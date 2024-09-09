@@ -13,31 +13,33 @@ def esm_to_alphafold(
     spike_sequences_path: Path,
     nanobody_sequences_path: Path,
     save_dir: Path,
+    top_n: int = 10,
     spike_sequence_col: str = "rbd",
     spike_name_col: str = "name",
     nanobody_sequence_col: str = "mutated_sequence",
     nanobody_pos_col: str = "position",
     nanobodoy_original_aa_col: str = "original_aa",
-    nanobody_mutant_aa_col: str = "mutant_aa",
+    nanobody_mutated_aa_col: str = "mutated_aa",
 ) -> None:
     """Convert ESM mutated nanobody sequences spike-nanobody sequences for input to AlphaFold
 
     :param spike_sequences_path: Path to a CSV file containing spike protein sequences.
     :param nanobody_sequences_path: Path to a CSV file containing mutated nanobody sequences from ESM.
     :param save_dir: Directory to save the paired nanobody-spike sequences for input to AlphaFold.
+    :param top_n: Number of top mutations to display.
     :param spike_sequence_col: Column name for the spike protein sequence in the CSV file.
     :param spike_name_col: Column name for the spike protein name in the CSV file.
     :param nanobody_sequence_col: Column name for the nanobody sequence in the CSV file.
     :param nanobody_pos_col: Column name for the nanobody mutation position in the CSV file.
     :param nanobodoy_original_aa_col: Column name for the original amino acid in the nanobody mutation in the CSV file.
-    :param nanobody_mutant_aa_col: Column name for the mutant amino acid in the nanobody mutation in the CSV file.
+    :param nanobody_mutated_aa_col: Column name for the mutant amino acid in the nanobody mutation in the CSV file.
     """
     # Load sequences from both files
     spike = pd.read_csv(spike_sequences_path)
     nanobody = pd.read_csv(nanobody_sequences_path)
 
     # Get nanobody name
-    nanobody_name = nanobody_sequences_path.name
+    nanobody_name = nanobody_sequences_path.stem
 
     # Make save directory
     save_dir.mkdir(parents=True, exist_ok=True)
@@ -52,8 +54,8 @@ def esm_to_alphafold(
         nanobody_seq = nanobody[nanobody_sequence_col].iloc[nanobody_index]
         nanobody_position = nanobody[nanobody_pos_col].iloc[nanobody_index]
         nanobody_original_aa = nanobody[nanobodoy_original_aa_col].iloc[nanobody_index]
-        nanobody_mutant_aa = nanobody[nanobody_mutant_aa_col].iloc[nanobody_index]
-        nanobody_mutant_name = f"{nanobody_name}_{nanobody_position}{nanobody_original_aa}{nanobody_mutant_aa}"
+        nanobody_mutant_aa = nanobody[nanobody_mutated_aa_col].iloc[nanobody_index]
+        nanobody_mutant_name = f"{nanobody_name}_{nanobody_original_aa}{nanobody_position}{nanobody_mutant_aa}"
 
         complex_name = f"{spike_name}_{nanobody_mutant_name}"
         merged_record = SeqRecord(

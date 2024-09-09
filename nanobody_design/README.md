@@ -46,7 +46,8 @@ do
 python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --spike_sequences_path nanobody_design/sequences/spike.csv \
     --nanobody_sequences_path nanobody_design/designed/esm/${NANOBODY}.csv \
-    --save_dir nanobody_design/designed/alphafold/sequences/${NANOBODY}
+    --save_dir nanobody_design/designed/alphafold/sequences/${NANOBODY} \
+    --top_n 10
 done
 ````
 
@@ -56,12 +57,13 @@ done
 Run AlphaFold-Multimer on the nanobody-spike complexes.
 
 ```bash
-mkdir -p nanobody_design/designed/alphafold/structures
-
-for FILE in nanobody_design/designed/alphafold/sequences/*.fasta
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+for FILE in nanobody_design/designed/alphafold/sequences/${NANOBODY}/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
-colabfold_batch $FILE nanobody_design/designed/alphafold/structures/$NAME
+colabfold_batch $FILE nanobody_design/designed/alphafold/structures/${NANOBODY}/$NAME
+done
 done
 ```
 
