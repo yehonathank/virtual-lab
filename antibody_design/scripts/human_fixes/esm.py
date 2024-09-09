@@ -1,5 +1,4 @@
 import argparse
-import numpy as np
 from transformers import EsmForMaskedLM, EsmTokenizer
 import torch
 from typing import List, Tuple
@@ -66,8 +65,8 @@ def main():
 
     try:
         print("Loading model and tokenizer...")
-        model = EsmForMaskedLM.from_pretrained('facebook/esm1b-t33_650M_UR50S')
-        tokenizer = EsmTokenizer.from_pretrained('facebook/esm1b-t33_650M_UR50S')
+        model = EsmForMaskedLM.from_pretrained('facebook/esm1b_t33_650M_UR50S')
+        tokenizer = EsmTokenizer.from_pretrained('facebook/esm1b_t33_650M_UR50S')
     except Exception as e:
         print(f"Error loading model or tokenizer: {e}. Ensure you have installed 'transformers' and 'torch'.")
         print("Installation steps: pip install transformers torch")
