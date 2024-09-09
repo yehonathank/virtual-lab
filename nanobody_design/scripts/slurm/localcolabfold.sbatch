@@ -28,12 +28,14 @@ conda activate localcolabfold
 
 cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
+mkdir -p nanobody_design/designed/alphafold/structures
+
 experiments=()
 
-for file in antibody_design/sequences/covid_spike_rbd_nanobody_pairs/*.fasta
+for FILE in nanobody_design/designed/alphafold/sequences/*.fasta
 do
-name=$(basename $file .fasta)
-experiments+=("colabfold_batch $file nanobody_analysis/structures/$name")
+NAME=$(basename "$FILE" .fasta)
+experiments+=("colabfold_batch $FILE nanobody_design/designed/alphafold/structures/$NAME")
 done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}

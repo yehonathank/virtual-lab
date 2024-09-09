@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --array=0-27
+#SBATCH --array=0-3
 #SBATCH --partition=jamesz,sfgf,gpu
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/esm/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/esm/%a.err
@@ -28,7 +28,17 @@ conda activate virtual_lab
 
 cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
+mkdir -p nanobody_design/designed/esm
+
 experiments=()
+
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+experiments+=("python nanobody_design/scripts/improved/esm.py \
+    nanobody_design/sequences/nanobodies.csv \
+    $NANOBODY \
+    --output_csv nanobody_design/designed/esm/${NANOBODY}.csv")
+done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}
 echo "Task ID = $SLURM_ARRAY_TASK_ID"
