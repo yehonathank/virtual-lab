@@ -4,9 +4,10 @@ import csv
 import logging
 from pathlib import Path
 from typing import List, Tuple
-from Bio.PDB import PDBParser, NeighborSearch, Chain, Residue
+from Bio.PDB import PDBParser, NeighborSearch
+from Bio.PDB.Chain import Chain
+from Bio.PDB.Residue import Residue
 import argparse
-from multiprocessing import Pool
 
 # Configure logging
 logging.basicConfig(filename='pdb_processing.log', level=logging.INFO,
