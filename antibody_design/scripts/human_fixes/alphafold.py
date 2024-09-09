@@ -2,6 +2,7 @@ import os
 import sys
 import csv
 import logging
+from pathlib import Path
 from typing import List, Tuple
 from Bio.PDB import PDBParser, NeighborSearch, Chain, Residue
 import argparse
@@ -107,13 +108,18 @@ def process_directory(directory: str, nanobody_chain_id: str, antigen_chain_id: 
         distance_threshold (float): Distance threshold for defining interface residues.
         output_file (str): Path to the output CSV file.
     """
-    pdb_files = [f for f in os.listdir(directory) if f.endswith('.pdb')]
+    pdb_files = list(Path(directory).glob('**/*unrelaxed_rank_001*.pdb'))
     if not pdb_files:
         logging.error(f"No PDB files found in the directory '{directory}'.")
         return
 
-    with Pool() as pool:
-        results = pool.starmap(calculate_interface_pLDDT, [(os.path.join(directory, filename), nanobody_chain_id, antigen_chain_id, distance_threshold) for filename in pdb_files])
+    results = [calculate_interface_pLDDT(
+        pdb_file=str(pdb_file),
+        nanobody_chain_id=nanobody_chain_id,
+        antigen_chain_id=antigen_chain_id,
+        distance_threshold=distance_threshold)
+        for pdb_file in pdb_files
+    ]
 
     with open(output_file, mode='w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
