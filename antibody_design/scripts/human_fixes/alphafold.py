@@ -64,7 +64,7 @@ def calculate_interface_residues(structure: Chain, nanobody_chain_id: str, antig
 
     return list(interface_residues)
 
-def calculate_interface_pLDDT(pdb_file: str, nanobody_chain_id: str, antigen_chain_id: str, distance_threshold: float) -> Tuple[str, float, int, int]:
+def calculate_interface_pLDDT(pdb_file: Path, nanobody_chain_id: str, antigen_chain_id: str, distance_threshold: float) -> Tuple[str, float, int, int]:
     """
     Calculate the interface pLDDT score for a given PDB file.
 
@@ -78,27 +78,28 @@ def calculate_interface_pLDDT(pdb_file: str, nanobody_chain_id: str, antigen_cha
         Tuple[str, float, int]: PDB filename, computed interface pLDDT score, number of interface residues, and number of interface atoms.
     """
     parser = PDBParser(QUIET=True)
+    pdb_name = pdb_file.parent.name
     try:
         structure = parser.get_structure('complex', pdb_file)
     except Exception as e:
         logging.error(f"Error parsing {pdb_file}: {e}")
-        return pdb_file, 0.0, 0, 0
+        return pdb_name, 0.0, 0, 0
 
     if nanobody_chain_id not in [chain.id for chain in structure.get_chains()] or antigen_chain_id not in [chain.id for chain in structure.get_chains()]:
         logging.error(f"Chain IDs {nanobody_chain_id} or {antigen_chain_id} not found in {pdb_file}.")
-        return pdb_file, 0.0, 0, 0
+        return pdb_name, 0.0, 0, 0
 
     interface_residues = calculate_interface_residues(structure, nanobody_chain_id, antigen_chain_id, distance_threshold)
     if not interface_residues:
         logging.warning(f"No interface residues found in {pdb_file}.")
-        return pdb_file, 0.0, 0, 0
+        return pdb_name, 0.0, 0, 0
 
     total_plddt_score = sum(atom.bfactor for residue in interface_residues for atom in residue)
     residue_count = len(interface_residues)
     atom_count = sum(1 for residue in interface_residues for atom in residue)
 
     average_plddt = total_plddt_score / atom_count if atom_count > 0 else 0.0
-    return pdb_file, average_plddt, residue_count, atom_count
+    return pdb_name, average_plddt, residue_count, atom_count
 
 def process_directory(directory: str, nanobody_chain_id: str, antigen_chain_id: str, distance_threshold: float, output_file: str) -> None:
     """
@@ -117,7 +118,7 @@ def process_directory(directory: str, nanobody_chain_id: str, antigen_chain_id: 
         return
 
     results = [calculate_interface_pLDDT(
-        pdb_file=str(pdb_file),
+        pdb_file=pdb_file,
         nanobody_chain_id=nanobody_chain_id,
         antigen_chain_id=antigen_chain_id,
         distance_threshold=distance_threshold)
@@ -142,7 +143,7 @@ def main():
     parser.add_argument('nanobody_chain_id', type=str, help='Chain ID for the nanobody')
     parser.add_argument('antigen_chain_id', type=str, help='Chain ID for the antigen')
     parser.add_argument('output_file', type=str, help='Output CSV file path')
-    parser.add_argument('--distance_threshold', type=float, default=5.0, help='Distance threshold in Å for interface residues (default: 5.0)')
+    parser.add_argument('--distance_threshold', type=float, default=4.0, help='Distance threshold in Å for interface residues (default: 4.0)')
 
     args = parser.parse_args()
 
