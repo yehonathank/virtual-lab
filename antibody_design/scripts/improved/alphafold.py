@@ -1,18 +1,13 @@
 import os
 import sys
 import csv
-import logging
 from typing import List, Tuple
-from Bio.PDB import PDBParser, NeighborSearch, Chain, Residue
+from Bio.PDB import PDBParser, NeighborSearch
+from Bio.PDB.Chain import Chain
+from Bio.PDB.Residue import Residue
 import argparse
 from multiprocessing import Pool
-
-# Configure logging
-logging.basicConfig(
-    filename="pdb_processing.log",
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s:%(message)s",
-)
+import glob
 
 
 def is_valid_pdb_file(pdb_file: str) -> bool:
@@ -30,7 +25,7 @@ def is_valid_pdb_file(pdb_file: str) -> bool:
         structure = parser.get_structure("complex", pdb_file)
         return True if structure else False
     except Exception as e:
-        logging.error(f"Invalid PDB file {pdb_file}: {e}")
+        print(f"Invalid PDB file {pdb_file}: {e}")
         return False
 
 
@@ -81,7 +76,7 @@ def calculate_interface_pLDDT(
     nanobody_chain_id: str,
     antigen_chain_id: str,
     distance_threshold: float,
-) -> Tuple[str, float, int]:
+) -> Tuple[str, float, int, int]:
     """
     Calculate the interface pLDDT score for a given PDB file.
 
@@ -92,37 +87,38 @@ def calculate_interface_pLDDT(
         distance_threshold (float): Distance threshold for defining interface residues.
 
     Returns:
-        Tuple[str, float, int]: PDB filename, computed interface pLDDT score, and number of interface residues.
+        Tuple[str, float, int, int]: PDB filename, computed interface pLDDT score, number of interface residues, and number of interface atoms.
     """
     parser = PDBParser(QUIET=True)
     try:
         structure = parser.get_structure("complex", pdb_file)
     except Exception as e:
-        logging.error(f"Error parsing {pdb_file}: {e}")
-        return pdb_file, 0.0, 0
+        print(f"Error parsing {pdb_file}: {e}")
+        return pdb_file, 0.0, 0, 0
 
     if nanobody_chain_id not in [
         chain.id for chain in structure.get_chains()
     ] or antigen_chain_id not in [chain.id for chain in structure.get_chains()]:
-        logging.error(
+        print(
             f"Chain IDs {nanobody_chain_id} or {antigen_chain_id} not found in {pdb_file}."
         )
-        return pdb_file, 0.0, 0
+        return pdb_file, 0.0, 0, 0
 
     interface_residues = calculate_interface_residues(
         structure, nanobody_chain_id, antigen_chain_id, distance_threshold
     )
     if not interface_residues:
-        logging.warning(f"No interface residues found in {pdb_file}.")
-        return pdb_file, 0.0, 0
+        print(f"No interface residues found in {pdb_file}.")
+        return pdb_file, 0.0, 0, 0
 
     total_plddt_score = sum(
         atom.bfactor for residue in interface_residues for atom in residue
     )
+    atom_count = sum(len(residue) for residue in interface_residues)
     residue_count = len(interface_residues)
 
-    average_plddt = total_plddt_score / residue_count if residue_count > 0 else 0.0
-    return pdb_file, average_plddt, residue_count
+    average_plddt = total_plddt_score / atom_count if atom_count > 0 else 0.0
+    return pdb_file, average_plddt, residue_count, atom_count
 
 
 def process_directory(
@@ -142,33 +138,37 @@ def process_directory(
         distance_threshold (float): Distance threshold for defining interface residues.
         output_file (str): Path to the output CSV file.
     """
-    pdb_files = [f for f in os.listdir(directory) if f.endswith(".pdb")]
+    pdb_files = glob.glob(
+        os.path.join(directory, "**/*unrelaxed_rank_001*.pdb"), recursive=True
+    )
     if not pdb_files:
-        logging.error(f"No PDB files found in the directory '{directory}'.")
+        print(f"No PDB files found in the directory '{directory}'.")
         return
 
     with Pool() as pool:
         results = pool.starmap(
             calculate_interface_pLDDT,
             [
-                (
-                    os.path.join(directory, filename),
-                    nanobody_chain_id,
-                    antigen_chain_id,
-                    distance_threshold,
-                )
+                (filename, nanobody_chain_id, antigen_chain_id, distance_threshold)
                 for filename in pdb_files
             ],
         )
 
     with open(output_file, mode="w", newline="") as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["PDB_File", "Interface_pLDDT", "Interface_Residue_Count"])
+        csv_writer.writerow(
+            [
+                "PDB_File",
+                "Interface_pLDDT",
+                "Interface_Residue_Count",
+                "Interface_Atom_Count",
+            ]
+        )
 
         for result in results:
             csv_writer.writerow(result)
 
-    logging.info(f"Interface pLDDT scores have been written to {output_file}")
+    print(f"Interface pLDDT scores have been written to {output_file}")
 
 
 def main():
@@ -187,14 +187,14 @@ def main():
     parser.add_argument(
         "--distance_threshold",
         type=float,
-        default=5.0,
-        help="Distance threshold in Å for interface residues (default: 5.0)",
+        default=4.0,
+        help="Distance threshold in Å for interface residues (default: 4.0)",
     )
 
     args = parser.parse_args()
 
     if not os.path.isdir(args.directory):
-        logging.error(f"The provided path '{args.directory}' is not a valid directory.")
+        print(f"The provided path '{args.directory}' is not a valid directory.")
         sys.exit(1)
 
     process_directory(
