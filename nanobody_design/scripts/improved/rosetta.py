@@ -19,14 +19,19 @@ def extract_scores_from_file(score_file: str) -> float:
             lines = f.readlines()
             for line in lines:
                 if line.startswith("SCORE:") and "dG_cross" in line:
-                    # Split the line into columns based on whitespace
-                    columns = line.split()
-                    # Find the index of the dG_cross column
-                    dg_cross_index = columns.index("dG_cross")
-                    # Extract the dG_cross value from the next line
-                    score_line = next(f).split()
-                    return float(score_line[dg_cross_index])
-        raise ValueError(f"No valid dG_cross score found in {score_file}")
+                    # Split the line into columns and find the index of dG_cross
+                    headers = line.split()
+                    dG_cross_index = headers.index("dG_cross")
+                    break
+            else:
+                raise ValueError(f"No valid header found in {score_file}")
+
+            # Find the line with the actual scores
+            for line in lines:
+                if line.startswith("SCORE:") and not "dG_cross" in line:
+                    scores = line.split()
+                    return float(scores[dG_cross_index])
+        raise ValueError(f"No valid score found in {score_file}")
     except Exception as e:
         logging.error(f"Error processing file {score_file}: {e}")
         return None
@@ -58,7 +63,7 @@ def main(input_dir: str, output_csv: str) -> None:
     scores.sort(key=lambda x: x[1])
 
     # Convert to DataFrame and save to CSV
-    df = pd.DataFrame(scores, columns=["File Name", "dG_cross Score"])
+    df = pd.DataFrame(scores, columns=["File Name", "dG_cross"])
     df.to_csv(output_csv, index=False)
 
     # Log errors if any

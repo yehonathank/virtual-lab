@@ -90,12 +90,34 @@ done
 
 ## Rosetta
 
-To run the Rosetta model, use the following command:
-
-TODO: get Rosetta working
+To run Rosetta, use the following command:
 
 ```bash
-python nanobody_design/scripts/improved/rosetta.py
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+OUTPUT_DIR="nanobody_design/designed/rosetta/${NANOBODY}"
+mkdir -p "${OUTPUT_DIR}"
+
+for FILE in nanobody_design/designed/alphafold/structures/"${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
+do
+NAME=$(basename "$(dirname "$FILE")")
+rosetta_scripts.default.linuxgccrelease \
+    -s $FILE \
+    -parser:protocol nanobody_design/scripts/improved/rosetta.xml \
+    -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc
+done
+done
+```
+
+Then, collate the outputs with the following command:
+
+```bash
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/improved/rosetta.py \
+    nanobody_design/designed/rosetta/${NANOBODY} \
+    nanobody_design/designed/rosetta/${NANOBODY}.csv
+done
 ```
 
 TODO: subsequent rounds
