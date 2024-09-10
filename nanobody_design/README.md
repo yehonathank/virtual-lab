@@ -71,17 +71,22 @@ done
 Process the AlphaFold-Multimer complexes to extract interface pLDDT scores:
 
 ```bash
-python nanobody_design/scripts/improved/alphafold_multimer.py \
-    nanobody_design/designed/alphafold/structures \
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/improved/alphafold.py \
+    nanobody_design/designed/alphafold/structures/${NANOBODY} \
     B \
     A \
-    nanobody_design/designed/alphafold/scores.csv
+    nanobody_design/designed/alphafold/${NANOBODY}/scores.csv
+done
 ```
 
 
 ## Rosetta
 
 To run the Rosetta model, use the following command:
+
+TODO: get Rosetta working
 
 ```bash
 python nanobody_design/scripts/improved/rosetta.py
