@@ -8,7 +8,7 @@ mkdir -p "${COLABFOLDDIR}"
 # Create conda environment
 conda update -n base conda -y
 conda create -n localcolabfold -c conda-forge -c bioconda \
-    python=3.10 openmm==7.7.0 pdbfixer \
+    python=3.10 openmm==7.7.0 pdbfixer==1.8.1 \
     kalign2=2.04 hhsuite=3.3.0 mmseqs2=15.6f452 -y
 conda activate localcolabfold
 
