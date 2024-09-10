@@ -104,7 +104,8 @@ NAME=$(basename "$(dirname "$FILE")")
 rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
     -parser:protocol nanobody_design/scripts/improved/rosetta.xml \
-    -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc
+    -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc \
+    -out:path:pdb ${OUTPUT_DIR}
 done
 done
 ```
