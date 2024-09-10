@@ -8,10 +8,22 @@ This README contains the commands needed to run the nanobody design workflow.
 After following the general `virtual_lab` installation instructions, run the following to install nanobody-specific requirements:
 
 ```bash
+conda activate virtual_lab
 pip install -r nanobody_design/requirements.txt
 ```
 
-TODO: localcolabfold installation and versions
+Additionally, create separate virtual environment for running AlphaFold-Multimer via LocalColabFold:
+
+```bash
+conda create -y -n localcolabfold python=3.10
+```
+
+Then, in that environment, install LocalColabFold by following these instructions: https://github.com/YoshitakaMo/localcolabfold. Make sure the following versions are installed:
+
+```
+alphafold-colabfold==2.3.6
+colabfold==1.5.5
+```
 
 
 ## LLM project design
