@@ -7,10 +7,10 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
 #SBATCH --array=0
-#SBATCH --partition=jamesz,sfgf,owners
+#SBATCH --partition=jamesz,sfgf
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/rosetta/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/rosetta/%a.err
-#SBATCH --time=2:00:00
+#SBATCH --time=4:00:00
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=swansonk@stanford.edu
 
