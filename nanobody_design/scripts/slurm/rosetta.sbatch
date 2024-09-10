@@ -27,13 +27,22 @@ ml biology rosetta
 
 cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
-ID="8K3K"
-CHAINS="D_E"
+experiments=()
 
-experiments=("mkdir ${ID}_relax;
-relax.default.linuxgccrelease -s ${ID}.pdb -nstruct 1 -relax:fast -out:path:all ${ID}_relax;
-mkdir ${ID}_interface;
-InterfaceAnalyzer.default.linuxgccrelease -s ${ID}_relax/${ID}_0001.pdb -interface ${CHAINS} -pack_input 1 -pack_separated 1 -out:path:all ${ID}_interface")
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+OUTPUT_DIR="nanobody_design/designed/rosetta/${NANOBODY}"
+mkdir -p "${OUTPUT_DIR}"
+
+for FILE in nanobody_design/designed/alphafold/structures/"${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
+do
+NAME=$(basename "$(dirname "$FILE")")
+experiments+=("rosetta_scripts.default.linuxgccrelease \
+    -s $FILE \
+    -parser:protocol nanobody_design/scripts/improved/rosetta.xml \
+    -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc")
+done
+done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}
 echo "Task ID = $SLURM_ARRAY_TASK_ID"

@@ -32,7 +32,7 @@ experiments=()
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-for FILE in nanobody_design/designed/alphafold/sequences/${NANOBODY}/*.fasta
+for FILE in nanobody_design/designed/alphafold/sequences/"${NANOBODY}"/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
 experiments+=("colabfold_batch $FILE nanobody_design/designed/alphafold/structures/${NANOBODY}/$NAME")

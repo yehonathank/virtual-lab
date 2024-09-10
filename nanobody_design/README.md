@@ -12,13 +12,7 @@ conda activate virtual_lab
 pip install -r nanobody_design/requirements.txt
 ```
 
-Additionally, create separate virtual environment for running AlphaFold-Multimer via LocalColabFold:
-
-```bash
-conda create -y -n localcolabfold python=3.10
-```
-
-Then, in that environment, install LocalColabFold by following these instructions: https://github.com/YoshitakaMo/localcolabfold. Make sure the following versions are installed:
+Additionally, create separate virtual environment for running AlphaFold-Multimer via LocalColabFold by following these instructions: https://github.com/YoshitakaMo/localcolabfold (or by running `install_localcolabfold.sh`). Make sure the following versions are installed:
 
 ```
 alphafold-colabfold==2.3.6
