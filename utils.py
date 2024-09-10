@@ -220,11 +220,12 @@ def count_discussion_tokens(
     }
 
     for index, turn in enumerate(discussion):
-        update_token_counts(
-            token_counts=token_counts,
-            discussion=discussion[:index],
-            response=turn["message"],
-        )
+        if turn["agent"] != "User":
+            update_token_counts(
+                token_counts=token_counts,
+                discussion=discussion[:index],
+                response=turn["message"],
+            )
 
     return token_counts
 

@@ -1,7 +1,7 @@
 <ROSETTASCRIPTS>
     <SCOREFXNS>
-        <!-- Using ref15 score function for protein-protein interactions -->
-        <ScoreFunction name="ref15" weights="ref15.wts"/>
+        <!-- Using ref2015 score function for protein-protein interactions -->
+        <ScoreFunction name="ref15" weights="ref2015.wts"/>
     </SCOREFXNS>
 
     <RESIDUE_SELECTORS>
@@ -13,10 +13,6 @@
     <TASKOPERATIONS>
         <InitializeFromCommandline name="init"/>
     </TASKOPERATIONS>
-
-    <FILTERS>
-        <!-- Removed InterfaceEnergy filter as it is not valid -->
-    </FILTERS>
 
     <MOVERS>
         <!-- Relaxation mover to optimize structure -->
@@ -30,9 +26,5 @@
         <Add mover="analyze_interface"/>
     </PROTOCOLS>
 
-    <OUTPUT scorefxn="ref15">
-        <!-- Use the standard Rosetta output options -->
-        <PoseFileTag tag="output"/>
-        <ScoreFile name="interface_energy_scores.sc"/>
-    </OUTPUT>
+    <OUTPUT scorefxn="ref15"/>
 </ROSETTASCRIPTS>
