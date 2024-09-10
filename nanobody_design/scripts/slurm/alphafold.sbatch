@@ -1,16 +1,16 @@
 #!/bin/bash
 #
-#SBATCH --job-name=localcolabfold
+#SBATCH --job-name=alphafold
 #
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --array=0-39
+#SBATCH --array=0-39%10
 #SBATCH --partition=jamesz,sfgf,gpu
-#SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/localcolabfold/%a.out
-#SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/localcolabfold/%a.err
+#SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/alphafold/%a.out
+#SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/alphafold/%a.err
 #SBATCH --time=24:00:00
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=swansonk@stanford.edu
