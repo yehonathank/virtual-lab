@@ -57,7 +57,7 @@ python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --save_dir nanobody_design/designed/round_1/alphafold/sequences/${NANOBODY} \
     --top_n 20
 done
-````
+```
 
 
 ## AlphaFold-Multimer
