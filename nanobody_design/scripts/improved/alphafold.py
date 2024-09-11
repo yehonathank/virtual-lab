@@ -6,7 +6,6 @@ from Bio.PDB import PDBParser, NeighborSearch
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 import argparse
-from multiprocessing import Pool
 import glob
 
 
@@ -145,14 +144,12 @@ def process_directory(
         print(f"No PDB files found in the directory '{directory}'.")
         return
 
-    with Pool() as pool:
-        results = pool.starmap(
-            calculate_interface_pLDDT,
-            [
-                (filename, nanobody_chain_id, antigen_chain_id, distance_threshold)
-                for filename in pdb_files
-            ],
+    results = [
+        calculate_interface_pLDDT(
+            pdb_file, nanobody_chain_id, antigen_chain_id, distance_threshold
         )
+        for pdb_file in pdb_files
+    ]
 
     with open(output_file, mode="w", newline="") as csvfile:
         csv_writer = csv.writer(csvfile)

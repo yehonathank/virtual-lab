@@ -182,10 +182,11 @@ You previously wrote a Python script that processes the outputs of AlphaFold-Mul
 
 1. Replace the current imports of Chain and Residue with "from Bio.PDB.Chain import Chain" and "from Bio.PDB.Residue import Residue".
 2. Remove the logging setup and simply print any log messages to the console.
-3. Change the list of pdb_files to instead get all PDB files in the directory that follow the pattern "**/*unrelaxed_rank_001*.pdb".
-4. Change the calculation of average pLDDT to divide by the number of atoms rather than the number of residues.
-5. Return and save in the CSV both the number of residues and the number of atoms in the interface.
-6. Change the default distance threshold to 4.
+3. Replace the parallel processing with sequential processing to avoid getting an "OSError: Too many open files".
+4. Change the list of pdb_files to instead get all PDB files in the directory that follow the pattern "**/*unrelaxed_rank_001*.pdb".
+5. Change the calculation of average pLDDT to divide by the number of atoms rather than the number of residues.
+6. Return and save in the CSV both the number of residues and the number of atoms in the interface.
+7. Change the default distance threshold to 4.
 
 Computational Biologist, please provide your response to the agenda.
 
@@ -202,7 +203,6 @@ from Bio.PDB import PDBParser, NeighborSearch
 from Bio.PDB.Chain import Chain
 from Bio.PDB.Residue import Residue
 import argparse
-from multiprocessing import Pool
 import glob
 
 def is_valid_pdb_file(pdb_file: str) -> bool:
@@ -307,8 +307,7 @@ def process_directory(directory: str, nanobody_chain_id: str, antigen_chain_id: 
         print(f"No PDB files found in the directory '{directory}'.")
         return
 
-    with Pool() as pool:
-        results = pool.starmap(calculate_interface_pLDDT, [(filename, nanobody_chain_id, antigen_chain_id, distance_threshold) for filename in pdb_files])
+    results = [calculate_interface_pLDDT(pdb_file, nanobody_chain_id, antigen_chain_id, distance_threshold) for pdb_file in pdb_files]
 
     with open(output_file, mode='w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
@@ -342,17 +341,21 @@ if __name__ == '__main__':
     main()
 ```
 
-### Key Changes Made:
+### Key Changes:
 
-1. **Imports**: The imports for `Chain` and `Residue` have been updated to use `from Bio.PDB.Chain import Chain` and `from Bio.PDB.Residue import Residue`.
+1. **Imports**: Updated imports for `Chain` and `Residue` to use specific imports from `Bio.PDB.Chain` and `Bio.PDB.Residue`.
 
 2. **Logging**: Removed logging setup and replaced it with simple `print` statements for logging messages to the console.
 
-3. **PDB File Selection**: Changed the method to gather PDB files using `glob.glob` to match files with the pattern `**/*unrelaxed_rank_001*.pdb`.
+3. **Sequential Processing**: Replaced parallel processing with sequential processing to avoid file handle limitations.
 
-4. **Average pLDDT Calculation**: Modified the calculation of the average pLDDT to divide by the number of atoms instead of the number of residues.
+4. **PDB File Pattern**: Changed the file selection to use `glob` with the pattern `**/*unrelaxed_rank_001*.pdb` to match specific PDB files.
 
-5. **CSV Output**: The script now returns and saves both the number of residues and the number of atoms in the interface.
+5. **Average pLDDT Calculation**: Modified the calculation to divide by the number of atoms instead of residues.
 
-6. **Distance Threshold**: Changed the default distance threshold to 4 Å.
+6. **CSV Output**: Updated the CSV output to include both the number of residues and the number of atoms in the interface.
+
+7. **Distance Threshold**: Changed the default distance threshold to 4 Å. 
+
+These changes ensure the script meets the specified improvements while maintaining its original functionality.
 
