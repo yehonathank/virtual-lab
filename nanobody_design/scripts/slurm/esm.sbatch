@@ -28,7 +28,7 @@ conda activate virtual_lab
 
 cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
-mkdir -p nanobody_design/designed/esm
+mkdir -p nanobody_design/designed/round_1/esm
 
 experiments=()
 
