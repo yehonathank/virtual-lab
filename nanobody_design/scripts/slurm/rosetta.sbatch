@@ -31,10 +31,10 @@ experiments=()
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-OUTPUT_DIR="nanobody_design/designed/rosetta/${NANOBODY}"
+OUTPUT_DIR="nanobody_design/designed/round_1/rosetta/${NANOBODY}"
 mkdir -p "${OUTPUT_DIR}"
 
-for FILE in nanobody_design/designed/alphafold/structures/"${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
+for FILE in nanobody_design/designed/round_1/alphafold/structures/"${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
 experiments+=("rosetta_scripts.default.linuxgccrelease \

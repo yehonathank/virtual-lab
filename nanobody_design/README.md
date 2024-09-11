@@ -30,14 +30,15 @@ Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobod
 To run the ESM model, use the following command:
 
 ```bash
-mkdir -p nanobody_design/designed/esm
+mkdir -p nanobody_design/designed/round_1/esm
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/improved/esm.py \
     nanobody_design/sequences/nanobodies.csv \
     $NANOBODY \
-    --output_csv nanobody_design/designed/esm/${NANOBODY}.csv
+    --output_csv nanobody_design/designed/round_1/esm/${NANOBODY}.csv \
+    --top-n 20
 done
 ```
 
@@ -52,9 +53,9 @@ do
 python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --spike_sequences_path nanobody_design/sequences/spike.csv \
     --spike_name KP3 \
-    --nanobody_sequences_path nanobody_design/designed/esm/${NANOBODY}.csv \
-    --save_dir nanobody_design/designed/alphafold/sequences/${NANOBODY} \
-    --top_n 10
+    --nanobody_sequences_path nanobody_design/designed/round_1/esm/${NANOBODY}.csv \
+    --save_dir nanobody_design/designed/round_1/alphafold/sequences/${NANOBODY} \
+    --top_n 20
 done
 ````
 
@@ -66,10 +67,10 @@ Run AlphaFold-Multimer on the nanobody-spike complexes.
 ```bash
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-for FILE in nanobody_design/designed/alphafold/sequences/${NANOBODY}/*.fasta
+for FILE in nanobody_design/designed/round_1/alphafold/sequences/${NANOBODY}/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
-colabfold_batch $FILE nanobody_design/designed/alphafold/structures/${NANOBODY}/$NAME
+colabfold_batch $FILE nanobody_design/designed/round_1/alphafold/structures/${NANOBODY}/$NAME
 done
 done
 ```
@@ -80,10 +81,10 @@ Process the AlphaFold-Multimer complexes to extract interface pLDDT scores:
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/improved/alphafold.py \
-    nanobody_design/designed/alphafold/structures/${NANOBODY} \
+    nanobody_design/designed/round_1/alphafold/structures/${NANOBODY} \
     B \
     A \
-    nanobody_design/designed/alphafold/structures/${NANOBODY}/scores.csv
+    nanobody_design/designed/round_1/alphafold/structures/${NANOBODY}/scores.csv
 done
 ```
 
@@ -95,10 +96,10 @@ To run Rosetta, use the following command:
 ```bash
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-OUTPUT_DIR="nanobody_design/designed/rosetta/${NANOBODY}"
+OUTPUT_DIR="nanobody_design/designed/round_1/rosetta/${NANOBODY}"
 mkdir -p "${OUTPUT_DIR}"
 
-for FILE in nanobody_design/designed/alphafold/structures/"${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
+for FILE in nanobody_design/designed/round_1/alphafold/structures/"${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
 rosetta_scripts.default.linuxgccrelease \
@@ -116,9 +117,9 @@ Then, collate the outputs with the following command:
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/improved/rosetta.py \
-    nanobody_design/designed/rosetta/${NANOBODY} \
-    nanobody_design/designed/rosetta/${NANOBODY}.csv
+    nanobody_design/designed/round_1/rosetta/${NANOBODY} \
+    nanobody_design/designed/round_1/rosetta/${NANOBODY}.csv
 done
 ```
 
-TODO: subsequent rounds
+TODO: selection (top 5 per nanobody) + subsequent rounds

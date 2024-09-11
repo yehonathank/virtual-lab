@@ -37,7 +37,7 @@ do
 experiments+=("python nanobody_design/scripts/improved/esm.py \
     nanobody_design/sequences/nanobodies.csv \
     $NANOBODY \
-    --output_csv nanobody_design/designed/esm/${NANOBODY}.csv")
+    --output_csv nanobody_design/designed/round_1/esm/${NANOBODY}.csv")
 done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}
