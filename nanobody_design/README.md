@@ -83,7 +83,7 @@ python nanobody_design/scripts/improved/alphafold.py \
     nanobody_design/designed/alphafold/structures/${NANOBODY} \
     B \
     A \
-    nanobody_design/designed/alphafold/${NANOBODY}/scores.csv
+    nanobody_design/designed/alphafold/structures/${NANOBODY}/scores.csv
 done
 ```
 
