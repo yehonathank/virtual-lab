@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pandas as pd
 from Bio import SeqIO
-from itertools import product
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
