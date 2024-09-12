@@ -84,7 +84,7 @@ python nanobody_design/scripts/improved/alphafold.py \
     nanobody_design/designed/round_1/alphafold/structures/${NANOBODY} \
     B \
     A \
-    nanobody_design/designed/round_1/alphafold/structures/${NANOBODY}/scores.csv
+    nanobody_design/designed/round_1/alphafold/${NANOBODY}.csv
 done
 ```
 
@@ -122,4 +122,21 @@ python nanobody_design/scripts/improved/rosetta.py \
 done
 ```
 
-TODO: selection (top 5 per nanobody) + subsequent rounds
+
+## Combine scores
+
+Combine scores from ESM, AlphaFold-Multimer, and Rosetta:
+
+```bash
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/data_processing/combine_scores.py \
+    --esm_scores_path nanobody_design/designed/round_1/esm/${NANOBODY}.csv \
+    --alphafold_scores_path nanobody_design/designed/round_1/alphafold/${NANOBODY}.csv \
+    --rosetta_scores_path nanobody_design/designed/round_1/rosetta/${NANOBODY}.csv \
+    --save_path nanobody_design/designed/round_1/scores/${NANOBODY}.csv \
+    --top_n 5
+done
+```
+
+TODO: subsequent rounds

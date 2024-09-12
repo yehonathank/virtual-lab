@@ -68,6 +68,7 @@ def combine_scores(
     print(" ".join(combined_scores["name"].head(top_n)))
 
     # Save combined scores
+    save_path.parent.mkdir(parents=True, exist_ok=True)
     combined_scores.to_csv(save_path, index=False)
 
 
