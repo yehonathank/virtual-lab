@@ -50,9 +50,12 @@ def combine_scores(
     combined_scores = combined_scores.merge(alphafold_scores, on="name")
 
     # Merge Rosetta scores
-    combined_scores = combined_scores.merge(
-        rosetta_scores, left_on="name", right_on="File Name"
-    )
+    rosetta_scores["name"] = [
+        Path(path).stem.split("_")[-1] for path in rosetta_scores["File Name"]
+    ]
+    del rosetta_scores["File Name"]
+
+    combined_scores = combined_scores.merge(rosetta_scores, on="name")
 
     # Compute weighted score
     combined_scores["weighted_score"] = (
