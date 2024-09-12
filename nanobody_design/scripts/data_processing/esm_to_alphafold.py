@@ -63,12 +63,18 @@ def esm_to_alphafold(
     for nanobody_index in range(len(nanobody)):
         # Get nanobody sequence and name
         nanobody_seq = nanobody[nanobody_sequence_col].iloc[nanobody_index]
-        nanobody_position = nanobody[nanobody_pos_col].iloc[nanobody_index]
-        nanobody_original_aa = nanobody[nanobodoy_original_aa_col].iloc[nanobody_index]
-        nanobody_mutant_aa = nanobody[nanobody_mutated_aa_col].iloc[nanobody_index]
-        nanobody_mutant_name = f"{nanobody_name}-{nanobody_original_aa}{nanobody_position}{nanobody_mutant_aa}"
 
-        complex_name = f"{spike_name}_{nanobody_mutant_name}"
+        if nanobody_sequence_col == "mutated_sequence":
+            nanobody_position = nanobody[nanobody_pos_col].iloc[nanobody_index]
+            nanobody_original_aa = nanobody[nanobodoy_original_aa_col].iloc[
+                nanobody_index
+            ]
+            nanobody_mutant_aa = nanobody[nanobody_mutated_aa_col].iloc[nanobody_index]
+            nanobody_new_name = f"{nanobody_name}-{nanobody_original_aa}{nanobody_position}{nanobody_mutant_aa}"
+        else:
+            nanobody_new_name = nanobody_name
+
+        complex_name = f"{spike_name}_{nanobody_new_name}"
         merged_record = SeqRecord(
             Seq(f"{spike_seq}:{nanobody_seq}"), id=complex_name, description=""
         )
