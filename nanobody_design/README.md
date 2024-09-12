@@ -25,25 +25,69 @@ colabfold==1.5.5
 Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobody-design workflow. The outputs of this notebook are the `nanobody_design/discussions` directory. The relevant ESM, AlphaFold-Multimer, and Rosetta scripts have been copied from those discussion to the `nanobody_design/scripts` folder. Additionally, the sequences for the relevant nanobodies selected by the LLM agents, along with SARS-CoV-2 spike RBD sequences, are in the `nanobody_design/sequences` directory.
 
 
-## ESM
+## Round 0
 
-To run the ESM model, use the following command:
+Set up wildtype nanobody sequences and run AlphaFold-Multimer and Rosetta on them for round 0.
+
+
+### ESM
+
+For wildtype sequences, assign an ESM log likelihood ratio of 0.0.
 
 ```bash
-mkdir -p nanobody_design/designed/round_1/esm
+mkdir -p nanobody_design/designed/round_0/esm
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-python nanobody_design/scripts/improved/esm.py \
-    nanobody_design/sequences/nanobodies.csv \
-    $NANOBODY \
-    --output_csv nanobody_design/designed/round_1/esm/${NANOBODY}.csv \
-    --top-n 20
+python -c "import pandas as pd
+data = pd.read_csv('nanobody_design/sequences/nanobodies.csv')
+data = data[data['name'] == '${NANOBODY}']
+data['log_likelihood_ratio'] = 0.0
+data.to_csv('nanobody_design/designed/round_0/esm/${NANOBODY}.csv', index=False)"
 done
 ```
 
 
-## ESM to AlphaFold-Multimer
+### AlphaFold-Multimer
+
+TODO: run this
+
+
+### Rosetta
+
+TODO: run this
+
+
+### Combine scores
+
+TODO: run this
+
+
+## Rounds 1-N
+
+Introduce mutations one at a time and score them using ESM, AlphaFold-Multimer, and Rosetta. Select the top mutants for the next round.
+
+### ESM
+
+To run the ESM model, use the following command:
+
+```bash
+ROUND_NUM=1
+
+mkdir -p nanobody_design/designed/round_${ROUND_NUM}/esm
+
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/improved/esm.py \
+    nanobody_design/designed/round_${ROUND_NUM-1}/${NANOBODY}.csv \
+    $NANOBODY \
+    --output_csv nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
+    --top_n 20
+done
+```
+
+
+### ESM to AlphaFold-Multimer
 
 To convert the ESM-designed mutated nanobody sequences to AlphaFold-Multimer nanobody-spike sequence inputs, use the following command:
 
@@ -60,7 +104,7 @@ done
 ```
 
 
-## AlphaFold-Multimer
+### AlphaFold-Multimer
 
 Run AlphaFold-Multimer on the nanobody-spike complexes.
 
@@ -89,7 +133,7 @@ done
 ```
 
 
-## Rosetta
+### Rosetta
 
 To run Rosetta, use the following command:
 
@@ -123,7 +167,7 @@ done
 ```
 
 
-## Combine scores
+### Combine scores
 
 Combine scores from ESM, AlphaFold-Multimer, and Rosetta:
 
@@ -138,5 +182,17 @@ python nanobody_design/scripts/data_processing/combine_scores.py \
     --top_n 5
 done
 ```
+
+## Round 2
+
+Repeat the above steps but with the top selected mutant nanobodies from the previous round.
+
+Ty1: Ty1-V32A Ty1-P45L Ty1-V32D Ty1-V32Y Ty1-V32T
+
+H11-D4: H11-D4-K74N H11-D4-R45L H11-D4-R27Y H11-D4-R27I H11-D4-R27S
+
+Nb21: Nb21-R43P Nb21-R43M Nb21-R37Q Nb21-Q87G Nb21-Q87D
+
+VHH-72: VHH-72-R27C VHH-72-F37V VHH-72-D89E VHH-72-R27F VHH-72-R27Y
 
 TODO: subsequent rounds
