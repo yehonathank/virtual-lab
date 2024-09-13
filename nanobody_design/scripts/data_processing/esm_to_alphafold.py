@@ -82,9 +82,9 @@ def esm_to_alphafold(
             else:
                 nanobody_new_name = nanobody_name
 
-            complex_name = f"{spike_name}_{nanobody_new_name}"
+            complex_name = f"{nanobody_new_name}_{spike_name}"
             merged_record = SeqRecord(
-                Seq(f"{spike_seq}:{nanobody_seq}"), id=complex_name, description=""
+                Seq(f"{nanobody_seq}:{spike_seq}"), id=complex_name, description=""
             )
 
             # Write the merged sequence to a new FASTA file

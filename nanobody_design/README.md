@@ -68,7 +68,18 @@ done
 
 ### AlphaFold-Multimer
 
-TODO: run this
+Run AlphaFold-Multimer on the nanobody-spike complexes.
+
+```bash
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+for FILE in nanobody_design/designed/round_0/alphafold/sequences/${NANOBODY}/*.fasta
+do
+NAME=$(basename "$FILE" .fasta)
+colabfold_batch $FILE nanobody_design/designed/round_0/alphafold/structures/${NANOBODY}/$NAME
+done
+done
+````
 
 
 ### Rosetta
@@ -81,13 +92,28 @@ TODO: run this
 TODO: run this
 
 
-## Rounds 1-N
+## Nanobody design
 
-Introduce mutations one at a time and score them using ESM, AlphaFold-Multimer, and Rosetta. Select the top mutants for the next round.
+Design improved nanobodies by iteratively adding mutations and scoring them using ESM, AlphaFold-Multimer, and Rosetta.
 
 ### ESM
 
-To run the ESM model, use the following command:
+For round 0, simply copy the original nanobodies and assign an ESM log-likelihood ratio of 0.
+
+```bash
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python -c "from pathlib import Path; import pandas as pd
+data = pd.read_csv('nanobody_design/sequences/nanobodies.csv')
+data = data[data['name'] == '${NANOBODY}']
+data['log_likelihood_ratio'] = 0.0
+save_dir = Path('nanobody_design/designed/round_0/esm/${NANOBODY}')
+save_dir.mkdir(parents=True, exist_ok=True)
+data.to_csv(save_dir / '${NANOBODY}.csv', index=False)"
+done
+```
+
+For all subsequent rounds, run the ESM model.
 
 ```bash
 ROUND_NUM=1
@@ -97,7 +123,7 @@ mkdir -p nanobody_design/designed/round_${ROUND_NUM}/esm
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/improved/esm.py \
-    nanobody_design/designed/round_${ROUND_NUM-1}/${NANOBODY}.csv \
+    nanobody_design/designed/round_${ROUND_NUM-1}/scores/${NANOBODY}.csv \
     --save_dir nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
     --top_n 20
 done
@@ -106,16 +132,18 @@ done
 
 ### ESM to AlphaFold-Multimer
 
-To convert the ESM-designed mutated nanobody sequences to AlphaFold-Multimer nanobody-spike sequence inputs, use the following command:
+Convert the ESM-designed mutated nanobody sequences to AlphaFold-Multimer nanobody-spike sequence inputs. (For round 0, add `--nanobody_sequence_col sequence`.)
 
 ```bash
+ROUND_NUM=1
+
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --spike_sequences_path nanobody_design/sequences/spike.csv \
     --spike_name KP3 \
-    --nanobody_sequences_path nanobody_design/designed/round_1/esm/${NANOBODY}.csv \
-    --save_dir nanobody_design/designed/round_1/alphafold/sequences/${NANOBODY} \
+    --nanobody_sequences_dir nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
+    --save_dir nanobody_design/designed/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY} \
     --top_n 20
 done
 ```
@@ -126,12 +154,14 @@ done
 Run AlphaFold-Multimer on the nanobody-spike complexes.
 
 ```bash
+ROUND_NUM=1
+
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-for FILE in nanobody_design/designed/round_1/alphafold/sequences/${NANOBODY}/*.fasta
+for FILE in nanobody_design/designed/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY}/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
-colabfold_batch $FILE nanobody_design/designed/round_1/alphafold/structures/${NANOBODY}/$NAME
+colabfold_batch $FILE nanobody_design/designed/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/$NAME
 done
 done
 ```
@@ -139,13 +169,15 @@ done
 Process the AlphaFold-Multimer complexes to extract interface pLDDT scores:
 
 ```bash
+ROUND_NUM=1
+
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/improved/alphafold.py \
-    nanobody_design/designed/round_1/alphafold/structures/${NANOBODY} \
-    B \
+    nanobody_design/designed/round_${ROUND_NUM}/alphafold/structures/${NANOBODY} \
     A \
-    nanobody_design/designed/round_1/alphafold/${NANOBODY}.csv
+    B \
+    nanobody_design/designed/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv
 done
 ```
 
