@@ -41,7 +41,7 @@ for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 experiments+=("python nanobody_design/scripts/improved/esm.py \
     nanobody_design/designed/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
-    --save-dir nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
+    nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
     --top-n 20")
 done
 
