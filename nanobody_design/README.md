@@ -166,7 +166,7 @@ done
 done
 ```
 
-Process the AlphaFold-Multimer complexes to extract interface pLDDT scores:
+Process the AlphaFold-Multimer complexes to extract interface pLDDT scores.
 
 ```bash
 ROUND_NUM=1
@@ -184,15 +184,17 @@ done
 
 ### Rosetta
 
-To run Rosetta, use the following command:
+Run Rosetta to calculate interface binding energies.
 
 ```bash
+ROUND_NUM=1
+
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-OUTPUT_DIR="nanobody_design/designed/round_1/rosetta/${NANOBODY}"
+OUTPUT_DIR="nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY}"
 mkdir -p "${OUTPUT_DIR}"
 
-for FILE in nanobody_design/designed/round_1/alphafold/structures/"${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
+for FILE in nanobody_design/designed/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/*/*unrelaxed_rank_001*.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
 rosetta_scripts.default.linuxgccrelease \
@@ -207,11 +209,13 @@ done
 Then, collate the outputs with the following command:
 
 ```bash
+ROUND_NUM=1
+
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/improved/rosetta.py \
-    nanobody_design/designed/round_1/rosetta/${NANOBODY} \
-    nanobody_design/designed/round_1/rosetta/${NANOBODY}.csv
+    nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY} \
+    nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv
 done
 ```
 
@@ -221,13 +225,15 @@ done
 Combine scores from ESM, AlphaFold-Multimer, and Rosetta:
 
 ```bash
+ROUND_NUM=1
+
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/data_processing/combine_scores.py \
-    --esm_scores_path nanobody_design/designed/round_1/esm/${NANOBODY}.csv \
-    --alphafold_scores_path nanobody_design/designed/round_1/alphafold/${NANOBODY}.csv \
-    --rosetta_scores_path nanobody_design/designed/round_1/rosetta/${NANOBODY}.csv \
-    --save_path nanobody_design/designed/round_1/scores/${NANOBODY}.csv \
+    --esm_scores_path nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
+    --alphafold_scores_path nanobody_design/designed/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv \
+    --rosetta_scores_path nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv \
+    --save_path nanobody_design/designed/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
     --top_n 5
 done
 ```
