@@ -35,15 +35,15 @@ Set up wildtype nanobody sequences and run AlphaFold-Multimer and Rosetta on the
 For wildtype sequences, assign an ESM log likelihood ratio of 0.0.
 
 ```bash
-mkdir -p nanobody_design/designed/round_0/esm
-
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-python -c "import pandas as pd
+python -c "from pathlib import Path; import pandas as pd
 data = pd.read_csv('nanobody_design/sequences/nanobodies.csv')
 data = data[data['name'] == '${NANOBODY}']
 data['log_likelihood_ratio'] = 0.0
-data.to_csv('nanobody_design/designed/round_0/esm/${NANOBODY}.csv', index=False)"
+save_dir = Path('nanobody_design/designed/round_0/esm/${NANOBODY}')
+save_dir.mkdir(parents=True, exist_ok=True)
+data.to_csv(save_dir / '${NANOBODY}.csv', index=False)"
 done
 ```
 
@@ -58,7 +58,7 @@ do
 python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --spike_sequences_path nanobody_design/sequences/spike.csv \
     --spike_name KP3 \
-    --nanobody_sequences_path nanobody_design/designed/round_0/esm/${NANOBODY}.csv \
+    --nanobody_sequences_dir nanobody_design/designed/round_0/esm/${NANOBODY} \
     --save_dir nanobody_design/designed/round_0/alphafold/sequences/${NANOBODY} \
     --top_n 20 \
     --nanobody_sequence_col sequence
@@ -98,8 +98,7 @@ for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/improved/esm.py \
     nanobody_design/designed/round_${ROUND_NUM-1}/${NANOBODY}.csv \
-    $NANOBODY \
-    --output_csv nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
+    --save_dir nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
     --top_n 20
 done
 ```

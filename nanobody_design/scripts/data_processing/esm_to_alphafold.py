@@ -11,7 +11,7 @@ from Bio.SeqRecord import SeqRecord
 def esm_to_alphafold(
     spike_sequences_path: Path,
     spike_name: str,
-    nanobody_sequences_path: Path,
+    nanobody_sequences_dir: Path,
     save_dir: Path,
     top_n: int = 10,
     spike_sequence_col: str = "rbd",
@@ -26,7 +26,7 @@ def esm_to_alphafold(
 
     :param spike_sequences_path: Path to a CSV file containing spike protein sequences.
     :param spike_name: Name of the spike protein.
-    :param nanobody_sequences_path: Path to a CSV file containing mutated nanobody sequences from ESM.
+    :param nanobody_sequences_dir: Path to a directory of CSV files containing mutated nanobody sequences from ESM.
     :param save_dir: Directory to save the paired nanobody-spike sequences for input to AlphaFold.
     :param top_n: Number of top mutations to display.
     :param spike_sequence_col: Column name for the spike protein sequence in the CSV file.
@@ -37,9 +37,8 @@ def esm_to_alphafold(
     :param nanobody_mutated_aa_col: Column name for the mutant amino acid in the nanobody mutation in the CSV file.
     :param nanobody_llr_col: Column name for the log-likelihood ratio in the nanobody mutation in the CSV file.
     """
-    # Load sequences from both files
+    # Load spike sequences
     spike = pd.read_csv(spike_sequences_path)
-    nanobody = pd.read_csv(nanobody_sequences_path)
 
     # Get spike sequence and name
     spike = spike[spike[spike_name_col] == spike_name]
@@ -50,38 +49,47 @@ def esm_to_alphafold(
     spike_seq = spike[spike_sequence_col].iloc[0]
     spike_name = spike[spike_name_col].iloc[0]
 
-    # Limit the number of top mutations to display
-    nanobody = nanobody.sort_values(by=nanobody_llr_col, ascending=False).head(top_n)
+    # Iterate over nanobody sequence paths
+    for nanobody_sequences_path in nanobody_sequences_dir.glob("*.csv"):
+        # Get nanobody sequences
+        nanobody = pd.read_csv(nanobody_sequences_path)
 
-    # Get nanobody name
-    nanobody_name = nanobody_sequences_path.stem
-
-    # Make save directory
-    save_dir.mkdir(parents=True, exist_ok=True)
-
-    # Pair spike-nanobody sequences
-    for nanobody_index in range(len(nanobody)):
-        # Get nanobody sequence and name
-        nanobody_seq = nanobody[nanobody_sequence_col].iloc[nanobody_index]
-
-        if nanobody_sequence_col == "mutated_sequence":
-            nanobody_position = nanobody[nanobody_pos_col].iloc[nanobody_index]
-            nanobody_original_aa = nanobody[nanobodoy_original_aa_col].iloc[
-                nanobody_index
-            ]
-            nanobody_mutant_aa = nanobody[nanobody_mutated_aa_col].iloc[nanobody_index]
-            nanobody_new_name = f"{nanobody_name}-{nanobody_original_aa}{nanobody_position}{nanobody_mutant_aa}"
-        else:
-            nanobody_new_name = nanobody_name
-
-        complex_name = f"{spike_name}_{nanobody_new_name}"
-        merged_record = SeqRecord(
-            Seq(f"{spike_seq}:{nanobody_seq}"), id=complex_name, description=""
+        # Limit the number of top mutations to display
+        nanobody = nanobody.sort_values(by=nanobody_llr_col, ascending=False).head(
+            top_n
         )
 
-        # Write the merged sequence to a new FASTA file
-        with open(save_dir / f"{complex_name}.fasta", "w") as output_handle:
-            SeqIO.write(merged_record, output_handle, "fasta")
+        # Get nanobody name
+        nanobody_name = nanobody_sequences_path.stem
+
+        # Make save directory
+        save_dir.mkdir(parents=True, exist_ok=True)
+
+        # Pair spike-nanobody sequences
+        for nanobody_index in range(len(nanobody)):
+            # Get nanobody sequence and name
+            nanobody_seq = nanobody[nanobody_sequence_col].iloc[nanobody_index]
+
+            if nanobody_sequence_col == "mutated_sequence":
+                nanobody_position = nanobody[nanobody_pos_col].iloc[nanobody_index]
+                nanobody_original_aa = nanobody[nanobodoy_original_aa_col].iloc[
+                    nanobody_index
+                ]
+                nanobody_mutant_aa = nanobody[nanobody_mutated_aa_col].iloc[
+                    nanobody_index
+                ]
+                nanobody_new_name = f"{nanobody_name}-{nanobody_original_aa}{nanobody_position}{nanobody_mutant_aa}"
+            else:
+                nanobody_new_name = nanobody_name
+
+            complex_name = f"{spike_name}_{nanobody_new_name}"
+            merged_record = SeqRecord(
+                Seq(f"{spike_seq}:{nanobody_seq}"), id=complex_name, description=""
+            )
+
+            # Write the merged sequence to a new FASTA file
+            with open(save_dir / f"{complex_name}.fasta", "w") as output_handle:
+                SeqIO.write(merged_record, output_handle, "fasta")
 
 
 if __name__ == "__main__":
