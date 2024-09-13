@@ -136,7 +136,7 @@ You previously wrote a Python script that uses ESM to compute the log-likelihood
 2. Replace "facebook/esm1b-t33_650M_UR50S" with "facebook/esm1b_t33_650M_UR50S".
 3. Batch the calculations of the mutant log-likelihoods with a batch size specified by the user (default to 16).
 4. Add a progress bar to the batched mutant log-likelihood calculations.
-5. Run the mutant log-likelihood calculations on CUDA.
+5. Run the mutant log-likelihood calculations on CUDA but with no gradients.
 6. Load the nanobody sequence from a user-specified CSV file that has the columns "sequence" and "name". Adapt your code to run the mutant log-likelihood calculations on all sequences in the CSV file one-by-one.
 7. For each sequence, save the mutant log-likelihoods to a CSV file with the format "mutated_sequence,position,original_aa,mutated_aa,log_likelihood_ratio". Ask the user for a save directory and then save this CSV file in that directory with the name: <nanbody-name>.csv.
 
@@ -144,29 +144,40 @@ Machine Learning Specialist, please provide your response to the agenda.
 
 ## Machine Learning Specialist
 
-Certainly! Below is the revised Python script that incorporates the requested improvements. This script now includes batching for mutant log-likelihood calculations, uses CUDA for computations, and processes sequences from a CSV file. It also saves the results to CSV files in a specified directory.
+Certainly! Below is the revised Python script that incorporates the requested improvements. The script now includes batching for mutant log-likelihood calculations, uses a progress bar, runs calculations on CUDA without gradients, and processes sequences from a CSV file, saving results to specified directories.
 
 ```python
 import argparse
-import numpy as np
 import pandas as pd
+import numpy as np
 from transformers import EsmForMaskedLM, EsmTokenizer
 import torch
-from typing import List, Tuple
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 import os
+from typing import List, Tuple
+
+class NanobodyDataset(Dataset):
+    def __init__(self, sequences: List[str]):
+        self.sequences = sequences
+
+    def __len__(self):
+        return len(self.sequences)
+
+    def __getitem__(self, idx):
+        return self.sequences[idx]
 
 def parse_arguments() -> Tuple[str, int, int, str]:
     """Parse command-line arguments to get the CSV file, batch size, and display limit.
 
     Returns:
-        Tuple[str, int, int, str]: The input CSV file path, batch size, number of top mutations to display, and save directory.
+        Tuple[str, int, int, str]: The input CSV file, batch size, number of top mutations to display, and save directory.
     """
     parser = argparse.ArgumentParser(description='Identify promising point mutations in nanobody sequences using ESM log-likelihoods.')
-    parser.add_argument('csv_file', type=str, help='Path to the CSV file containing nanobody sequences with columns "sequence" and "name".')
+    parser.add_argument('csv_file', type=str, help='CSV file containing nanobody sequences with columns "sequence" and "name".')
     parser.add_argument('--batch-size', type=int, default=16, help='Batch size for mutant log-likelihood calculations (default: 16).')
     parser.add_argument('--top-n', type=int, default=10, help='Number of top mutations to display (default: 10). Must be a positive integer.')
-    parser.add_argument('--save-dir', type=str, required=True, help='Directory to save the results CSV files.')
+    parser.add_argument('--save-dir', type=str, required=True, help='Directory to save the output CSV files.')
     args = parser.parse_args()
 
     # Validate inputs
@@ -186,14 +197,15 @@ def compute_log_likelihood_ratios(seq: str, model, tokenizer, batch_size: int) -
         seq (str): The input nanobody sequence.
         model: The ESM model for masked language modeling.
         tokenizer: Tokenizer corresponding to the ESM model.
-        batch_size (int): The batch size for processing mutations.
+        batch_size (int): Batch size for processing mutations.
 
     Returns:
         List[Tuple[str, int, str, str, float]]: A list of tuples containing mutated sequence, position, original amino acid, mutated amino acid, and log-likelihood ratio.
     """
     try:
         encoded_input = tokenizer(seq, return_tensors='pt', add_special_tokens=True).to('cuda')
-        original_output = model(**encoded_input)
+        with torch.no_grad():
+            original_output = model(**encoded_input)
 
         log_likelihoods = []
         amino_acids = 'ACDEFGHIKLMNPQRSTVWY'
@@ -206,17 +218,17 @@ def compute_log_likelihood_ratios(seq: str, model, tokenizer, batch_size: int) -
                 mutated_sequence = seq[:pos - 1] + aa + seq[pos:]
                 mutations.append((mutated_sequence, pos, seq[pos - 1], aa))
 
-        for i in tqdm(range(0, len(mutations), batch_size), desc="Processing mutations"):
-            batch_mutations = mutations[i:i + batch_size]
-            mutated_sequences = [m[0] for m in batch_mutations]
-            mutated_inputs = tokenizer(mutated_sequences, return_tensors='pt', padding=True, truncation=True, add_special_tokens=True).to('cuda')
-            mutated_outputs = model(**mutated_inputs)
+        # Batch processing
+        data_loader = DataLoader(NanobodyDataset(mutations), batch_size=batch_size, shuffle=False)
+        for batch in tqdm(data_loader, desc="Processing mutations"):
+            mutated_inputs = tokenizer(batch, return_tensors='pt', padding=True, truncation=True, add_special_tokens=True).to('cuda')
+            with torch.no_grad():
+                mutated_outputs = model(**mutated_inputs)
 
-            for j, (mutated_sequence, pos, original_aa, mutated_aa) in enumerate(batch_mutations):
-                original_ll = original_output.logits[0, pos, tokenizer.convert_tokens_to_ids(seq[pos-1])].item()
-                mutated_ll = mutated_outputs.logits[j, pos, tokenizer.convert_tokens_to_ids(mutated_aa)].item()
+            for i, (mutated_sequence, pos, original_aa, mutated_aa) in enumerate(batch):
+                original_ll = original_output.logits[0, pos, tokenizer.convert_tokens_to_ids(original_aa)].item()
+                mutated_ll = mutated_outputs.logits[i, pos, tokenizer.convert_tokens_to_ids(mutated_aa)].item()
                 ll_ratio = mutated_ll - original_ll
-
                 log_likelihoods.append((mutated_sequence, pos, original_aa, mutated_aa, ll_ratio))
 
         return sorted(log_likelihoods, key=lambda x: x[4], reverse=True)
@@ -240,28 +252,25 @@ def main():
         print("Warning: CUDA is not available. Running on CPU may be slow. Consider using a cloud service with GPU support.")
         print("For CUDA installation, visit: https://pytorch.org/get-started/locally/")
 
+    # Load sequences from CSV
     try:
-        sequences_df = pd.read_csv(csv_file)
+        df = pd.read_csv(csv_file)
+        sequences = df['sequence'].tolist()
+        names = df['name'].tolist()
     except Exception as e:
-        print(f"Error reading CSV file: {e}. Ensure the file exists and is in the correct format.")
+        print(f"Error reading CSV file: {e}. Ensure the file exists and has the correct format.")
         return
 
-    for _, row in sequences_df.iterrows():
-        nanobody_sequence = row['sequence']
-        nanobody_name = row['name']
-
-        print(f"Computing log-likelihood ratios for {nanobody_name}...")
-        mutations = compute_log_likelihood_ratios(nanobody_sequence, model, tokenizer, batch_size)
+    for seq, name in zip(sequences, names):
+        print(f"Computing log-likelihood ratios for {name}...")
+        mutations = compute_log_likelihood_ratios(seq, model, tokenizer, batch_size)
 
         if mutations:
-            output_file = os.path.join(save_dir, f"{nanobody_name}.csv")
-            with open(output_file, 'w') as f:
-                f.write("mutated_sequence,position,original_aa,mutated_aa,log_likelihood_ratio\n")
-                for mutation in mutations:
-                    f.write(f"{mutation[0]},{mutation[1]},{mutation[2]},{mutation[3]},{mutation[4]}\n")
+            output_file = os.path.join(save_dir, f"{name}.csv")
+            pd.DataFrame(mutations, columns=["mutated_sequence", "position", "original_aa", "mutated_aa", "log_likelihood_ratio"]).to_csv(output_file, index=False)
             print(f"Results saved to {output_file}")
         else:
-            print(f"No mutations could be computed for {nanobody_name}. Please check your input sequence and model.")
+            print(f"No mutations could be computed for {name}. Please check your input sequence and model.")
 
     print("\nInterpretation:")
     print("Log-likelihood ratios indicate the relative likelihood of mutations improving binding affinity.")
@@ -274,12 +283,12 @@ if __name__ == '__main__':
 
 ### Key Improvements:
 
-1. **Unused Imports Removed**: Cleaned up the import statements to include only necessary libraries.
-2. **Model Name Correction**: Updated the model name to `facebook/esm1b_t33_650M_UR50S`.
-3. **Batch Processing**: Implemented batching for mutant log-likelihood calculations with a user-specified batch size.
+1. **Unused Imports Removed**: Cleaned up imports to include only necessary libraries.
+2. **Model Name Updated**: Changed the model name to `facebook/esm1b_t33_650M_UR50S`.
+3. **Batch Processing**: Implemented batch processing for mutant log-likelihood calculations with a user-specified batch size.
 4. **Progress Bar**: Added a progress bar using `tqdm` to track the progress of mutation processing.
-5. **CUDA Utilization**: Ensured that computations are performed on CUDA if available, improving performance.
-6. **CSV Input and Output**: Modified the script to read sequences from a CSV file and save results to individual CSV files for each sequence in a specified directory.
+5. **CUDA Optimization**: Calculations are performed on CUDA with `torch.no_grad()` to optimize performance.
+6. **CSV Input and Output**: The script reads sequences from a CSV file and saves results to individual CSV files for each sequence in a specified directory.
 
-These changes enhance the script's efficiency, usability, and scalability, aligning with the project's goals of optimizing antibody designs against SARS-CoV-2 variants.
+These changes enhance the script's efficiency, usability, and scalability for processing multiple sequences.
 

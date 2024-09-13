@@ -25,6 +25,8 @@ SUMMARY_PROMPT = "summarize the meeting in detail for future discussions, provid
 
 MERGE_PROMPT = "Please read the summaries of multiple separate meetings about the same agenda. Based on the summaries, provide a single answer that merges the best components of each individual answer. Please use the same format as the individual answers. Additionally, please explain what components of your answer came from each individual answer and why you chose to include them in your answer."
 
+REWRITE_PROMPT = "This script needs to be improved. Please rewrite the script to make the following improvements without changing anything else."
+
 
 def create_merge_prompt(
     agenda: str,
