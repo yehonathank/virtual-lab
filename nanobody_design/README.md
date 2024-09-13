@@ -62,6 +62,19 @@ python nanobody_design/scripts/improved/esm.py \
 done
 ```
 
+Then, merge the ESM scores into a single file.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python -c "from pathlib import Path;import pandas as pd
+data = pd.concat([pd.read_csv(path) for path in Path('nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}').glob('*.csv')])
+data.to_csv('nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv', index=False)"
+done
+```
+
 
 ### ESM to AlphaFold-Multimer
 
@@ -139,7 +152,7 @@ done
 done
 ```
 
-Then, collate the outputs with the following command:
+Then, collate the outputs.
 
 ```bash
 ROUND_NUM=1
@@ -155,7 +168,7 @@ done
 
 ### Combine scores
 
-Combine scores from ESM, AlphaFold-Multimer, and Rosetta:
+Combine scores from ESM, AlphaFold-Multimer, and Rosetta. (For round 0, add `--single_sequence`.)
 
 ```bash
 ROUND_NUM=1
@@ -170,17 +183,3 @@ python nanobody_design/scripts/data_processing/combine_scores.py \
     --top_n 5
 done
 ```
-
-## Round 2
-
-Repeat the above steps but with the top selected mutant nanobodies from the previous round.
-
-Ty1: Ty1-V32A Ty1-P45L Ty1-V32D Ty1-V32Y Ty1-V32T
-
-H11-D4: H11-D4-K74N H11-D4-R45L H11-D4-R27Y H11-D4-R27I H11-D4-R27S
-
-Nb21: Nb21-R43P Nb21-R43M Nb21-R37Q Nb21-Q87G Nb21-Q87D
-
-VHH-72: VHH-72-R27C VHH-72-F37V VHH-72-D89E VHH-72-R27F VHH-72-R27Y
-
-TODO: subsequent rounds

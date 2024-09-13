@@ -11,7 +11,7 @@ def combine_scores(
     rosetta_scores_path: Path,
     save_path: Path,
     top_n: int = 5,
-    single_sequence: bool = False,
+    wildtype_sequence: bool = False,
 ) -> None:
     """Combines scores from ESM, AlphaFold-Multimer, and Rosetta into a single file.
 
@@ -20,7 +20,7 @@ def combine_scores(
     :param rosetta_scores_path: Path to a CSV file containing Rosetta scores.
     :param save_path: Path to save the combined scores.
     :param top_n: Number of top sequences to display.
-    :param single_sequence: Whether there is only a single sequence (affects naming).
+    :param wildtype_sequence: Whether there is only a single wildtype sequence.
     """
     # Load scores from all three files
     esm_scores = pd.read_csv(esm_scores_path)
@@ -28,10 +28,11 @@ def combine_scores(
     rosetta_scores = pd.read_csv(rosetta_scores_path)
 
     # Get ESM names
-    if single_sequence:
-        esm_scores["name"] = esm_scores_path.stem
+    if wildtype_sequence:
+        name = esm_scores_path.stem
+        sequence = esm_scores["sequence"]
     else:
-        esm_scores["name"] = [
+        name = [
             f"{esm_scores_path.stem}-{original}{position}{mutant}"
             for original, position, mutant in zip(
                 esm_scores["original_aa"],
@@ -39,12 +40,13 @@ def combine_scores(
                 esm_scores["mutated_aa"],
             )
         ]
+        sequence = esm_scores["mutated_sequence"]
 
     # Set up new DataFrame with ESM scores
     combined_scores = pd.DataFrame(
         data={
-            "name": esm_scores["name"],
-            "sequence": esm_scores["mutated_sequence"],
+            "name": name,
+            "sequence": sequence,
             "log_likelihood_ratio": esm_scores["log_likelihood_ratio"],
         },
     )
