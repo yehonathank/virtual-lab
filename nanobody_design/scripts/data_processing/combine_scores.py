@@ -53,7 +53,7 @@ def combine_scores(
 
     # Merge AlphaFold-Multimer scores
     alphafold_scores["name"] = [
-        Path(path).parent.name.split("_")[-1] for path in alphafold_scores["PDB_File"]
+        Path(path).parent.name.split("_")[0] for path in alphafold_scores["PDB_File"]
     ]
     del alphafold_scores["PDB_File"]
 
@@ -61,7 +61,7 @@ def combine_scores(
 
     # Merge Rosetta scores
     rosetta_scores["name"] = [
-        Path(path).stem.split("_")[-1] for path in rosetta_scores["File Name"]
+        Path(path).stem.split("_")[0] for path in rosetta_scores["File Name"]
     ]
     del rosetta_scores["File Name"]
 
