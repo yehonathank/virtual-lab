@@ -31,24 +31,25 @@ def combine_scores(
 
     # Get ESM names
     if wildtype_sequence:
-        name = esm_scores_path.stem
-        sequence = esm_scores["sequence"]
+        names = esm_scores["name"]
+        sequences = esm_scores["sequence"]
     else:
-        name = [
-            f"{esm_scores_path.stem}-{original}{position}{mutant}"
-            for original, position, mutant in zip(
+        names = [
+            f"{name}-{original}{position}{mutant}"
+            for name, original, position, mutant in zip(
+                esm_scores["name"],
                 esm_scores["original_aa"],
                 esm_scores["position"],
                 esm_scores["mutated_aa"],
             )
         ]
-        sequence = esm_scores["mutated_sequence"]
+        sequences = esm_scores["mutated_sequence"]
 
     # Set up new DataFrame with ESM scores
     combined_scores = pd.DataFrame(
         data={
-            "name": name,
-            "sequence": sequence,
+            "name": names,
+            "sequence": sequences,
             "log_likelihood_ratio": esm_scores["log_likelihood_ratio"],
         },
     )

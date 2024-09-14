@@ -70,7 +70,7 @@ ROUND_NUM=1
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python -c "from pathlib import Path;import pandas as pd
-data = pd.concat([pd.read_csv(path) for path in Path('nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}').glob('*.csv')])
+data = pd.concat([pd.read_csv(path).assign(name=path.stem) for path in Path('nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}').glob('*.csv')])
 data.to_csv('nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv', index=False)"
 done
 ```
