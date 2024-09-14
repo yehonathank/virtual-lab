@@ -52,10 +52,9 @@ For all subsequent rounds, run the ESM model.
 ROUND_NUM=1
 PREV_ROUND_NUM=$((ROUND_NUM - 1))
 
-mkdir -p nanobody_design/designed/round_${ROUND_NUM}/esm
-
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
+mkdir -p nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}
 python nanobody_design/scripts/improved/esm.py \
     nanobody_design/designed/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
     nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
