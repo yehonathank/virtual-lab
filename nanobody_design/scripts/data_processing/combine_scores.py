@@ -9,7 +9,8 @@ def combine_scores(
     esm_scores_path: Path,
     alphafold_scores_path: Path,
     rosetta_scores_path: Path,
-    save_path: Path,
+    all_save_path: Path,
+    top_save_path: Path,
     top_n: int = 5,
     wildtype_sequence: bool = False,
 ) -> None:
@@ -18,7 +19,8 @@ def combine_scores(
     :param esm_scores_path: Path to a CSV file containing ESM scores.
     :param alphafold_scores_path: Path to a CSV file containing AlphaFold-Multimer scores.
     :param rosetta_scores_path: Path to a CSV file containing Rosetta scores.
-    :param save_path: Path to save the combined scores.
+    :param all_save_path: Path to save all the combined scores.
+    :param top_save_path: Path to save the top N combined scores.
     :param top_n: Number of top sequences to display.
     :param wildtype_sequence: Whether there is only a single wildtype sequence.
     """
@@ -77,12 +79,13 @@ def combine_scores(
     # Sort by weighted score
     combined_scores.sort_values(by="weighted_score", ascending=False, inplace=True)
 
-    # Print names of top N sequences
-    print(" ".join(combined_scores["name"].head(top_n)))
+    # Save all scores
+    all_save_path.parent.mkdir(parents=True, exist_ok=True)
+    combined_scores.to_csv(all_save_path, index=False)
 
-    # Save combined scores
-    save_path.parent.mkdir(parents=True, exist_ok=True)
-    combined_scores.to_csv(save_path, index=False)
+    # Save top N scores
+    top_save_path.parent.mkdir(parents=True, exist_ok=True)
+    combined_scores.head(top_n).to_csv(top_save_path, index=False)
 
 
 if __name__ == "__main__":

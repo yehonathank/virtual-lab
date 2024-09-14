@@ -180,7 +180,8 @@ python nanobody_design/scripts/data_processing/combine_scores.py \
     --esm_scores_path nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
     --alphafold_scores_path nanobody_design/designed/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv \
     --rosetta_scores_path nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv \
-    --save_path nanobody_design/designed/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
+    --all_save_path nanobody_design/designed/round_${ROUND_NUM}/scores/${NANOBODY}_all.csv \
+    --top_save_path nanobody_design/designed/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
     --top_n 5
 done
 ```
