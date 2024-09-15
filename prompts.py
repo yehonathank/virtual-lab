@@ -324,39 +324,16 @@ CODING_RULES = (
 )
 
 
-with open("emerald/emerald_experiments_7.3.24.txt") as f:
-    ECL_EXPERIMENTS = f.read()
+try:
+    with open("drug_discovery/emerald/emerald_running_experiments_9.15.24.txt") as f:
+        ECL_RUNNING_EXPERIMENTS = f.read()
 
+    with open("drug_discovery/emerald/emerald_unit_operations_9.15.24.txt") as f:
+        ECL_UNIT_OPERATIONS = f.read()
 
-ECL_CONTEXT = f"You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs.\n\n{ECL_EXPERIMENTS}."
+    ECL_CONTEXT = f"You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments and unit operations available at ECL are below.\n\n{ECL_RUNNING_EXPERIMENTS}\n\n{ECL_UNIT_OPERATIONS}"
 
-DRUG_DISCOVERY_CONTEXTS = (ECL_CONTEXT,)
-
-ECL_INSTRUMENT_SIMPLIFICATION_PROMPT = """A long piece of text will be given to you. Please read the text and then write the name of every single experiment. After each experiment name, copy the example applications, if provided. For example, given this input text in quotes:
-
-"ExperimentSolidPhaseExtraction(Beta)
-Base Package
-
-Example applications include: Compound Separation, Compound Purification, Mobile Phase, Solid Sorbent, Filtration
-
-Small Robotic Liquid Handler
-20 PSI pressure push (independent for each vessel)
-0.1 to 100 mL/min flow rates for solvent pushes
-Up to 20 L of wash solvent per batch
-Up to 700 mL of equilibration buffer and elution buffer per batch
-Filter through 3 cc or 6 cc SPE cartridges
-
-Collects in SBS deep well plates
-
-Positive Pressure Filter
-0 to 40 PSI independent pressure sources for each well
-Filter though SBS filter plates
-Collects in SBS deep well plates"
-
-you would then write the following text, provided here in quotes:
-
-"ExperimentSolidPhaseExtraction(Beta)
-
-Example applications include: Compound Separation, Compound Purification, Mobile Phase, Solid Sorbent, Filtration"
-
-Below is the text you need to read. Please read it and write out all the experiments as explained."""
+    DRUG_DISCOVERY_CONTEXTS = (ECL_CONTEXT,)
+except FileNotFoundError:
+    print("Could not find the file containing the ECL context.")
+    DRUG_DISCOVERY_CONTEXTS = ()
