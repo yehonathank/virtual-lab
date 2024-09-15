@@ -9,7 +9,7 @@ After following the general `virtual_lab` installation instructions, run the fol
 
 ```bash
 conda activate virtual_lab
-pip install -r nanobody_design/requirements.txt
+pip install -r nanobody_design/requirements_nanobody_design.txt
 ```
 
 Additionally, create separate virtual environment for running AlphaFold-Multimer via LocalColabFold by following these instructions: https://github.com/YoshitakaMo/localcolabfold (or by running `install_localcolabfold.sh`). Make sure the following versions are installed:
@@ -22,7 +22,7 @@ colabfold==1.5.5
 
 ## LLM project design
 
-Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobody-design workflow. The outputs of this notebook are the `nanobody_design/discussions` directory. The relevant ESM, AlphaFold-Multimer, and Rosetta scripts have been copied from those discussion to the `nanobody_design/scripts` folder. Additionally, the sequences for the relevant nanobodies selected by the LLM agents, along with SARS-CoV-2 spike RBD sequences, are in the `nanobody_design/sequences` directory.
+Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobody design workflow. The outputs of this notebook are the `nanobody_design/discussions` directory. The relevant ESM, AlphaFold-Multimer, and Rosetta scripts have been copied from those discussion to the `nanobody_design/scripts` folder. Additionally, the sequences for the relevant nanobodies selected by the LLM agents, along with SARS-CoV-2 spike RBD sequences, are in the `nanobody_design/sequences` directory.
 
 
 ## Nanobody design
