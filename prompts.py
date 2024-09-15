@@ -326,14 +326,18 @@ CODING_RULES = (
 
 try:
     with open("drug_discovery/emerald/emerald_running_experiments_9.15.24.txt") as f:
-        ECL_RUNNING_EXPERIMENTS = f.read()
+        ECL_RUNNING_EXPERIMENTS = f.read().replace("\n", "\n\n")
 
     with open("drug_discovery/emerald/emerald_unit_operations_9.15.24.txt") as f:
-        ECL_UNIT_OPERATIONS = f.read()
+        ECL_UNIT_OPERATIONS = f.read().replace("\n", "\n\n")
 
-    ECL_CONTEXT = f"You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments and unit operations available at ECL are below.\n\n{ECL_RUNNING_EXPERIMENTS}\n\n{ECL_UNIT_OPERATIONS}"
+    ECL_CONTEXT = "You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments and unit operations available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs."
 
-    DRUG_DISCOVERY_CONTEXTS = (ECL_CONTEXT,)
+    DRUG_DISCOVERY_CONTEXTS = (
+        ECL_CONTEXT,
+        ECL_RUNNING_EXPERIMENTS,
+        ECL_UNIT_OPERATIONS,
+    )
 except FileNotFoundError:
     print("Could not find the file containing the ECL context.")
     DRUG_DISCOVERY_CONTEXTS = ()
