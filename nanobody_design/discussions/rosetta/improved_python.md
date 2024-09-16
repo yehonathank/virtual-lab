@@ -171,7 +171,7 @@ Computational Biologist, please provide your response to the agenda.
 
 ## Computational Biologist
 
-Certainly! To address the agenda, I'll modify the `extract_scores_from_file` function to extract the `dG_separated` value from the Rosetta score file format you provided. Here's the updated Python script with the necessary changes:
+Certainly! To address the agenda, I'll modify the `extract_scores_from_file` function to specifically extract the `dG_separated` value from the provided Rosetta score file format. Here's the updated Python script with the necessary changes:
 
 ```python
 import os
@@ -194,13 +194,12 @@ def extract_scores_from_file(score_file: str) -> float:
             lines = f.readlines()
             for line in lines:
                 if line.startswith("SCORE:") and "dG_separated" in line:
-                    # Split the line into columns based on whitespace
                     columns = line.split()
-                    # Find the index of the 'dG_separated' column header
-                    header_line = lines[0].split()
-                    dg_separated_index = header_line.index("dG_separated")
-                    # Return the dG_separated value as a float
-                    return float(columns[dg_separated_index])
+                    # Find the index of the dG_separated column
+                    dg_separated_index = columns.index("dG_separated")
+                elif line.startswith("SCORE:") and not line.startswith("SCORE: total_score"):
+                    values = line.split()
+                    return float(values[dg_separated_index])
         raise ValueError(f"No valid dG_separated score found in {score_file}")
     except Exception as e:
         logging.error(f"Error processing file {score_file}: {e}")
@@ -249,8 +248,9 @@ if __name__ == "__main__":
 ```
 
 ### Key Changes:
-- **Column Indexing**: The script now identifies the index of the `dG_separated` column from the header line and extracts the corresponding value from the score lines.
-- **Error Handling**: The script raises a `ValueError` if no valid `dG_separated` score is found, ensuring robust error handling.
+1. **Column Identification**: The script now identifies the index of the `dG_separated` column by parsing the header line that contains the column names.
+2. **Value Extraction**: It then extracts the `dG_separated` value from the subsequent line that contains the actual scores, using the identified index.
+3. **Error Handling**: If the `dG_separated` value is not found, the script logs an error and continues processing other files.
 
-This updated script should meet the requirements specified in the agenda by accurately extracting the `dG_separated` values from the provided Rosetta score files.
+This updated script should meet the requirements outlined in the agenda by accurately extracting the `dG_separated` values from the Rosetta score files.
 

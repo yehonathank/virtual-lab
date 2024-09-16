@@ -19,13 +19,14 @@ def extract_scores_from_file(score_file: str) -> float:
             lines = f.readlines()
             for line in lines:
                 if line.startswith("SCORE:") and "dG_separated" in line:
-                    # Split the line into columns based on whitespace
                     columns = line.split()
-                    # Find the index of the 'dG_separated' column header
-                    header_line = lines[0].split()
-                    dg_separated_index = header_line.index("dG_separated")
-                    # Return the dG_separated value as a float
-                    return float(columns[dg_separated_index])
+                    # Find the index of the dG_separated column
+                    dg_separated_index = columns.index("dG_separated")
+                elif line.startswith("SCORE:") and not line.startswith(
+                    "SCORE: total_score"
+                ):
+                    values = line.split()
+                    return float(values[dg_separated_index])
         raise ValueError(f"No valid dG_separated score found in {score_file}")
     except Exception as e:
         logging.error(f"Error processing file {score_file}: {e}")
