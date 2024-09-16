@@ -3,6 +3,14 @@ generates a Protocol object for performing Bio-Layer Interferometry (BLI) on the
 
 Biolayer interferometry is a technique used to quantify the magnitude and kinetics of an interaction between a surface immobilized species and a solution phase analyte. Binding of the analyte is monitored by the change in thickness of the bound bio-layer on the tip of a fiber-optic probe, which is determined by the white-light interference pattern of a reference channel and the bio-layer/solution interface. Probe tips can be functionalized via immersion in a solution of the target immobilized species and regenerated to return either a loading ready or measurement ready surface. After appropriate treatment, the probes are dipped into a sample solution to quantify the analyte concentration or to determine the association and dissociation kinetics. Other common experiments include epitope binning and assay optimization. Biolayer interferometry is useful for studying a variety of interactions involving proteins, oligomers, small molecules, fragments, and antibodies, and can be performed on crude samples such as cell lysate.
 
+Experimental Principles
+Figure 1.1: Procedural overview of a Biolayer Interferometry experiment. Step 1: The assay plate is loaded with buffers, loading solutions, standards, analytes, and other types of solutions required for the desired assay. Step 2: The probes are loaded into the probe rack position, where they may be immersed in equilibration solution prior to and during the course of the assay. Step 3: The multi-channel reader probes are immersed in an assay plate column to load the probe surface with an immobilized species (ActivateSurface, LoadSurface, Quench), measure the analyte binding properties (MeasureAssociation, MeasureDissocaition, Quantitate), or return the probe to measurement-ready condition via regeneration (Regenerate, Neutralize, Wash). Step 4: Any solutions derived from a given sample can be recovered from the AssayPlate.
+
+Instrumentation
+Octet Red96e
+Model[Instrument, BioLayerInterferometer, id:xRO9n3Bw9ZRq]
+Figure 2.1.1: Fiber-optic probes are stored in the probe rack position, either dry or immersed in a buffer solution. An 8-channel manifold moves between the probe rack and assay plate positions to pick up probes and conduct measurements via immersion in wells of a given column in the assay plate. A plate cover can be used to cover columns of the assay plate not currently being measured by the 8-channel reader to prevent evaporation over the course of long assays. The white light input reflects off of the internal optical layer and the biolayer/solution interface, producing an interference pattern which is directly proportional to the biolayer thickness.
+
 Experiment Options
 General
 Instrument
@@ -190,6 +198,7 @@ Programmatic Pattern: RangeP[0.5*(Microliter/Second), 250*(Microliter/Second)] |
 Probe Regeneration
 RegenerationType
 Indicates the steps to be included when returning the bio-probe surface to a measurement-ready condition. Regenerate: Adds a step where the bio-probe is immersed in RegenerationSolution. Neutralize: The bio-probe is immersed in NeutralizationSolution after regeneration to neutralize the probe surface. Wash: Adds a washing step after Regeneration or Neutralization (if selected) in WashSolution to remove any residual solution. PreCondition: Performs the requested regeneration cycle prior to the first sample measurement to ensure all measurements are performed with identical assay steps.
+Figure 3.1: Regeneration type available for ExperimentBioLayerInterferometry.
 Default Value: None
 Pattern Description: A selection of one or more of Regenerate, Neutralize, Wash, or PreCondition or None or Null.
 Programmatic Pattern: (None | DuplicateFreeListableP[Regenerate | Neutralize | Wash | PreCondition]) | Null
@@ -333,6 +342,7 @@ Programmatic Pattern: (RangeP[100*RPM, 1500*RPM] | Automatic) | Null
 Kinetics Assay
 KineticsReferenceType
 Indicates the type of non-sample solutions to be included. Select all that apply. A well containing the selected solution will be measured simultaneously during the association step. If multiple solutions are selected, one well for each solution will be included.
+Figure 3.2: Kinetics reference type available for ExperimentBioLayerInterferometry.
 Default Value: Null
 Pattern Description: A selection of one or more of Blank or Standard or Null.
 Programmatic Pattern: DuplicateFreeListableP[Blank | Standard] | Null
@@ -450,6 +460,7 @@ Index Matches to: experiment samples
 Quantitation Assay
 QuantitationParameters
 A series of modifications on a basic quantitation experiment which are used inform the assay steps and plate layout. Select all that apply and populate options for the relevant solutions section. StandardCurve: Dilutions of user-specified solution (QuantitationStandard) are used to generate a calibration curve used to quantify analyte concentrations in samples. StandardWell: Simultaneously measure a well containing analyte of known concentration (QuantitationStandard) along with the unknown samples. BlankWell: Simultaneously measure a well of solution not containing the analyte (Blank solution) along with unknown samples. AmplifiedDetection: Performs quantitation measurement in DetectionSolution which amplifies the change in bio-layer thickness, yielding more sensitive detection. This solution is generally an antibody or other substrate that binds to the analyte on the probe surface, thereby increasing the bio-layer thickness CaptureAntibody: Includes a step in which the bio-probe is functionalized with a capture antibody by immersion in CaptureAntibodySolution. SecondaryAntibody: Includes a step in which the bio-probe is treated with another antibody (in SecondaryAntibodySolution) following the first treatment. EnzymeLinked: Exposes the bio-probe to EnzymeSolution for direct measurement, or prior to detection.
+Figure 3.3: Various quantitation parameters available for ExperimentBioLayerInterferometry.
 Default Value: Null
 Pattern Description: A selection of one or more of StandardCurve, StandardWell, BlankWell, AmplifiedDetection, or EnzymeLinked or Null.
 Programmatic Pattern: DuplicateFreeListableP[StandardCurve | StandardWell | BlankWell | AmplifiedDetection | EnzymeLinked] | Null
@@ -538,6 +549,7 @@ Programmatic Pattern: ((ObjectP[{Object[Sample], Model[Sample]}] | _String) | Au
 Epitope Binning Assay
 BinningType
 Indicates the assay configuration for EpitopeBinning. Sandwich: The first antibody is bound to the bio-probe surface. The surface is first exposed to the target antigen (BinningAntigen), then to solutions of competing antibodies. Tandem: The target antigen species is immobilized on the bio-probe surface. The surface is then exposed to a pair of competing antibodies sequentially. Premix: An antibody is bound to the bio-probe surface. The bio-probe is then exposed to a premixed solution of antigen and competing antibody.
+Figure 3.4: Various binning types available for ExperimentBioLayerInterferometry.
 Default Value: Automatic
 Default Calculation: If EpitopeBinning is selected in ExperimentType, BinningType will default to Sandwich, otherwise it will default to Null.
 Pattern Description: Sandwich, PreMix, or Tandem or Null.

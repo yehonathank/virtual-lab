@@ -1,6 +1,22 @@
 ExperimentBioconjugation[SamplePools, NewIdentityModels]⟹Protocol
 generates a Protocol object to covalently bind SamplePools through chemical crosslinking to create a sample composed of NewIdentityModels. Bioconjugation reactions are a restricted form of synthesis where conjugations: 1) occur in aqueous solution, 2) occur at atmospheric conditions, 3) are low volume, 4) do not require slow addition of reagents, 5) and do not require reaction monitoring.
 
+Bioconjugation chemically links molecules together where the resulting molecule takes on properties of all parent molecules. This procedure is typically used to modify proteins, antibodies, solid phase supports, and oligomers. Common conjugates are fluorophores, nanoparticles, biotin, and horseradish peroxidase. First, if necessary, the input sample is functionalized or activated to prepare covalent binding sites to accept the conjugate. The activated input sample is then incubated with the conjugates and a covalent bond is formed. The reaction can be quenched to deactivate any unreacted binding sites. Downstream purification may be used to separate conjugated samples from the reaction components prior to use in other assays.
+
+Experimental Principles
+Figure 1.1: Bioconjugation covalently binds a biomolecule to a molecule of interest. Optional Step 1: Biomolecules can be activated to prepare and expose binding sites prior to conjugation. Activation parameters can be used to specify the activation reagent (ActivationReagent, ActivationReagentVolume), mixing of the activation sample (ActivationMix, ActivationMixType, etc.), the incubation time (ActivationTime), the incubation temperature (ActivationTemperature), and any post activation washing if desired (PostActivationWash). Step 2: The conjugation samples are mixed (ConjugationMix, ConjugationMixType, etc) at the desired ratio incubated for the ConjugationTime at the ConjugationTemperature. During this step, covalent bonds are formed between the conjugation samples to create a new molecule characterized by properties of each individual conjugation molecule. Optional Step 3: Unreacted conjugates can be quenched using the QuenchReaction option to deactivate any reactive sites or inhibit the molecular properties of any unconjugated molecules. Step 4: The resulting conjugated molecule can be further purified using PostConjugationWorkup options or used in downstream assays. This process is ideal for small volume conjugations of antibodies, proteins, oligomers, and microbeads including xMap Luminex beads. All steps of this experiment use ExperimentSampleManipulation primitives such as Transfer, Incubate, Filter, and Pellet. For more information on options available in these primitives or to understand how ExperimentSampleManipulation works please see the corresponding help file.
+
+Instrumentation
+Hamilton STARlet
+Model[Instrument, LiquidHandler, id:kEJ9mqaW7xZP]
+Figure 2.1.1: An overview of the robotic workcell. It is capable of processing plate operations including incubation, shaking, and magnetic bead separation on-deck and filtration and absorbance/fluorescence/luminescence measurement off-deck, with a robot arm facilitating the plate movements.
+Figure 2.1.2: Overhead view of the liquid handling instrument deck.
+Super STAR
+Model[Instrument, LiquidHandler, id:7X104vnRbRXd]
+Figure 2.2.1: An overview of the robotic workcell. It is capable of processing plate operations including incubation, shaking, and magnetic bead separation on-deck and centrifugation, filtration, and absorbance/fluorescence/luminescence measurement off-deck, with a robot arm facilitating the plate movements.
+Figure 2.2.2: Overhead view of the liquid handling instrument deck.
+
+
 Experiment Options
 General
 ReactionChemistry
