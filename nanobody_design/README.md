@@ -184,3 +184,23 @@ python nanobody_design/scripts/data_processing/combine_scores.py \
     --top_n 5
 done
 ```
+
+
+### Select nanobodies
+
+After all the rounds have been run, select the best nanobodies.
+
+```bash
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/data_processing/select_nanobodies.py \
+    --scores_paths \
+    nanobody_design/designed/round_1/scores/${NANOBODY}.csv \
+    nanobody_design/designed/round_2/scores/${NANOBODY}.csv \
+    nanobody_design/designed/round_3/scores/${NANOBODY}.csv \
+    nanobody_design/designed/round_4/scores/${NANOBODY}.csv \
+    --save_path nanobody_design/designed/selected/${NANOBODY}.csv \
+    --score_column weighted_score \
+    --top_n 24
+done
+```
