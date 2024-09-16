@@ -74,7 +74,7 @@ def combine_scores(
     combined_scores["weighted_score"] = (
         0.2 * combined_scores["log_likelihood_ratio"]
         + 0.5 * combined_scores["Interface_pLDDT"]
-        - 0.3 * combined_scores["dG_cross"]
+        - 0.3 * combined_scores["dG_separated"]
     )
 
     # Sort by weighted score
