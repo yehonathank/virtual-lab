@@ -582,6 +582,7 @@ Default Value: Null
 Pattern Description: {AmbientStorage, Refrigerator, Freezer, DeepFreezer, CryogenicStorage, YeastIncubation, YeastShakingIncubation, BacterialIncubation, BacterialShakingIncubation, MammalianIncubation, ViralIncubation, CrystalIncubation, AcceleratedTesting, IntermediateTesting, LongTermTesting, UVVisLightTesting} or Disposal or Null.
 Programmatic Pattern: (Alternatives[SampleStorageTypeP | Disposal]) | Null
 Index Matches to: experiment samples
+
 Protocol Options
 Organizational Information
 Template
@@ -594,6 +595,7 @@ A object name which should be used to refer to the output object in lieu of an a
 Default Value: Null
 Pattern Description: A string or Null.
 Programmatic Pattern: _String | Null
+
 Example Calls
 Resin
 The resin that will be used for the synthesis can be controlled via the Resin option. If you would like to use a resin that is pre-downloaded with a monomer, indicate that via the option DownloadResin->False and specify which Resin to use. For example, here we perform one synthesis with a regular resin (where the first monomer will be downloaded onto the resin), and another synthesis with a resin that already contains the first monomer:
@@ -606,7 +608,7 @@ ExperimentPeptideSynthesis[{myStrandModel1, myStrandModel2},
 ]
 Cleavage and Sample Storage
 By default, the synthesized strands are cleaved from the resin at the end of the synthesis and then resuspended in distilled water. If desired, it is possible to keep the strands on the resin by specifying Cleavage -> False, in which case the uncleaved strands will be stored as a resin slurry in storage buffer. The parameters for these manipulations (such as the buffer and buffer amount) are controlled via the set of Resuspension and Storage options, respectively. In the following example, the first synthesized peptide is being cleaved in 2.5 mL of cleavage solution and then resuspended in 1 mL of resuspension solution, while the second strand is kept uncleaved and is stored as a slurry in 2 mL of storage solution:
-textExperimentPeptideSynthesis[{myStrandModel1, myStrandModel2},
+ExperimentPeptideSynthesis[{myStrandModel1, myStrandModel2},
  	Cleavage -> {True, False},
  	CleavageSolution -> mySpecialSolution,
  	CleavageVolume -> {2.5 * Milliliter, Automatic},
@@ -618,13 +620,14 @@ textExperimentPeptideSynthesis[{myStrandModel1, myStrandModel2},
  	StorageVolume -> {Automatic, 2 * Milliliter}
  ]
 ExperimentPeptideSynthesis offers flexibility in the way that the cleaved and dried peptide pellet is resuspended in the final resuspension solution. The type of mixing can be specified by ResuspensionMixType as either Pipette, Sonicate or Vortex. NumberOfResuspensionMixes and ResuspensionMixTime provide control over the duration of the mixing. If more thorough mixing is desired, sequential mixing steps can be provided by a list of instruction primitives for each strand. In the following example, the peptide pellet is first resuspended by pipetting up and down 10 times, followed by a 5 minutes sonication and vortexing step to ensure full solubilization of the peptides
-textExperimentPeptideSynthesis[myDifficultStrandModel1,
+ExperimentPeptideSynthesis[myDifficultStrandModel1,
  	ResuspensionMixPrimitives -> {
    		Mix[MixType -> Pipette, NumberOfMixes -> 10],
    		Mix[MixType -> Vortex, Time -> (5 * Minute)],
    		Mix[MixType -> Sonicate, Time -> (5 * Minute)]
    	}
  ]
+
 Possible Issues
 No yield
 For a difficult strands the chemical steps, including resin swelling, resin downloading, coupling, cleavage and resuspension, used to synthesize a strand can be controlled with the Primatives and ResuspensionMixPrimitives options.
