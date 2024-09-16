@@ -161,7 +161,7 @@ Here is the agenda for the meeting:
 
 You previously wrote a Python script to aggregate multiple Rosetta binding energy score files into one CSV file (see summary). This script needs to be improved. Please rewrite the script to make the following improvements without changing anything else.
 
-1. Modify the extract_scores_from_file function so that it extracts the dG_cross value from a file of the following form.
+1. Modify the extract_scores_from_file function so that it extracts the dG_separated value from a file of the following form.
 
 SEQUENCE:
 SCORE: total_score complex_normalized           dG_cross dG_cross/dSASAx100 dG_separated dG_separated/dSASAx100 dSASA_hphobic dSASA_int dSASA_polar delta_unsatHbonds dslf_fa13    fa_atr    fa_dun   fa_elec fa_intra_rep fa_intra_sol_xover4              fa_rep              fa_sol hbond_E_fraction hbond_bb_sc hbond_lr_bb    hbond_sc hbond_sr_bb hbonds_int lk_ball_wtd    nres_all    nres_int       omega     p_aa_pp    packstat per_residue_energy_int pro_close rama_prepro         ref    sc_value side1_normalized side1_score side2_normalized side2_score yhh_planarity description
@@ -171,7 +171,7 @@ Computational Biologist, please provide your response to the agenda.
 
 ## Computational Biologist
 
-Certainly! To address the agenda, I'll modify the `extract_scores_from_file` function to extract the `dG_cross` value from the specified score file format. Here's the updated Python script with the necessary changes:
+Certainly! To address the agenda, I'll modify the `extract_scores_from_file` function to extract the `dG_separated` value from the Rosetta score file format you provided. Here's the updated Python script with the necessary changes:
 
 ```python
 import os
@@ -181,32 +181,27 @@ import logging
 
 def extract_scores_from_file(score_file: str) -> float:
     """
-    Extract the dG_cross score from a Rosetta score file.
+    Extract the dG_separated score from a Rosetta score file.
     
     Parameters:
     score_file (str): Path to the score file.
     
     Returns:
-    float: The extracted dG_cross score.
+    float: The extracted dG_separated score.
     """
     try:
         with open(score_file, 'r') as f:
             lines = f.readlines()
             for line in lines:
-                if line.startswith("SCORE:") and "dG_cross" in line:
-                    # Split the line into columns and find the index of dG_cross
-                    headers = line.split()
-                    dG_cross_index = headers.index("dG_cross")
-                    break
-            else:
-                raise ValueError(f"No valid header found in {score_file}")
-
-            # Find the line with the actual scores
-            for line in lines:
-                if line.startswith("SCORE:") and not "dG_cross" in line:
-                    scores = line.split()
-                    return float(scores[dG_cross_index])
-        raise ValueError(f"No valid score found in {score_file}")
+                if line.startswith("SCORE:") and "dG_separated" in line:
+                    # Split the line into columns based on whitespace
+                    columns = line.split()
+                    # Find the index of the 'dG_separated' column header
+                    header_line = lines[0].split()
+                    dg_separated_index = header_line.index("dG_separated")
+                    # Return the dG_separated value as a float
+                    return float(columns[dg_separated_index])
+        raise ValueError(f"No valid dG_separated score found in {score_file}")
     except Exception as e:
         logging.error(f"Error processing file {score_file}: {e}")
         return None
@@ -235,7 +230,7 @@ def main(input_dir: str, output_csv: str) -> None:
     scores.sort(key=lambda x: x[1])
 
     # Convert to DataFrame and save to CSV
-    df = pd.DataFrame(scores, columns=['File Name', 'dG_cross'])
+    df = pd.DataFrame(scores, columns=['File Name', 'dG_separated'])
     df.to_csv(output_csv, index=False)
 
     # Log errors if any
@@ -254,8 +249,8 @@ if __name__ == "__main__":
 ```
 
 ### Key Changes:
-1. **Header Parsing**: The script now identifies the index of the `dG_cross` column by parsing the header line that contains the column names.
-2. **Score Extraction**: It extracts the `dG_cross` value from the corresponding column in the score line.
+- **Column Indexing**: The script now identifies the index of the `dG_separated` column from the header line and extracts the corresponding value from the score lines.
+- **Error Handling**: The script raises a `ValueError` if no valid `dG_separated` score is found, ensuring robust error handling.
 
-This updated script should efficiently extract the `dG_cross` values from the specified score files and output them into a CSV file, maintaining the original functionality while focusing on the new requirement.
+This updated script should meet the requirements specified in the agenda by accurately extracting the `dG_separated` values from the provided Rosetta score files.
 

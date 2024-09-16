@@ -6,32 +6,27 @@ import logging
 
 def extract_scores_from_file(score_file: str) -> float:
     """
-    Extract the dG_cross score from a Rosetta score file.
+    Extract the dG_separated score from a Rosetta score file.
 
     Parameters:
     score_file (str): Path to the score file.
 
     Returns:
-    float: The extracted dG_cross score.
+    float: The extracted dG_separated score.
     """
     try:
         with open(score_file, "r") as f:
             lines = f.readlines()
             for line in lines:
-                if line.startswith("SCORE:") and "dG_cross" in line:
-                    # Split the line into columns and find the index of dG_cross
-                    headers = line.split()
-                    dG_cross_index = headers.index("dG_cross")
-                    break
-            else:
-                raise ValueError(f"No valid header found in {score_file}")
-
-            # Find the line with the actual scores
-            for line in lines:
-                if line.startswith("SCORE:") and not "dG_cross" in line:
-                    scores = line.split()
-                    return float(scores[dG_cross_index])
-        raise ValueError(f"No valid score found in {score_file}")
+                if line.startswith("SCORE:") and "dG_separated" in line:
+                    # Split the line into columns based on whitespace
+                    columns = line.split()
+                    # Find the index of the 'dG_separated' column header
+                    header_line = lines[0].split()
+                    dg_separated_index = header_line.index("dG_separated")
+                    # Return the dG_separated value as a float
+                    return float(columns[dg_separated_index])
+        raise ValueError(f"No valid dG_separated score found in {score_file}")
     except Exception as e:
         logging.error(f"Error processing file {score_file}: {e}")
         return None
@@ -63,7 +58,7 @@ def main(input_dir: str, output_csv: str) -> None:
     scores.sort(key=lambda x: x[1])
 
     # Convert to DataFrame and save to CSV
-    df = pd.DataFrame(scores, columns=["File Name", "dG_cross"])
+    df = pd.DataFrame(scores, columns=["File Name", "dG_separated"])
     df.to_csv(output_csv, index=False)
 
     # Log errors if any
