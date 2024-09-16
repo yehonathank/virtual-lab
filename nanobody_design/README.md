@@ -27,7 +27,7 @@ Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobod
 
 ## Nanobody design
 
-Design improved nanobodies by iteratively adding mutations and scoring them using ESM, AlphaFold-Multimer, and Rosetta.
+Design improved nanobodies by iteratively adding mutations and scoring them using ESM, AlphaFold-Multimer, and Rosetta for four rounds (in addition to round 0).
 
 ### ESM
 
@@ -194,11 +194,8 @@ After all the rounds have been run, select the best nanobodies.
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/data_processing/select_nanobodies.py \
-    --scores_paths \
-    nanobody_design/designed/round_1/scores/${NANOBODY}.csv \
-    nanobody_design/designed/round_2/scores/${NANOBODY}.csv \
-    nanobody_design/designed/round_3/scores/${NANOBODY}.csv \
-    nanobody_design/designed/round_4/scores/${NANOBODY}.csv \
+    --score_path_pattern nanobody_design/designed/round_{round_num}/scores/${NANOBODY}_all.csv \
+    --rounds 1 2 3 4 \
     --save_path nanobody_design/designed/selected/${NANOBODY}.csv \
     --score_column weighted_score \
     --top_n 24

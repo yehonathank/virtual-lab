@@ -6,20 +6,29 @@ import pandas as pd
 
 
 def select_nanobodies(
-    scores_paths: list[Path],
+    score_path_pattern: str,
+    round_nums: list[int],
     save_path: Path,
     score_column: str = "weighted_score",
     top_n: int = 24,
 ) -> None:
     """Select top-scoring mutated nanobodies for experimental validation.
 
-    :param scores_paths: List of paths to CSV score files.
+    :param score_path_pattern: The pattern to use to find score files by replacing "{round_num}" with the round number.
+    :param round_nums: List of round numbers to process.
     :param save_path: Path to save the selected nanobodies.
     :param score_column: Column name containing the score to sort by.
     :param top_n: Number of nanobodies to select.
     """
     # Load scores from all files and concatenate
-    scores = pd.concat([pd.read_csv(path) for path in scores_paths])
+    scores = pd.concat(
+        [
+            pd.read_csv(score_path_pattern.format(round_num=round_num)).assign(
+                round_num=round_num
+            )
+            for round_num in round_nums
+        ]
+    )
 
     # Sort by weighted score
     scores.sort_values(by=score_column, ascending=False, inplace=True)
