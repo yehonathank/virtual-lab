@@ -1827,7 +1827,6 @@ ExperimentBioconjugation[{{mySample1, mySample2}},
  ]
 Perform sample workup after conjugation is complete.
 Pellet the sample after conjugation to purify it from its reaction components.
-Copy to clipboard.
 ExperimentBioconjugation[
  	{
   		{
