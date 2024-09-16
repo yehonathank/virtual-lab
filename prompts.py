@@ -325,10 +325,10 @@ CODING_RULES = (
 
 
 try:
-    with open("drug_discovery/emerald/emerald_running_experiments_9.15.24.txt") as f:
+    with open("drug_discovery/emerald/emerald_running_experiments.txt") as f:
         ECL_RUNNING_EXPERIMENTS = f.read().replace("\n", "\n\n")
 
-    with open("drug_discovery/emerald/emerald_unit_operations_9.15.24.txt") as f:
+    with open("drug_discovery/emerald/emerald_unit_operations.txt") as f:
         ECL_UNIT_OPERATIONS = f.read().replace("\n", "\n\n")
 
     ECL_CONTEXT = "You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments and unit operations available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs."
