@@ -322,22 +322,3 @@ CODING_RULES = (
     "If your code needs user-provided values, write code to parse those values from the command line.",
     "Your code must be high quality, well-engineered, efficient, and well-documented (including docstrings, comments, and Python type hints if using Python).",
 )
-
-
-try:
-    with open("drug_discovery/emerald/running_experiments.txt") as f:
-        ECL_RUNNING_EXPERIMENTS = f.read().replace("\n", "\n\n")
-
-    with open("drug_discovery/emerald/unit_operations.txt") as f:
-        ECL_UNIT_OPERATIONS = f.read().replace("\n", "\n\n")
-
-    ECL_CONTEXT = "You have access to Emerald Cloud Labs (ECL), a cloud lab provider that can run automated biology experiments. The full list of experiments and unit operations available at ECL are below. Please note that ECL currently cannot work with cell cultures and cannot synthesize small molecule drugs."
-
-    DRUG_DISCOVERY_CONTEXTS = (
-        ECL_CONTEXT,
-        ECL_RUNNING_EXPERIMENTS,
-        ECL_UNIT_OPERATIONS,
-    )
-except FileNotFoundError:
-    print("Could not find the file containing the ECL context.")
-    DRUG_DISCOVERY_CONTEXTS = ()
