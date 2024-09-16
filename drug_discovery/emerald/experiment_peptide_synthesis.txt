@@ -9,7 +9,7 @@ Figure 1.1: Procedural overview of a PeptideSynthesis experiment. Step 1: Define
 
 Instrumentation
 Symphony X
-Model[Instrument, PeptideSynthesizer, id:WNa4ZjRr58Wq]
+Model[Instrument, PeptideSynthesizer, "id:WNa4ZjRr58Wq"]
 Figure 2.1.1: A system of pre-activation vessels (PV), reaction vessels (RV), amino acid bottles, buffers and solutions, waste and collection vessels (CV) connected by channels. The flow in the channels is controlled by Nitrogen gas and the volume of the liquid deliveries are verified with optical sensors.
 
 Experiment Options

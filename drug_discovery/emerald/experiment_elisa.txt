@@ -15,7 +15,7 @@ Figure 1.8: FastELISA process: 1. If required, antibodies are diluted. 2. Coatin
 
 Instrumentation
 Hamilton Nimbus HD
-Model[Instrument, LiquidHandler, id:rea9jlRLr5qb]
+Model[Instrument, LiquidHandler, "id:rea9jlRLr5qb"]
 Figure 2.1.1: An overview of the ELISA robotic workcell. It is capable of processing plate operations including liquid handling with 4 indipendent pipettes, microplate movements, plate incubation-shaking, plate washing, and plate absorbance measurements.
 
 Experiment Options

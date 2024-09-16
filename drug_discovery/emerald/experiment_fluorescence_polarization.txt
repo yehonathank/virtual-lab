@@ -8,7 +8,7 @@ Figure 1.1: Procedural overview of a Fluorescence Polarization experiment. Step 
 
 Instrumentation
 PHERAstar FS
-Model[Instrument, PlateReader, id:01G6nvkKr3o7]
+Model[Instrument, PlateReader, "id:01G6nvkKr3o7"]
 Figure 2.1.1: The PHERAstar uses optic modules to package excitation and emission filters into a single package. This means wavelength combinations are restricted to those which already exist in the optic module. Up to five excitation/emission pairs can be recorded in a single experiment. Additionally, the PHERAstar supports dual emission so it's possible to record emission data at 2 different wavelengths simultaneously. The plate chamber can be heated up to 45°C and it can mix the plate at up to 700 RPM before and/or during the run. The reader has two 300μL syringe pump injectors which can be used for 0.5 - 300 μL injections of two unique samples at up to four time points during the run. There are two primary kinetics read modes. It can perform all readings, injections and mixing for a single well before moving onto the next well or it can read in cycles, reading all the assay wells in the plate again and again until the RunTime has been reached. The second mode is recommended for most assays, except those that use very fast kinetics.
 
 Experiment Options

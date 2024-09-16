@@ -8,7 +8,7 @@ Figure 1.1: Procedural overview of a Biolayer Interferometry experiment. Step 1:
 
 Instrumentation
 Octet Red96e
-Model[Instrument, BioLayerInterferometer, id:xRO9n3Bw9ZRq]
+Model[Instrument, BioLayerInterferometer, "id:xRO9n3Bw9ZRq"]
 Figure 2.1.1: Fiber-optic probes are stored in the probe rack position, either dry or immersed in a buffer solution. An 8-channel manifold moves between the probe rack and assay plate positions to pick up probes and conduct measurements via immersion in wells of a given column in the assay plate. A plate cover can be used to cover columns of the assay plate not currently being measured by the 8-channel reader to prevent evaporation over the course of long assays. The white light input reflects off of the internal optical layer and the biolayer/solution interface, producing an interference pattern which is directly proportional to the biolayer thickness.
 
 Experiment Options

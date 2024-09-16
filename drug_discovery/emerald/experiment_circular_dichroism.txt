@@ -8,7 +8,7 @@ Figure 1.1: Procedural overview of a CircularDichroism experiment using an Ekko 
 
 Instrumentation
 Ekko
-Model[Instrument, PlateReader, id:mnk9jORmGjEw]
+Model[Instrument, PlateReader, "id:mnk9jORmGjEw"]
 Figure 2.1.1: In an Ekko CD Microplate Reader, a Xenon Lamp emits the full-spectrum light. The light is then split and diffracted into several beams by passing a grating monochromator to emit non-polarized light. The non-polarized light then passes the polarizer to generate linear polarized light. The linear polarized light then passes through the photoelastic modulator to create both left- and right-hand circular polarized light. Finally, the differential absorbed circularly polarized light. The transmitted light is then directed through a prism that splits the beam into wavelengths from 185 nm to 900 nm as measured by the detector.
 
 Experiment Options

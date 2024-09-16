@@ -8,11 +8,11 @@ Figure 1.1: Bioconjugation covalently binds a biomolecule to a molecule of inter
 
 Instrumentation
 Hamilton STARlet
-Model[Instrument, LiquidHandler, id:kEJ9mqaW7xZP]
+Model[Instrument, LiquidHandler, "id:kEJ9mqaW7xZP"]
 Figure 2.1.1: An overview of the robotic workcell. It is capable of processing plate operations including incubation, shaking, and magnetic bead separation on-deck and filtration and absorbance/fluorescence/luminescence measurement off-deck, with a robot arm facilitating the plate movements.
 Figure 2.1.2: Overhead view of the liquid handling instrument deck.
 Super STAR
-Model[Instrument, LiquidHandler, id:7X104vnRbRXd]
+Model[Instrument, LiquidHandler, "id:7X104vnRbRXd"]
 Figure 2.2.1: An overview of the robotic workcell. It is capable of processing plate operations including incubation, shaking, and magnetic bead separation on-deck and centrifugation, filtration, and absorbance/fluorescence/luminescence measurement off-deck, with a robot arm facilitating the plate movements.
 Figure 2.2.2: Overhead view of the liquid handling instrument deck.
 
