@@ -195,9 +195,9 @@ for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/data_processing/select_nanobodies.py \
     --score_path_pattern nanobody_design/designed/round_{round_num}/scores/${NANOBODY}_all.csv \
-    --rounds 1 2 3 4 \
+    --max_round 4 \
     --save_path nanobody_design/designed/selected/${NANOBODY}.csv \
-    --score_column weighted_score \
-    --top_n 24
+    --top_n 24 \
+    --score_column weighted_score
 done
 ```
