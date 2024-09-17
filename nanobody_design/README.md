@@ -197,7 +197,6 @@ python nanobody_design/scripts/data_processing/select_nanobodies.py \
     --score_path_pattern nanobody_design/designed/round_{round_num}/scores/${NANOBODY}_all.csv \
     --max_round 4 \
     --save_path nanobody_design/designed/selected/${NANOBODY}.csv \
-    --top_n 24 \
-    --score_column weighted_score
+    --top_n 24
 done
 ```
