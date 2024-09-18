@@ -3986,64 +3986,61 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentHPLC protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentHPLC[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentHPLC protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentHPLC[inputs] where you fill in "inputs" with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values and therefore do not include them in your experiment function call. Only specify options that must be changed from their default value for your specific experiment. For every option that you specify, please state the default value, the different value you chose, and why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentHPLC` protocol using Emerald Cloud Labs (ECL) for the peptide-based therapeutics project, we need to carefully select the inputs and options that align with our experimental goals. Here is a proposed implementation of the `ExperimentHPLC` protocol, along with explanations for the specified options:
+To implement the `ExperimentHPLC` protocol using Emerald Cloud Labs (ECL) for the peptide-based therapeutics project, we need to carefully select the inputs and specify only the necessary options that deviate from their default values. This approach ensures that the experiment is tailored to our specific needs while maintaining efficiency and alignment with the project's goals. Below is the proposed experiment setup:
+
+### ExperimentHPLC Function Call
 
 ```plaintext
 ExperimentHPLC[
   myPeptideSamples,
   SeparationMode -> ReversePhase,
-  BufferB -> Model[Sample, "Methanol - LCMS grade"],
-  GradientB -> {
-    {0 * Minute, 5 * Percent},
-    {20 * Minute, 40 * Percent}
-  },
   Detector -> PhotoDiodeArray,
-  AbsorbanceWavelength -> Span[200, 400 * Nanometer],
+  GradientB -> {{0 * Minute, 5 * Percent}, {20 * Minute, 40 * Percent}},
   CollectFractions -> True,
-  FractionCollectionDetector -> PhotoDiodeArray,
-  AbsoluteThreshold -> (50 * Milli * AbsorbanceUnit),
-  StandardFrequency -> FirstAndLast,
-  BlankFrequency -> 5
+  FractionCollectionMode -> Peak,
+  AbsoluteThreshold -> (50 * Milli * AbsorbanceUnit)
 ]
 ```
 
-### Explanation of Specified Options:
+### Explanation of Specified Options
 
-1. **SeparationMode -> ReversePhase**: 
-   - **Reason**: Reverse-phase HPLC is commonly used for peptide separation due to its effectiveness in separating polar and non-polar compounds. This mode will help us achieve the desired separation of peptide constituents.
+1. **SeparationMode**
+   - **Default Value**: Automatic
+   - **Chosen Value**: ReversePhase
+   - **Reason**: ReversePhase is selected because it is suitable for separating polar and non-polar compounds, which is ideal for peptide purification.
 
-2. **BufferB -> Model[Sample, "Methanol - LCMS grade"]**:
-   - **Reason**: Methanol is a suitable organic solvent for reverse-phase HPLC, providing a good balance between polarity and elution strength. Using LCMS-grade methanol ensures high purity, reducing the risk of contamination.
+2. **Detector**
+   - **Default Value**: Automatic
+   - **Chosen Value**: PhotoDiodeArray
+   - **Reason**: PhotoDiodeArray detection allows for a broad range of wavelengths to be monitored, providing comprehensive data on peptide purity and composition.
 
-3. **GradientB -> {{0 * Minute, 5 * Percent}, {20 * Minute, 40 * Percent}}**:
-   - **Reason**: This gradient is designed to gradually increase the concentration of methanol, facilitating the elution of peptides based on their hydrophobicity. The gradient profile is chosen to optimize separation efficiency.
+3. **GradientB**
+   - **Default Value**: Automatic
+   - **Chosen Value**: `{{0 * Minute, 5 * Percent}, {20 * Minute, 40 * Percent}}`
+   - **Reason**: This gradient is specified to optimize the separation of peptides by gradually increasing the concentration of organic solvent, enhancing resolution and peak separation.
 
-4. **Detector -> PhotoDiodeArray**:
-   - **Reason**: The photodiode array detector allows for the detection of absorbance across a range of wavelengths, which is useful for identifying and quantifying peptides with different chromophores.
+4. **CollectFractions**
+   - **Default Value**: Automatic
+   - **Chosen Value**: True
+   - **Reason**: Enabling fraction collection is crucial for isolating and collecting purified peptide fractions for subsequent validation and analysis.
 
-5. **AbsorbanceWavelength -> Span[200, 400 * Nanometer]**:
-   - **Reason**: This wavelength range covers the typical absorbance maxima for peptides, allowing for comprehensive detection of peptide bonds and aromatic side chains.
+5. **FractionCollectionMode**
+   - **Default Value**: Automatic
+   - **Chosen Value**: Peak
+   - **Reason**: Using Peak mode ensures that fractions are collected based on peak detection, which is efficient for capturing the desired peptide components.
 
-6. **CollectFractions -> True**:
-   - **Reason**: Fraction collection is enabled to physically collect separated peptide fractions for further analysis and validation, which is crucial for downstream applications and characterization.
+6. **AbsoluteThreshold**
+   - **Default Value**: Automatic
+   - **Chosen Value**: `50 * Milli * AbsorbanceUnit`
+   - **Reason**: Setting a specific threshold ensures that only significant peaks are collected, minimizing contamination from minor impurities.
 
-7. **FractionCollectionDetector -> PhotoDiodeArray**:
-   - **Reason**: Using the same detector for fraction collection ensures consistency in detecting peaks and triggering fraction collection based on absorbance.
+### Conclusion
 
-8. **AbsoluteThreshold -> (50 * Milli * AbsorbanceUnit)**:
-   - **Reason**: This threshold is set to ensure that only significant peaks are collected, reducing the collection of noise and improving the purity of collected fractions.
-
-9. **StandardFrequency -> FirstAndLast**:
-   - **Reason**: Running standards at the beginning and end of the sequence helps verify the consistency and accuracy of the HPLC system throughout the experiment.
-
-10. **BlankFrequency -> 5**:
-    - **Reason**: Injecting blanks every five samples helps monitor and account for any carryover or background noise, ensuring the reliability of the results.
-
-This setup is designed to efficiently separate and analyze the synthesized peptides, providing high-quality data for further validation and integration into machine learning models. The choices made here are aimed at optimizing the separation and detection of peptides while ensuring robust and reproducible results.
+This setup aligns with the project's goals by ensuring high clinical value through precise peptide purification, leveraging scientifically impactful applications of machine learning for drug discovery, and utilizing ECL for experimental validation within the 3-month timeframe. By specifying only the necessary options, we maintain the experiment's focus and efficiency, ensuring that it meets the project's objectives effectively.
 

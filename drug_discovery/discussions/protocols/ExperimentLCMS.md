@@ -1978,17 +1978,17 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentLCMS protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentLCMS[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentLCMS protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentLCMS[inputs] where you fill in "inputs" with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values and therefore do not include them in your experiment function call. Only specify options that must be changed from their default value for your specific experiment. For every option that you specify, please state the default value, the different value you chose, and why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentLCMS` protocol using Emerald Cloud Labs (ECL) for the validation of peptide-based therapeutics, we need to carefully select the inputs and options that align with our experimental design. Here is a proposed setup for the `ExperimentLCMS` call, along with explanations for each specified option:
+To implement the `ExperimentLCMS` protocol using Emerald Cloud Labs (ECL) for the validation of peptide-based therapeutics, we need to carefully select the inputs and specify any necessary options that deviate from their default values. Here is a proposed experiment setup:
 
 ```plaintext
 ExperimentLCMS[
-  myPeptideSample,
+  myPeptideSamples,
   MassAnalyzer -> QTOF,
   IonMode -> Positive,
   Calibrant -> Model[Sample, StockSolution, Standard, "Cesium Iodide ESI Calibrant"],
@@ -2002,29 +2002,37 @@ ExperimentLCMS[
 ]
 ```
 
-### Explanation of Specified Options:
+### Explanation of Options Specified:
 
-1. **MassAnalyzer -> QTOF**: 
-   - **Reason**: The QTOF (Quadrupole Time-of-Flight) mass analyzer is chosen for its high resolution and accuracy, which is essential for confirming the molecular weight and sequence identity of peptides. This aligns with our goal of ensuring high clinical value through precise validation.
+1. **MassAnalyzer**:
+   - **Default Value**: Automatic (QTOF)
+   - **Chosen Value**: QTOF
+   - **Reason**: QTOF is selected for its high resolution and accuracy, which is essential for confirming the molecular weight and sequence identity of peptides.
 
-2. **IonMode -> Positive**: 
-   - **Reason**: Peptides typically ionize better in positive ion mode due to the presence of basic amino acid residues. This setting enhances sensitivity and detection efficiency.
+2. **IonMode**:
+   - **Default Value**: Automatic (Positive)
+   - **Chosen Value**: Positive
+   - **Reason**: Positive ion mode is typically used for peptide analysis due to the protonation of amine groups, which enhances ionization efficiency.
 
-3. **Calibrant -> Model[Sample, StockSolution, Standard, "Cesium Iodide ESI Calibrant"]**: 
-   - **Reason**: Cesium iodide is a standard calibrant for ESI (Electrospray Ionization) in positive mode, providing reliable mass accuracy across a wide range of m/z values, which is crucial for peptide analysis.
+3. **Calibrant**:
+   - **Default Value**: Automatic (depends on sample type)
+   - **Chosen Value**: Model[Sample, StockSolution, Standard, "Cesium Iodide ESI Calibrant"]
+   - **Reason**: Cesium Iodide is chosen for its suitability in calibrating the mass spectrometer for peptide samples, ensuring accurate mass detection.
 
-4. **AcquisitionWindow -> {Span[0 * Minute, 30 * Minute]}**: 
-   - **Reason**: This window covers the entire gradient run, ensuring that all peptide elution events are captured for analysis.
+4. **AcquisitionWindow**:
+   - **Default Value**: Automatic (entire gradient window)
+   - **Chosen Value**: {Span[0 * Minute, 30 * Minute]}
+   - **Reason**: This window is set to cover the entire duration of the gradient, ensuring comprehensive data collection.
 
-5. **AcquisitionMode -> MS1FullScan**: 
-   - **Reason**: MS1FullScan is used to detect intact ions without fragmentation, which is suitable for confirming the presence and purity of the synthesized peptides.
+5. **AcquisitionMode**:
+   - **Default Value**: Automatic (MS1FullScan)
+   - **Chosen Value**: MS1FullScan
+   - **Reason**: MS1FullScan is used to measure intact ions without fragmentation, which is suitable for confirming the molecular weight of peptides.
 
-6. **Gradient**: 
-   - **Reason**: The gradient is designed to separate peptides effectively over a 30-minute run. Starting with a high percentage of aqueous buffer (Buffer A) and gradually increasing the organic solvent (Buffer B) helps in resolving peptides based on their hydrophobicity. The flow rate of 0.3 mL/min is chosen to balance resolution and analysis time.
+6. **Gradient**:
+   - **Default Value**: Automatic
+   - **Chosen Value**: Custom gradient as specified
+   - **Reason**: A specific gradient is defined to optimize the separation of peptide components, enhancing the resolution and detection of analytes.
 
-### Default Options:
-
-Most other options are left at their default values to streamline the experiment setup and focus on the critical parameters that impact peptide analysis. This approach ensures that the experiment is both efficient and aligned with the project's goals of high clinical value and impactful scientific application.
-
-By implementing this protocol in ECL, we ensure that the experimental validation is conducted within the 3-month limit, leveraging the platform's capabilities for precise and reproducible results. This setup will provide the necessary data to feed back into our machine learning models, enhancing their predictive power for future peptide design iterations.
+This setup ensures that the LCMS experiment is tailored to the specific needs of peptide analysis, providing accurate and reliable data for the validation of peptide-based therapeutics. The use of ECL for this experiment aligns with the project's goals of high clinical value and impactful scientific application.
 

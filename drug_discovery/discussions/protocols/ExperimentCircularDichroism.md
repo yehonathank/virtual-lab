@@ -1432,57 +1432,53 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentCircularDichroism protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentCircularDichroism[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentCircularDichroism protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentCircularDichroism[inputs] where you fill in "inputs" with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values and therefore do not include them in your experiment function call. Only specify options that must be changed from their default value for your specific experiment. For every option that you specify, please state the default value, the different value you chose, and why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentCircularDichroism` protocol using ECL, we need to carefully select the inputs and options that align with our experimental design for validating peptide-based therapeutics. Below is the proposed experiment setup, along with explanations for each specified option:
+To implement the `ExperimentCircularDichroism` protocol using ECL, we need to carefully select the inputs and specify any necessary options that deviate from the default values. Given the context and goals of our project, here is how we can structure the experiment:
+
+### ExperimentCircularDichroism Protocol Implementation
 
 ```plaintext
 ExperimentCircularDichroism[
-    {
-        Object[Sample, "PEGylated Peptide Sample"]
-    },
+    mySamples,
     DetectionWavelength -> Span[190 * Nanometer, 260 * Nanometer],
     CalculatingMolarEllipticitySpectrum -> True,
-    Analyte -> Model[Molecule, "id:PEGylatedPeptide"],
-    AnalyteConcentration -> 1.0 * Micromolar,
-    BlankAbsorbance -> True,
-    Blanks -> Model[Sample, "Milli-Q water"]
+    Analyte -> Model[Molecule, "id:YourMoleculeID"],
+    AnalyteConcentration -> {1.0 * Micromolar}
 ]
 ```
 
-### Explanation of Specified Options:
+### Explanation of Specified Options
 
-1. **DetectionWavelength -> Span[190 * Nanometer, 260 * Nanometer]**:
-   - **Reason**: This range is chosen to capture the secondary structure information of the peptide, as it typically shows characteristic CD signals in this UV range. This is crucial for confirming the structural integrity of the PEGylated peptide.
+1. **DetectionWavelength**
+   - **Default Value**: Automatic
+   - **Chosen Value**: `Span[190 * Nanometer, 260 * Nanometer]`
+   - **Reason**: We are interested in probing the secondary structure of peptides, which typically show characteristic CD signals in the far-UV range (190-260 nm). This range is crucial for assessing the alpha-helix and beta-sheet content of our peptide-based therapeutics.
 
-2. **CalculatingMolarEllipticitySpectrum -> True**:
-   - **Reason**: Calculating molar ellipticity is essential for quantitative analysis of the CD data, allowing us to compare the structural features of the peptide across different concentrations and conditions.
+2. **CalculatingMolarEllipticitySpectrum**
+   - **Default Value**: Automatic
+   - **Chosen Value**: `True`
+   - **Reason**: Calculating molar ellipticity is essential for quantitative analysis of the secondary structure. It allows us to compare the structural integrity of different peptide samples and assess their conformational stability.
 
-3. **Analyte -> Model[Molecule, "id:PEGylatedPeptide"]**:
-   - **Reason**: Specifying the analyte ensures that the experiment is tailored to the specific molecule of interest, which is necessary for accurate data interpretation and molar ellipticity calculations.
+3. **Analyte**
+   - **Default Value**: Automatic
+   - **Chosen Value**: `Model[Molecule, "id:YourMoleculeID"]`
+   - **Reason**: Specifying the analyte ensures that the system recognizes the molecule of interest for which the CD spectra are being measured. This is critical for accurate data processing and interpretation.
 
-4. **AnalyteConcentration -> 1.0 * Micromolar**:
-   - **Reason**: This concentration is selected based on preliminary studies indicating optimal signal-to-noise ratio for CD measurements, ensuring reliable data collection.
+4. **AnalyteConcentration**
+   - **Default Value**: Automatic
+   - **Chosen Value**: `{1.0 * Micromolar}`
+   - **Reason**: Providing the concentration of the analyte is necessary for calculating molar ellipticity. A concentration of 1.0 µM is chosen to ensure sufficient signal strength without exceeding the linear range of the CD spectrometer.
 
-5. **BlankAbsorbance -> True**:
-   - **Reason**: Including blank absorbance measurements is critical for correcting background signals, which improves the accuracy of the CD data by accounting for any contributions from the solvent or container.
+### Additional Considerations
 
-6. **Blanks -> Model[Sample, "Milli-Q water"]**:
-   - **Reason**: Milli-Q water is used as a blank to ensure that any absorbance measured is due to the peptide and not the solvent, which is standard practice in CD spectroscopy to ensure data integrity.
+- **Sample Preparation**: Ensure that the samples are prepared in a suitable buffer (e.g., PBS) and are free from particulates that could scatter light and affect the CD measurements.
+- **Instrument Settings**: Utilize the Ekko CD Microplate Reader as specified, ensuring that the plate is not covered during measurements to avoid interference with the optical path.
+- **Data Management**: Use ECL's data management tools to store and analyze the results, integrating them into our machine learning models for further refinement.
 
-### Default Options:
-
-Most other options are left at their default values to simplify the setup and because they are already optimized for general CD experiments. This includes aspects like the use of a quartz plate for data collection, which is preferred for its optical properties.
-
-### Implementation Plan:
-
-- **Sample Preparation**: Ensure the PEGylated peptide is prepared and stored under appropriate conditions before the experiment.
-- **Data Collection**: Use the ECL platform to execute the experiment, ensuring all data is collected and processed according to the specified protocol.
-- **Data Analysis**: Analyze the CD spectra to confirm the secondary structure of the peptide, using the calculated molar ellipticity for quantitative insights.
-
-This setup aligns with our project's goals by providing a robust method for validating the structural integrity of peptide-based therapeutics using ECL, thereby contributing to the high clinical value and scientific impact of our research.
+By implementing this protocol, we aim to validate the structural properties of our peptide-based therapeutics, ensuring they meet the necessary criteria for binding efficacy and stability. This experiment will provide critical data to feed back into our machine learning models, enhancing their predictive power and guiding future design iterations.
 

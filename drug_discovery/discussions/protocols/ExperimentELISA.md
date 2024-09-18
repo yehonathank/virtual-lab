@@ -3316,60 +3316,64 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentELISA protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentELISA[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentELISA protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentELISA[inputs] where you fill in "inputs" with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values and therefore do not include them in your experiment function call. Only specify options that must be changed from their default value for your specific experiment. For every option that you specify, please state the default value, the different value you chose, and why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentELISA` protocol using Emerald Cloud Labs (ECL) for the validation of peptide-based therapeutics, we need to carefully select the inputs and options based on our specific experimental design. Here's a proposed setup for the `ExperimentELISA` function call, along with explanations for the specified options:
+To implement the `ExperimentELISA` protocol using Emerald Cloud Labs (ECL), we need to carefully select the inputs and specify any necessary options that deviate from their default values. The goal is to validate the binding of our synthesized peptides to the target protein using ELISA, ensuring the experiment aligns with our objectives of high clinical value and impactful scientific application.
 
-### ExperimentELISA Function Call
+### ExperimentELISA Protocol Implementation
 
 ```plaintext
 ExperimentELISA[
-    myPeptideSamples,
-    Method -> DirectELISA,
-    PrimaryAntibody -> myPrimaryAntibody,
-    PrimaryAntibodyDilutionFactor -> 0.005,
-    Standard -> myStandardSamples,
-    StandardSerialDilutionCurve -> {100 * Microliter, {0.5, 8}},
-    Blank -> myBlankSamples,
-    SubstrateSolution -> Model[Sample, "ELISA TMB Stabilized Chromogen"],
-    StopSolution -> Model[Sample, "ELISA HRP-TMB Stop Solution"]
+  mySamples,
+  Method -> DirectELISA,
+  PrimaryAntibody -> myAntibody1,
+  PrimaryAntibodyDilutionFactor -> 0.005,
+  Standard -> myStandardSamples,
+  StandardSerialDilutionCurve -> {100 * Microliter, {0.5, 8}},
+  Blank -> myBlankSamples
 ]
 ```
 
 ### Explanation of Specified Options
 
-1. **Method -> DirectELISA**: 
-   - **Reason**: DirectELISA is chosen for its simplicity and speed, as it involves fewer steps compared to indirect methods. This is suitable for initial validation of peptide binding to the target protein.
+1. **Method**
+   - **Default Value**: DirectELISA
+   - **Chosen Value**: DirectELISA
+   - **Reason**: We are using a DirectELISA method to detect the immobilized antigen by an antibody directly conjugated with an enzyme. This method is straightforward and suitable for our initial validation of peptide binding.
 
-2. **PrimaryAntibody -> myPrimaryAntibody**:
-   - **Reason**: The primary antibody is selected based on its specificity to the target antigen (peptide). This ensures accurate detection of the peptide-antigen interaction.
+2. **PrimaryAntibody**
+   - **Default Value**: Automatic (set to an antibody against the TargetAntigen)
+   - **Chosen Value**: myAntibody1
+   - **Reason**: We specify `myAntibody1` to ensure the antibody used is specific to our synthesized peptide, enhancing the accuracy of our binding validation.
 
-3. **PrimaryAntibodyDilutionFactor -> 0.005**:
-   - **Reason**: A dilution factor of 0.005 is chosen to optimize the signal-to-noise ratio, ensuring sufficient sensitivity without excessive background noise.
+3. **PrimaryAntibodyDilutionFactor**
+   - **Default Value**: 0.001 (1:1,000)
+   - **Chosen Value**: 0.005 (1:200)
+   - **Reason**: A higher concentration (lower dilution factor) is chosen to ensure sufficient signal strength, especially important if the binding affinity is initially unknown or expected to be low.
 
-4. **Standard -> myStandardSamples**:
-   - **Reason**: Including standard samples allows for the generation of a standard curve, which is essential for quantifying the concentration of the target antigen in the samples.
+4. **Standard**
+   - **Default Value**: Automatic (set to the DefaultSampleModel of the target antigen)
+   - **Chosen Value**: myStandardSamples
+   - **Reason**: We include known concentrations of the target antigen to generate a standard curve, crucial for quantifying the binding affinity of our peptides.
 
-5. **StandardSerialDilutionCurve -> {100 * Microliter, {0.5, 8}}**:
-   - **Reason**: A serial dilution curve with a starting volume of 100 microliters and a dilution factor of 0.5 over 8 dilutions provides a broad range for accurate quantification and helps in establishing a reliable standard curve.
+5. **StandardSerialDilutionCurve**
+   - **Default Value**: Null (if StandardDilutionCurve is specified)
+   - **Chosen Value**: {100 * Microliter, {0.5, 8}}
+   - **Reason**: This setup creates a dilution series to establish a standard curve, allowing us to accurately quantify peptide binding.
 
-6. **Blank -> myBlankSamples**:
-   - **Reason**: Blank samples are included to measure the background signal, which is crucial for accurate data interpretation and ensuring the specificity of the assay.
+6. **Blank**
+   - **Default Value**: Automatic (set to a suitable blank solution)
+   - **Chosen Value**: myBlankSamples
+   - **Reason**: Including blank samples helps measure background signal, ensuring the accuracy of our results by accounting for non-specific binding or other artifacts.
 
-7. **SubstrateSolution -> Model[Sample, "ELISA TMB Stabilized Chromogen"]**:
-   - **Reason**: TMB is a common substrate for HRP, providing a colorimetric readout that is easy to measure and interpret. The stabilized form ensures consistency and reliability.
+### Additional Considerations
 
-8. **StopSolution -> Model[Sample, "ELISA HRP-TMB Stop Solution"]**:
-   - **Reason**: The stop solution is used to halt the enzymatic reaction, allowing for consistent timing in measurement and preventing overdevelopment of the colorimetric signal.
+- **Replicates**: Although not specified, ensure that the number of replicates is sufficient to provide statistically significant results. The default is set to 2, which may be adequate for initial experiments.
+- **Washing and Blocking**: Ensure that the washing buffer and blocking steps are optimized to reduce non-specific binding, although these are typically set to effective defaults.
 
-### General Considerations
-
-- **Default Values**: Most options are left at their default values to streamline the setup and focus on critical parameters that directly impact the experimental outcomes.
-- **ECL Utilization**: By using ECL for this experiment, we ensure high precision and reproducibility, which is essential for validating the peptide's binding efficacy within the 3-month experimental limit.
-
-This setup aligns with our project goals by ensuring high clinical value through accurate validation of peptide interactions, leveraging machine learning predictions, and utilizing ECL for experimental validation.
+By implementing this protocol, we aim to validate the binding of our synthesized peptides to the target protein, providing critical data to feed back into our machine learning models. This approach will help refine predictions and guide further iterations in peptide design, aligning with our project goals of high clinical value and impactful scientific application.
 

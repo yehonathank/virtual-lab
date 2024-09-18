@@ -2864,58 +2864,76 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentBioLayerInterferometry protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentBioLayerInterferometry[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentBioLayerInterferometry protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentBioLayerInterferometry[inputs] where you fill in "inputs" with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values and therefore do not include them in your experiment function call. Only specify options that must be changed from their default value for your specific experiment. For every option that you specify, please state the default value, the different value you chose, and why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentBioLayerInterferometry` protocol using ECL, we need to tailor the experiment to our specific peptide-based therapeutic project. The goal is to validate the binding of synthesized peptides to a target protein using Bio-Layer Interferometry (BLI). Below is the proposed experiment setup with explanations for each specified option:
+To implement the `ExperimentBioLayerInterferometry` protocol using ECL, we need to focus on the key parameters that must be adjusted from their default values to suit our specific experimental needs. Here is a step-by-step breakdown of the experiment setup, including the rationale for each specified option:
 
-### Experiment Setup
+### ExperimentBioLayerInterferometry Setup
 
+#### Inputs
+- **Samples**: The PEGylated peptide and the target protein solution.
+- **ExperimentType**: Kinetics, as we are interested in measuring the binding kinetics between the peptide and the target protein.
+
+#### Specified Options
+1. **ExperimentType**
+   - **Default Value**: Quantitation
+   - **Chosen Value**: Kinetics
+   - **Rationale**: We need to measure the association and dissociation rates of the peptide-protein interaction to understand the binding kinetics.
+
+2. **BioProbeType**
+   - **Default Value**: Model[Item, BLIProbe, ProA]
+   - **Chosen Value**: Model[Item, BLIProbe, ProB]
+   - **Rationale**: Depending on the specific chemistry of the peptide and protein, a different probe type may offer better binding characteristics or sensitivity.
+
+3. **NumberOfRepeats**
+   - **Default Value**: Null
+   - **Chosen Value**: 3
+   - **Rationale**: To ensure reproducibility and reliability of the kinetic data, we will repeat the assay three times.
+
+4. **AcquisitionRate**
+   - **Default Value**: 5 hertz
+   - **Chosen Value**: 10 hertz
+   - **Rationale**: A higher acquisition rate is suitable for capturing fast binding events, which is critical for accurately measuring kinetics.
+
+5. **PlateCover**
+   - **Default Value**: Automatic
+   - **Chosen Value**: True
+   - **Rationale**: To prevent evaporation during long assays, especially since kinetic measurements can extend over several hours.
+
+6. **Temperature**
+   - **Default Value**: Ambient
+   - **Chosen Value**: 25 degrees Celsius
+   - **Rationale**: Maintaining a controlled temperature is essential for consistent kinetic measurements.
+
+7. **KineticsSampleFixedDilutions**
+   - **Default Value**: Automatic
+   - **Chosen Value**: {100 µL, 200 µL, "Sample Dilution"}
+   - **Rationale**: To create a series of dilutions for the kinetic analysis, ensuring a range of concentrations are tested.
+
+8. **KineticsSampleDiluent**
+   - **Default Value**: Automatic
+   - **Chosen Value**: Model[Sample, StockSolution, "PBS"]
+   - **Rationale**: PBS is a common buffer for maintaining physiological conditions during binding assays.
+
+### Experiment Function Call
 ```plaintext
 ExperimentBioLayerInterferometry[
-  {
-    Object[Sample, "PEGylated peptide solution"],
-    Object[Sample, "Target protein solution"]
-  },
-  ExperimentType -> Kinetics,
-  BioProbeType -> Model[Item, BLIProbe, ProA],
-  NumberOfRepeats -> 3,
-  AcquisitionRate -> 5*Hertz,
-  PlateCover -> True,
-  Temperature -> 25*Celsius,
-  KineticsSampleFixedDilutions -> Automatic,
-  KineticsSampleDiluent -> Model[Sample, StockSolution, BLI Kinetics Buffer, 1X],
-  MeasureAssociationTime -> 15*Minute,
-  MeasureDissociationTime -> 30*Minute
+    {Object[Sample, "PEGylated peptide"], Object[Sample, "target protein solution"]},
+    ExperimentType -> Kinetics,
+    BioProbeType -> Model[Item, BLIProbe, ProB],
+    NumberOfRepeats -> 3,
+    AcquisitionRate -> 10*Hertz,
+    PlateCover -> True,
+    Temperature -> 25*Celsius,
+    KineticsSampleFixedDilutions -> {{100*Microliter, 200*Microliter, "Sample Dilution"}},
+    KineticsSampleDiluent -> Model[Sample, StockSolution, "PBS"]
 ]
 ```
 
-### Explanation of Specified Options
-
-1. **ExperimentType -> Kinetics**: We are interested in measuring the association and dissociation kinetics of the peptide-protein interaction, which is crucial for understanding binding affinity and kinetics.
-
-2. **BioProbeType -> Model[Item, BLIProbe, ProA]**: The ProA probe is selected for its compatibility with proteins, ensuring efficient capture of the target protein on the probe surface.
-
-3. **NumberOfRepeats -> 3**: To ensure reproducibility and reliability of the data, we will perform the experiment in triplicate.
-
-4. **AcquisitionRate -> 5*Hertz**: This rate provides a balance between data density and signal-to-noise ratio, suitable for most binding events.
-
-5. **PlateCover -> True**: Given that the experiment might run for extended periods, a plate cover is used to prevent evaporation, which could affect the results.
-
-6. **Temperature -> 25*Celsius**: Conducting the experiment at a controlled temperature ensures consistent kinetic measurements and mimics physiological conditions.
-
-7. **KineticsSampleFixedDilutions -> Automatic**: This setting allows for automatic generation of a dilution series, which is essential for determining the concentration-dependent binding kinetics.
-
-8. **KineticsSampleDiluent -> Model[Sample, StockSolution, BLI Kinetics Buffer, 1X]**: Using a standard kinetics buffer ensures optimal conditions for the interaction and minimizes non-specific binding.
-
-9. **MeasureAssociationTime -> 15*Minute**: This duration is chosen based on typical association times for peptide-protein interactions, allowing sufficient time for binding to reach equilibrium.
-
-10. **MeasureDissociationTime -> 30*Minute**: A longer dissociation time helps capture the full dissociation profile, which is critical for calculating the dissociation rate constant.
-
-### Conclusion
-
-This setup is designed to efficiently validate the binding kinetics of our PEGylated peptide to the target protein using BLI. The specified options are chosen to ensure high-quality data that can be used to refine our machine learning models and guide further peptide optimization. By conducting this experiment on ECL, we align with the project's goals of high clinical value and impactful scientific application.
+### Summary
+This setup ensures that we are accurately measuring the binding kinetics of our peptide-protein interaction under controlled conditions, with sufficient replicates to ensure data reliability. The use of ECL allows us to efficiently manage and execute this protocol within the 3-month experimental limit, aligning with our project goals of high clinical value and impactful scientific application.
 
