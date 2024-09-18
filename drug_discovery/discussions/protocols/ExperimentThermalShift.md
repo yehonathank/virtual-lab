@@ -2048,61 +2048,63 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptide-based therapeutics for a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentThermalShift protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentThermalShift[<options>] where you fill in <options> with the appropriate options. Please refer to the ECL documentation that is provided as context. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentThermalShift protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentThermalShift[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentThermalShift` protocol using ECL for the validation of peptide-based therapeutics, we need to carefully select the options that align with our experimental design and objectives. Below is the proposed experiment setup, followed by explanations for each specified option:
+To implement the `ExperimentThermalShift` protocol using ECL, we need to carefully consider the inputs and options based on our specific experimental design. Given the context and the goals of our project, here is how we can structure the experiment:
+
+### ExperimentThermalShift Protocol Implementation
 
 ```plaintext
 ExperimentThermalShift[
-  Samples -> {PEGylatedPeptideSample},
+  {
+    "PEGylatedPeptideSample"
+  },
   Instrument -> Model[Instrument, MultimodeSpectrophotometer, "Uncle"],
   NumberOfReplicates -> 3,
-  MinTemperature -> (25 * Celsius),
-  MaxTemperature -> (95 * Celsius),
-  TemperatureRampRate -> (1 * Celsius / Minute),
-  NumberOfCycles -> 1,
   DetectionReagent -> Model[Sample, StockSolution, "10X SYPRO Orange"],
-  DynamicLightScattering -> True,
-  DynamicLightScatteringMeasurements -> {Before, After},
-  DynamicLightScatteringMeasurementTemperatures -> {25 * Celsius, 95 * Celsius}
+  MinTemperature -> 25 * Celsius,
+  MaxTemperature -> 95 * Celsius,
+  TemperatureRampRate -> 1 * Celsius / Minute,
+  NumberOfCycles -> 1,
+  OptimizeFluorescenceLaserPower -> True
 ]
 ```
 
-### Explanation of Specified Options:
+### Explanation of Specified Options
 
-1. **Samples**: `Samples -> {PEGylatedPeptideSample}`
-   - We are testing the thermal stability of the PEGylated peptide, which is the main analyte of interest in this experiment.
+1. **Instrument**: 
+   - **Value**: `Model[Instrument, MultimodeSpectrophotometer, "Uncle"]`
+   - **Reason**: The Uncle multimode spectrophotometer is chosen for protein samples, which aligns with our PEGylated peptide. It allows for both fluorescence and static light scattering measurements, providing comprehensive data on thermal stability.
 
-2. **Instrument**: `Instrument -> Model[Instrument, MultimodeSpectrophotometer, "Uncle"]`
-   - The "Uncle" multimode spectrophotometer is chosen because it allows for both fluorescence and static light scattering measurements, which are crucial for assessing the thermal stability and aggregation behavior of proteins and peptides.
+2. **NumberOfReplicates**: 
+   - **Value**: `3`
+   - **Reason**: Increasing the number of replicates to 3 enhances the reliability and statistical significance of the data, which is crucial for robust experimental validation.
 
-3. **NumberOfReplicates**: `NumberOfReplicates -> 3`
-   - Conducting the experiment in triplicate ensures statistical reliability and reproducibility of the results.
+3. **DetectionReagent**: 
+   - **Value**: `Model[Sample, StockSolution, "10X SYPRO Orange"]`
+   - **Reason**: SYPRO Orange is a suitable dye for detecting protein unfolding, which is essential for monitoring the thermal stability of our PEGylated peptide.
 
-4. **MinTemperature** and **MaxTemperature**: `MinTemperature -> (25 * Celsius)`, `MaxTemperature -> (95 * Celsius)`
-   - These temperature settings cover a broad range that is typical for assessing the thermal stability of peptides, ensuring that we capture the melting transition.
+4. **MinTemperature and MaxTemperature**: 
+   - **Values**: `25 * Celsius` and `95 * Celsius`
+   - **Reason**: These temperature settings cover a broad range, ensuring that we capture the full melting profile of the peptide. The range is typical for protein thermal shift assays.
 
-5. **TemperatureRampRate**: `TemperatureRampRate -> (1 * Celsius / Minute)`
-   - A moderate ramp rate is selected to allow for accurate detection of thermal transitions without causing rapid denaturation that could obscure results.
+5. **TemperatureRampRate**: 
+   - **Value**: `1 * Celsius / Minute`
+   - **Reason**: A moderate ramp rate allows for precise detection of melting transitions without causing rapid changes that might obscure data interpretation.
 
-6. **NumberOfCycles**: `NumberOfCycles -> 1`
-   - A single heating and cooling cycle is sufficient for initial stability assessment, reducing the risk of sample degradation over multiple cycles.
+6. **NumberOfCycles**: 
+   - **Value**: `1`
+   - **Reason**: A single cycle is sufficient to determine the melting temperature, which is the primary goal of this experiment.
 
-7. **DetectionReagent**: `DetectionReagent -> Model[Sample, StockSolution, "10X SYPRO Orange"]`
-   - SYPRO Orange is a commonly used dye for thermal shift assays, providing reliable fluorescence signals upon binding to hydrophobic regions exposed during protein unfolding.
+7. **OptimizeFluorescenceLaserPower**: 
+   - **Value**: `True`
+   - **Reason**: Optimizing the laser power ensures that the fluorescence signal is within the optimal range for detection, improving the accuracy and sensitivity of the measurements.
 
-8. **DynamicLightScattering**: `DynamicLightScattering -> True`
-   - Enabling DLS measurements allows us to assess changes in particle size, providing insights into aggregation behavior as the temperature changes.
+### Conclusion
 
-9. **DynamicLightScatteringMeasurements**: `DynamicLightScatteringMeasurements -> {Before, After}`
-   - Measurements are taken both before and after the thermal ramp to evaluate any changes in aggregation state due to heating.
-
-10. **DynamicLightScatteringMeasurementTemperatures**: `DynamicLightScatteringMeasurementTemperatures -> {25 * Celsius, 95 * Celsius}`
-    - DLS measurements at the start and end of the temperature range provide a clear picture of the peptide's behavior under thermal stress.
-
-This setup is designed to provide comprehensive data on the thermal stability and aggregation propensity of the PEGylated peptide, which will be crucial for its validation as a therapeutic candidate. The use of ECL ensures that the experiment is conducted with high precision and reproducibility, aligning with our project goals of high clinical value and impactful scientific application.
+This setup ensures that we gather high-quality data on the thermal stability of our PEGylated peptide, which is critical for assessing its potential as a therapeutic agent. The use of ECL and the Uncle spectrophotometer aligns with our project goals of high clinical value and impactful scientific application. The experiment is designed to be completed within the 3-month limit, ensuring timely validation of our peptide-based therapeutics.
 

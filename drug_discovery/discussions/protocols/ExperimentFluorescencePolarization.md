@@ -1458,60 +1458,49 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptide-based therapeutics for a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentFluorescencePolarization protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentFluorescencePolarization[<options>] where you fill in <options> with the appropriate options. Please refer to the ECL documentation that is provided as context. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentFluorescencePolarization protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentFluorescencePolarization[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentFluorescencePolarization` protocol using ECL, we need to carefully select the options that align with our experimental design and objectives. Here is the proposed setup for the experiment, along with explanations for each specified option:
+To implement the `ExperimentFluorescencePolarization` protocol using ECL, we need to carefully select the inputs and options that align with our experimental design and objectives. Below is a proposed setup for the experiment, along with explanations for each specified option:
 
 ```plaintext
 ExperimentFluorescencePolarization[
-  ExcitationWavelength -> (485 * Nanometer),
-  EmissionWavelength -> (520 * Nanometer),
-  PlateReaderMix -> True,
-  PlateReaderMixTime -> (1 * Minute),
-  PlateReaderMixRate -> (700 * RPM),
-  PrimaryGain -> (50 * Percent),
-  NumberOfReplicates -> 3,
-  Temperature -> 37 * Celsius,
-  EquilibrationTime -> (5 * Minute),
-  ReadDirection -> Row
+    mySamples,
+    ExcitationWavelength -> (485 * Nanometer),
+    EmissionWavelength -> (520 * Nanometer),
+    PlateReaderMix -> True,
+    PlateReaderMixTime -> (1 * Minute),
+    PlateReaderMixRate -> (700 * RPM),
+    PrimaryGain -> (50 * Percent),
+    NumberOfReplicates -> 3
 ]
 ```
 
 ### Explanation of Specified Options:
 
-1. **ExcitationWavelength -> (485 * Nanometer)**
-   - **Reason**: This wavelength is commonly used for exciting fluorescein-based dyes, such as FITC, which is often used in fluorescence polarization assays.
+1. **ExcitationWavelength -> (485 * Nanometer)** and **EmissionWavelength -> (520 * Nanometer)**:
+   - **Reason**: These wavelengths are commonly used for fluorescein-based tracers, which are often employed in fluorescence polarization assays. This choice ensures optimal excitation and emission for our labeled peptide, enhancing the sensitivity and accuracy of the binding measurements.
 
-2. **EmissionWavelength -> (520 * Nanometer)**
-   - **Reason**: This corresponds to the emission peak of fluorescein, ensuring optimal detection of the emitted fluorescence.
+2. **PlateReaderMix -> True**, **PlateReaderMixTime -> (1 * Minute)**, and **PlateReaderMixRate -> (700 * RPM)**:
+   - **Reason**: Mixing the samples ensures homogeneity and improves the interaction between the peptide and the target protein. The specified mixing time and rate are chosen to maximize mixing efficiency without causing excessive evaporation or sample loss.
 
-3. **PlateReaderMix -> True**
-   - **Reason**: Mixing ensures homogeneity of the samples, which is crucial for accurate fluorescence polarization measurements.
+3. **PrimaryGain -> (50 * Percent)**:
+   - **Reason**: Setting the gain to 50% of the instrument's dynamic range allows for a balanced signal that is neither too weak nor saturated, facilitating accurate measurement across a range of sample concentrations.
 
-4. **PlateReaderMixTime -> (1 * Minute)**
-   - **Reason**: A 1-minute mixing time is sufficient to achieve uniform distribution of the samples in the wells.
+4. **NumberOfReplicates -> 3**:
+   - **Reason**: Performing the experiment in triplicate increases the reliability of the data by allowing for statistical analysis and reducing the impact of any outliers or experimental errors.
 
-5. **PlateReaderMixRate -> (700 * RPM)**
-   - **Reason**: The maximum mixing rate ensures thorough mixing without causing excessive splashing or evaporation.
+### Default Options:
 
-6. **PrimaryGain -> (50 * Percent)**
-   - **Reason**: Setting the gain to 50% of the instrument's dynamic range helps in capturing a wide range of fluorescence intensities while avoiding saturation.
+Most other options are left at their default values to simplify the setup and because they are adequate for our experimental needs. For instance, the default temperature (ambient) and read location (top) are suitable for our assay conditions.
 
-7. **NumberOfReplicates -> 3**
-   - **Reason**: Performing triplicates increases the reliability of the data by allowing for statistical analysis and reducing the impact of outliers.
+### Implementation Considerations:
 
-8. **Temperature -> 37 * Celsius**
-   - **Reason**: Conducting the experiment at physiological temperature is important for maintaining the biological relevance of the binding interactions.
+- **Sample Preparation**: Ensure that the peptide samples are properly labeled with a fluorophore compatible with the selected wavelengths.
+- **Data Analysis**: Plan for subsequent data analysis to determine binding affinities and kinetics, which will be fed back into the machine learning models for further refinement.
 
-9. **EquilibrationTime -> (5 * Minute)**
-   - **Reason**: Allowing the samples to equilibrate at the assay temperature ensures that temperature-dependent processes reach a steady state before measurement.
-
-10. **ReadDirection -> Row**
-    - **Reason**: Reading the plate row by row is efficient and minimizes the time between measurements of adjacent wells, reducing potential variability due to time-dependent changes.
-
-By specifying these options, we ensure that the experiment is set up to provide reliable and relevant data for the validation of our peptide-based therapeutics. The use of ECL for this experiment aligns with our project goals of leveraging advanced technology for impactful drug discovery research.
+This setup aligns with our project goals by providing a robust method for validating peptide-protein interactions, which is crucial for the development of peptide-based therapeutics. The use of ECL ensures that the experiments are conducted under controlled and reproducible conditions, facilitating high-quality data collection within the 3-month experimental timeline.
 

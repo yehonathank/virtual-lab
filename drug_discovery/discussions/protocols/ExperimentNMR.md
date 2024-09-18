@@ -1504,55 +1504,42 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptide-based therapeutics for a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentNMR protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentNMR[<options>] where you fill in <options> with the appropriate options. Please refer to the ECL documentation that is provided as context. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentNMR protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentNMR[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentNMR` protocol using Emerald Cloud Labs (ECL) for the validation of peptide-based therapeutics, we need to carefully select the options that align with our experimental design and objectives. Below is the proposed experiment setup using the `ExperimentNMR` function, along with explanations for each specified option:
+To implement the `ExperimentNMR` protocol using ECL for the validation of peptide-based therapeutics, we need to carefully select the appropriate inputs and parameters based on our experimental design. Here is a proposed setup for the NMR experiment:
 
 ```plaintext
 ExperimentNMR[
-    myPeptideSample,
-    Nucleus -> "1H",
-    DeuteratedSolvent -> DMSO,
-    SampleAmount -> 5 Milligram,
-    SolventVolume -> 700 Microliter,
-    NumberOfScans -> 64,
-    AcquisitionTime -> 4 Second,
-    SampleTemperature -> Ambient
+    Object[Sample, "id:yourSampleID"],  // Replace with actual sample ID
+    Nucleus -> "1H",  // We are interested in proton NMR for structural validation
+    DeuteratedSolvent -> DMSO,  // DMSO is chosen for its ability to dissolve peptides well
+    SampleAmount -> 5 Milligram,  // A typical amount for NMR analysis
+    SolventVolume -> 700 Microliter,  // Ensures proper shimming and resolution
+    SampleTemperature -> Ambient,  // Default ambient temperature is suitable for initial analysis
+    NumberOfScans -> 64  // Increased from default to improve signal-to-noise ratio
 ]
 ```
 
 ### Explanation of Specified Options:
 
-1. **Nucleus -> "1H"**: 
-   - **Reason**: Proton NMR is commonly used for structural validation of peptides due to the abundance of hydrogen atoms in organic molecules. It provides detailed information about the chemical environment of the protons in the peptide.
+1. **Nucleus -> "1H"**: Proton NMR is selected because it provides detailed information about the hydrogen environment in the peptide, which is crucial for structural validation.
 
-2. **DeuteratedSolvent -> DMSO**:
-   - **Reason**: DMSO-d6 is a common solvent for NMR spectroscopy, especially for peptides, due to its ability to dissolve a wide range of compounds and its minimal interference with the NMR signals. It is particularly useful for peptides that may not be soluble in water or other solvents.
+2. **DeuteratedSolvent -> DMSO**: DMSO is chosen as the solvent because it is excellent for dissolving peptides, ensuring that the sample is in a suitable state for NMR analysis. The default solvent is Deuterium Oxide, which may not dissolve all peptides effectively.
 
-3. **SampleAmount -> 5 Milligram**:
-   - **Reason**: This amount is sufficient to obtain a clear NMR spectrum while ensuring that the sample is not too concentrated, which could lead to issues with peak broadening or solvent signal interference.
+3. **SampleAmount -> 5 Milligram**: This amount is typical for NMR analysis, providing a sufficient concentration for obtaining a clear spectrum without overwhelming the detector.
 
-4. **SolventVolume -> 700 Microliter**:
-   - **Reason**: This volume is recommended to ensure proper shimming and resolution of the NMR spectrum. It provides a good balance between sample concentration and solvent volume.
+4. **SolventVolume -> 700 Microliter**: This volume is recommended to ensure proper shimming and resolution. It prevents issues with peak tailing and ensures the instrument can lock onto the solvent's deuterium signal effectively.
 
-5. **NumberOfScans -> 64**:
-   - **Reason**: A higher number of scans improves the signal-to-noise ratio, which is crucial for detecting subtle features in the spectrum of complex molecules like peptides.
+5. **NumberOfScans -> 64**: Increasing the number of scans from the default improves the signal-to-noise ratio, which is beneficial for detecting subtle features in the spectrum that are important for structural validation.
 
-6. **AcquisitionTime -> 4 Second**:
-   - **Reason**: This acquisition time is standard for proton NMR and allows for adequate sampling of the free induction decay (FID) to ensure high-quality spectral data.
+### Default Options:
 
-7. **SampleTemperature -> Ambient**:
-   - **Reason**: Conducting the experiment at ambient temperature is practical and avoids the need for additional temperature control, which can simplify the experimental setup and reduce potential sources of error.
+- **SampleTemperature -> Ambient**: The default ambient temperature is suitable for initial analysis unless specific temperature-dependent studies are required.
+- **Other acquisition parameters**: Default values are used unless specific adjustments are needed based on preliminary results or specific experimental goals.
 
-### Additional Considerations:
-
-- **UseExternalStandard**: Not specified, as the default setting is appropriate for our needs. If necessary, an external standard can be used to improve quantification accuracy.
-- **WaterSuppression**: Not specified, as it is not needed for DMSO-d6 solvent.
-- **Post-Experiment Analysis**: After acquiring the NMR data, we will use `AnalyzePeaks` to identify and assign peaks, ensuring the structural integrity of the peptide.
-
-This setup aligns with our project goals by ensuring high-quality data acquisition for structural validation of the peptide-based therapeutics. The use of ECL for experimental validation within the 3-month limit is feasible with this protocol, allowing us to integrate the results into our machine learning models for further refinement and prediction accuracy.
+This setup aligns with our project goals by ensuring that the NMR experiment is designed to provide high-quality data for validating the structural integrity of the synthesized peptides. The use of ECL for this experiment ensures that we can efficiently manage and execute the protocol within the 3-month experimental limit.
 

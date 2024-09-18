@@ -1978,63 +1978,53 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptide-based therapeutics for a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentLCMS protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentLCMS[<options>] where you fill in <options> with the appropriate options. Please refer to the ECL documentation that is provided as context. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentLCMS protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentLCMS[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentLCMS` protocol using Emerald Cloud Labs (ECL) for the validation of peptide-based therapeutics, we need to carefully select and specify options that align with our experimental design. Below is the proposed setup for the `ExperimentLCMS` protocol, along with explanations for each specified option:
+To implement the `ExperimentLCMS` protocol using Emerald Cloud Labs (ECL) for the validation of peptide-based therapeutics, we need to carefully select the inputs and options that align with our experimental design. Here is a proposed setup for the `ExperimentLCMS` call, along with explanations for each specified option:
 
 ```plaintext
 ExperimentLCMS[
-    MassAnalyzer -> QTOF,
-    IonMode -> Positive,
-    Calibrant -> Model[Sample, StockSolution, Standard, "Cesium Iodide ESI Calibrant"],
-    Gradient -> {
-        {0 * Minute, 95 * Percent, 5 * Percent, 0 * Percent, 0 * Percent, 1 * Milliliter / Minute},
-        {15 * Minute, 50 * Percent, 50 * Percent, 0 * Percent, 0 * Percent, 1 * Milliliter / Minute},
-        {30 * Minute, 5 * Percent, 95 * Percent, 0 * Percent, 0 * Percent, 1 * Milliliter / Minute}
-    },
-    AcquisitionWindow -> {
-        Span[2 * Minute, 5 * Minute],
-        Span[7 * Minute, 9 * Minute]
-    },
-    AcquisitionMode -> {MS1FullScan, DataDependent},
-    Fragment -> {True, False},
-    MassDetection -> {650 * Gram / Mole, Protein},
-    FragmentMassDetection -> {Span[300 * Gram / Mole, 1000 * Gram / Mole], Null}
+  myPeptideSample,
+  MassAnalyzer -> QTOF,
+  IonMode -> Positive,
+  Calibrant -> Model[Sample, StockSolution, Standard, "Cesium Iodide ESI Calibrant"],
+  AcquisitionWindow -> {Span[0 * Minute, 30 * Minute]},
+  AcquisitionMode -> MS1FullScan,
+  Gradient -> {
+    {0 * Minute, 95 * Percent, 5 * Percent, 0 * Percent, 0 * Percent, 0.3 * Milliliter / Minute},
+    {15 * Minute, 50 * Percent, 50 * Percent, 0 * Percent, 0 * Percent, 0.3 * Milliliter / Minute},
+    {30 * Minute, 5 * Percent, 95 * Percent, 0 * Percent, 0 * Percent, 0.3 * Milliliter / Minute}
+  }
 ]
 ```
 
 ### Explanation of Specified Options:
 
 1. **MassAnalyzer -> QTOF**: 
-   - **Reason**: The Quadrupole Time-of-Flight (QTOF) mass analyzer is chosen for its high resolution and accuracy, which is essential for the detailed analysis of peptides and their modifications.
+   - **Reason**: The QTOF (Quadrupole Time-of-Flight) mass analyzer is chosen for its high resolution and accuracy, which is essential for confirming the molecular weight and sequence identity of peptides. This aligns with our goal of ensuring high clinical value through precise validation.
 
 2. **IonMode -> Positive**: 
-   - **Reason**: Peptides typically ionize better in positive mode due to the presence of basic amino acids, which enhances sensitivity and detection.
+   - **Reason**: Peptides typically ionize better in positive ion mode due to the presence of basic amino acid residues. This setting enhances sensitivity and detection efficiency.
 
 3. **Calibrant -> Model[Sample, StockSolution, Standard, "Cesium Iodide ESI Calibrant"]**: 
-   - **Reason**: Cesium Iodide is a suitable calibrant for ensuring accurate mass measurements across a wide range of m/z values, which is critical for peptide analysis.
+   - **Reason**: Cesium iodide is a standard calibrant for ESI (Electrospray Ionization) in positive mode, providing reliable mass accuracy across a wide range of m/z values, which is crucial for peptide analysis.
 
-4. **Gradient**: 
-   - **Reason**: A gradient is specified to effectively separate peptide components over time. The gradient starts with a high percentage of aqueous buffer to retain hydrophilic components and gradually increases the organic phase to elute more hydrophobic peptides.
+4. **AcquisitionWindow -> {Span[0 * Minute, 30 * Minute]}**: 
+   - **Reason**: This window covers the entire gradient run, ensuring that all peptide elution events are captured for analysis.
 
-5. **AcquisitionWindow -> {Span[2 * Minute, 5 * Minute], Span[7 * Minute, 9 * Minute]}**: 
-   - **Reason**: Specific time windows are chosen to focus on regions of the chromatogram where peptide elution is expected, optimizing data collection and reducing unnecessary data acquisition.
+5. **AcquisitionMode -> MS1FullScan**: 
+   - **Reason**: MS1FullScan is used to detect intact ions without fragmentation, which is suitable for confirming the presence and purity of the synthesized peptides.
 
-6. **AcquisitionMode -> {MS1FullScan, DataDependent}**: 
-   - **Reason**: MS1FullScan is used initially to survey intact ions, while DataDependent acquisition allows for targeted fragmentation of selected ions based on their abundance, providing detailed structural information.
+6. **Gradient**: 
+   - **Reason**: The gradient is designed to separate peptides effectively over a 30-minute run. Starting with a high percentage of aqueous buffer (Buffer A) and gradually increasing the organic solvent (Buffer B) helps in resolving peptides based on their hydrophobicity. The flow rate of 0.3 mL/min is chosen to balance resolution and analysis time.
 
-7. **Fragment -> {True, False}**: 
-   - **Reason**: Fragmentation is enabled during the DataDependent acquisition mode to obtain structural information from product ions, while it is disabled during the MS1FullScan to focus on intact ions.
+### Default Options:
 
-8. **MassDetection -> {650 * Gram / Mole, Protein}**: 
-   - **Reason**: This range is set to capture the mass-to-charge ratios typical of peptides, ensuring that the relevant ions are detected and analyzed.
+Most other options are left at their default values to streamline the experiment setup and focus on the critical parameters that impact peptide analysis. This approach ensures that the experiment is both efficient and aligned with the project's goals of high clinical value and impactful scientific application.
 
-9. **FragmentMassDetection -> {Span[300 * Gram / Mole, 1000 * Gram / Mole], Null}**: 
-   - **Reason**: This range is specified to capture the fragment ions resulting from peptide fragmentation, providing insights into peptide sequence and modifications.
-
-By specifying these options, we ensure that the LCMS experiment is tailored to the analysis of peptide-based therapeutics, aligning with our project's goals of high clinical value and impactful scientific application. This setup will be implemented using ECL to validate our peptide synthesis and modifications within the 3-month experimental timeframe.
+By implementing this protocol in ECL, we ensure that the experimental validation is conducted within the 3-month limit, leveraging the platform's capabilities for precise and reproducible results. This setup will provide the necessary data to feed back into our machine learning models, enhancing their predictive power for future peptide design iterations.
 

@@ -2868,24 +2868,21 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptide-based therapeutics for a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentSolidPhaseExtraction protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentSolidPhaseExtraction[<options>] where you fill in <options> with the appropriate options. Please refer to the ECL documentation that is provided as context. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentSolidPhaseExtraction protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentSolidPhaseExtraction[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentSolidPhaseExtraction` protocol using ECL, we need to carefully select the options that align with our experimental design for peptide-based therapeutics. Here is how we can set up the experiment, along with explanations for each specified option:
+To implement the `ExperimentSolidPhaseExtraction` protocol using ECL, we need to tailor the experiment to our specific peptide-based therapeutic project. This involves selecting appropriate inputs and adjusting certain options to align with our experimental design and objectives. Here's how we can structure the experiment:
+
+### ExperimentSolidPhaseExtraction Protocol Implementation
 
 ```plaintext
 ExperimentSolidPhaseExtraction[
     {
         {myPooledSample1, myPooledSample2}, mySample1, mySample2
     },
-    ExtractionStrategy -> Positive,
-    ExtractionMode -> ReversePhase,
-    ExtractionSorbent -> C18,
-    ExtractionCartridge -> Model[Container, ExtractionCartridge, "500mg, 3cc, C18, Vac extraction cartridge"],
-    Instrument -> Model[Instrument, LiquidHandler, "id:o1k9jAKOwLl8"],
     PreFlushingSolution -> Model[Sample, StockSolution, "90% methanol"],
     PreFlushingSolutionVolume -> 10 * Milliliter,
     ConditioningSolution -> Model[Sample, StockSolution, "15 mM ammonium acetate"],
@@ -2893,37 +2890,38 @@ ExperimentSolidPhaseExtraction[
     WashingSolution -> Model[Sample, "Milli-Q water"],
     WashingSolutionVolume -> 30 * Milliliter,
     ElutingSolution -> Model[Sample, StockSolution, "90% methanol"],
-    ElutingSolutionVolume -> 1 * Milliliter
+    ElutingSolutionVolume -> 1 * Milliliter,
+    ExtractionMode -> ReversePhase,
+    ExtractionSorbent -> C18,
+    Instrument -> Model[Instrument, LiquidHandler, "id:o1k9jAKOwLl8"]
 ]
 ```
 
-### Explanation of Specified Options:
+### Explanation of Specified Options
 
-1. **ExtractionStrategy -> Positive**: We are interested in retaining the analytes of interest on the sorbent, which is typical for peptide purification.
+1. **PreFlushingSolution**: We chose "90% methanol" to effectively remove any residues from the sorbent, ensuring a clean start for the extraction process. Methanol is a common choice for pre-flushing due to its ability to dissolve a wide range of organic residues.
 
-2. **ExtractionMode -> ReversePhase**: This mode is suitable for separating compounds based on polarity, which is effective for peptides.
+2. **PreFlushingSolutionVolume**: Set to 10 mL to ensure thorough flushing of the sorbent. This volume is sufficient to cover the sorbent and remove any contaminants.
 
-3. **ExtractionSorbent -> C18**: C18 is a common choice for reverse-phase extractions, providing good retention for peptides.
+3. **ConditioningSolution**: "15 mM ammonium acetate" is selected to condition the sorbent, preparing it for optimal interaction with the analytes. This solution is compatible with the C18 sorbent and helps maintain the pH balance.
 
-4. **ExtractionCartridge**: We specify a C18 cartridge that matches our sorbent choice and is compatible with our liquid handler.
+4. **ConditioningSolutionVolume**: 17 mL is chosen to ensure the sorbent is fully conditioned, providing consistent interaction with the sample.
 
-5. **Instrument -> Model[Instrument, LiquidHandler, "id:o1k9jAKOwLl8"]**: The Gilson GX-271 LiquidHandler is selected for its compatibility with our cartridge and ability to automate the SPE process.
+5. **WashingSolution**: "Milli-Q water" is used to wash away non-specifically bound impurities, enhancing the purity of the eluted analytes.
 
-6. **PreFlushingSolution -> "90% methanol"**: Methanol is used to clean the sorbent of any residues, ensuring a clean starting point for the extraction.
+6. **WashingSolutionVolume**: 30 mL is specified to ensure thorough washing, reducing potential contamination in the final elution.
 
-7. **PreFlushingSolutionVolume -> 10 * Milliliter**: This volume is sufficient to thoroughly flush the cartridge without wasting solvent.
+7. **ElutingSolution**: "90% methanol" is used again for elution, as it effectively disrupts interactions between the analytes and the sorbent, allowing for efficient recovery of the target compounds.
 
-8. **ConditioningSolution -> "15 mM ammonium acetate"**: This solution conditions the sorbent to ensure consistent interaction with the sample.
+8. **ElutingSolutionVolume**: 1 mL is chosen to concentrate the eluted analytes, facilitating downstream analysis.
 
-9. **ConditioningSolutionVolume -> 17 * Milliliter**: This volume ensures the sorbent is fully conditioned.
+9. **ExtractionMode**: ReversePhase is selected because it is suitable for separating compounds based on polarity, which is ideal for our peptide-based samples.
 
-10. **WashingSolution -> "Milli-Q water"**: Water is used to wash away non-specifically bound impurities.
+10. **ExtractionSorbent**: C18 is chosen due to its widespread use in reverse-phase chromatography, providing strong retention for non-polar compounds.
 
-11. **WashingSolutionVolume -> 30 * Milliliter**: A larger volume ensures thorough washing, improving the purity of the eluted analytes.
+11. **Instrument**: The Gilson GX-271 LiquidHandler is selected for its capability to handle the specified volumes and perform the necessary liquid handling steps efficiently.
 
-12. **ElutingSolution -> "90% methanol"**: Methanol is used to elute the peptides from the sorbent.
+### Conclusion
 
-13. **ElutingSolutionVolume -> 1 * Milliliter**: A smaller volume is used to concentrate the eluted peptides, facilitating downstream analysis.
-
-This setup ensures that we efficiently extract and purify our peptide samples, aligning with our project's goals of high clinical value and impactful scientific application. The use of ECL for this experiment allows us to leverage automated systems for precise and reproducible results within our 3-month experimental timeline.
+This setup is designed to maximize the purity and yield of the peptide analytes, ensuring that the samples are ready for subsequent validation steps. By using ECL, we can ensure precise control over the experimental conditions, which is crucial for reproducibility and reliability in drug discovery research.
 

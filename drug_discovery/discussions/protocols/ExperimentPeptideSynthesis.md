@@ -1446,71 +1446,70 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptide-based therapeutics for a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentPeptideSynthesis protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentPeptideSynthesis[<options>] where you fill in <options> with the appropriate options. Please refer to the ECL documentation that is provided as context. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentPeptideSynthesis protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentPeptideSynthesis[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentPeptideSynthesis` protocol using Emerald Cloud Labs (ECL), we need to specify certain options based on our experimental design while leaving most options at their default values. Here is a proposed setup for the experiment, along with explanations for the specified options:
+To implement the `ExperimentPeptideSynthesis` protocol using Emerald Cloud Labs (ECL), we need to carefully select the inputs and options based on our experimental design and the goals of our project. Here's how we can structure the experiment call, along with explanations for each specified option:
+
+### ExperimentPeptideSynthesis Call
 
 ```plaintext
 ExperimentPeptideSynthesis[
-    Name -> "PeptideTherapeuticSynthesis",
-    Instrument -> Model[Instrument, PeptideSynthesizer, "id:WNa4ZjRr58Wq"],
-    SynthesisStrategy -> Fmoc,
-    Scale -> 10*Micromole,
-    TargetLoading -> 100*(Micromole/Gram),
-    Resin -> Model[Sample, "Rink Amide ChemMatrix"],
-    DownloadResin -> True,
-    SwellResin -> True,
-    SwellSolution -> Model[Sample, "Dichloromethane, Reagent Grade"],
-    WashSolution -> Model[Sample, "Dimethylformamide, Reagent Grade"],
-    DeprotectionSolution -> Model[Sample, StockSolution, "Deprotection Solution (20% piperidine in NMP)"],
+    {
+        Model[Sample, "Peptide", "LysTyrValAlaMet"],
+        Model[Sample, "Peptide", "LysTyrValAlaMetTyr"]
+    },
+    DownloadResin -> {True, False},
+    Cleavage -> {True, False},
     CleavageSolution -> Model[Sample, StockSolution, "95%TFA-TIPS-H2O"],
-    Cleavage -> True,
+    CleavageVolume -> {2.5 * Milliliter, Automatic},
+    CleavageTime -> {90 * Minute, Automatic},
+    NumberOfCleavageCycles -> {1, Automatic},
     ResuspensionBuffer -> Model[Sample, "Milli-Q water"],
-    ResuspensionMixType -> Sonicate,
-    ResuspensionMixTime -> 5*Minute,
-    NumberOfResuspensionMixes -> 10
+    ResuspensionVolume -> {1 * Milliliter, Automatic},
+    StorageBuffer -> Model[Sample, "Dimethylformamide, Reagent Grade"],
+    StorageVolume -> {Automatic, 2 * Milliliter},
+    ResuspensionMixPrimitives -> {
+        Mix[MixType -> Pipette, NumberOfMixes -> 10],
+        Mix[MixType -> Vortex, Time -> (5 * Minute)],
+        Mix[MixType -> Sonicate, Time -> (5 * Minute)]
+    }
 ]
 ```
 
-### Explanation of Specified Options:
+### Explanation of Specified Options
 
-1. **Name**: `"PeptideTherapeuticSynthesis"` - This provides a clear identifier for the experiment, making it easier to track and manage within ECL.
+1. **Peptide Models**: 
+   - We are synthesizing two peptides: "LysTyrValAlaMet" and "LysTyrValAlaMetTyr". These sequences are chosen based on their potential binding affinity to the target protein, as predicted by our machine learning models.
 
-2. **Instrument**: `Model[Instrument, PeptideSynthesizer, "id:WNa4ZjRr58Wq"]` - Specifies the use of the Symphony X peptide synthesizer, which is calibrated for accurate volume delivery and suitable for our synthesis needs.
+2. **DownloadResin**: 
+   - `True` for the first peptide indicates that the resin will be downloaded with the first monomer, while `False` for the second peptide indicates a pre-downloaded resin. This choice allows us to compare synthesis efficiency and yield between different resin preparation methods.
 
-3. **SynthesisStrategy**: `Fmoc` - We are using the Fmoc strategy for protecting groups, which is standard for solid-phase peptide synthesis and aligns with our protocol.
+3. **Cleavage**: 
+   - `True` for the first peptide ensures it is cleaved from the resin, allowing us to test the entire synthesis and purification process. `False` for the second peptide keeps it on the resin for potential future modifications or storage.
 
-4. **Scale**: `10*Micromole` - This scale is chosen to produce a sufficient quantity of peptide for subsequent validation experiments while remaining within the capabilities of the synthesizer.
+4. **CleavageSolution**: 
+   - We specify "95%TFA-TIPS-H2O" as the cleavage solution to ensure effective cleavage of the peptide from the resin, which is a standard and effective cocktail for this purpose.
 
-5. **TargetLoading**: `100*(Micromole/Gram)` - This target loading is selected to optimize the resin's capacity for peptide synthesis, balancing between efficiency and yield.
+5. **CleavageVolume and CleavageTime**: 
+   - A volume of 2.5 mL and a time of 90 minutes are specified for the first peptide to optimize cleavage efficiency while minimizing potential side reactions.
 
-6. **Resin**: `Model[Sample, "Rink Amide ChemMatrix"]` - This resin is chosen for its compatibility with Fmoc chemistry and its ability to provide high yields of peptides with amide linkages.
+6. **NumberOfCleavageCycles**: 
+   - Set to 1 for the first peptide to ensure complete cleavage without excessive exposure to the cleavage cocktail.
 
-7. **DownloadResin**: `True` - Indicates that the resin will be downloaded with the first monomer, which is typical for starting the synthesis process.
+7. **ResuspensionBuffer and ResuspensionVolume**: 
+   - "Milli-Q water" is used to resuspend the cleaved peptide, ensuring it is in a suitable solvent for subsequent analysis. A volume of 1 mL is chosen to concentrate the peptide for easier handling and analysis.
 
-8. **SwellResin**: `True` - Ensures the resin is properly swelled before synthesis, which is critical for optimal coupling efficiency.
+8. **StorageBuffer and StorageVolume**: 
+   - "Dimethylformamide, Reagent Grade" is used for storing the uncleaved peptide on the resin, providing a stable environment to prevent degradation. A volume of 2 mL is specified for efficient storage.
 
-9. **SwellSolution**: `Model[Sample, "Dichloromethane, Reagent Grade"]` - Chosen for its effectiveness in swelling the resin, facilitating better access for reagents.
+9. **ResuspensionMixPrimitives**: 
+   - A combination of pipetting, vortexing, and sonication is used to ensure thorough resuspension and solubilization of the peptide, which is crucial for accurate downstream analysis.
 
-10. **WashSolution**: `Model[Sample, "Dimethylformamide, Reagent Grade"]` - Used for washing between steps to remove excess reagents and by-products, ensuring purity.
+### Conclusion
 
-11. **DeprotectionSolution**: `Model[Sample, StockSolution, "Deprotection Solution (20% piperidine in NMP)"]` - Necessary for removing Fmoc protecting groups, allowing the next amino acid to couple.
-
-12. **CleavageSolution**: `Model[Sample, StockSolution, "95%TFA-TIPS-H2O"]` - Used to cleave the peptide from the resin, a critical step to obtain the free peptide.
-
-13. **Cleavage**: `True` - Indicates that the peptide will be cleaved from the resin at the end of the synthesis, which is necessary for further purification and analysis.
-
-14. **ResuspensionBuffer**: `Model[Sample, "Milli-Q water"]` - Used to resuspend the cleaved peptide, ensuring it is in a suitable medium for subsequent purification and analysis.
-
-15. **ResuspensionMixType**: `Sonicate` - Chosen to ensure thorough mixing and solubilization of the peptide, which is important for accurate downstream analysis.
-
-16. **ResuspensionMixTime**: `5*Minute` - Provides sufficient time for the sonication process to effectively resuspend the peptide.
-
-17. **NumberOfResuspensionMixes**: `10` - Ensures thorough mixing, which is critical for achieving a homogeneous solution of the peptide.
-
-This setup aligns with our project goals of high clinical value and impactful scientific application, utilizing ECL for experimental validation within the 3-month timeframe.
+This setup aligns with our project goals by focusing on peptide synthesis and validation using ECL, ensuring high clinical value and impactful scientific contributions. The specified options are tailored to optimize synthesis efficiency, peptide purity, and ease of analysis, while also allowing for a comparison of different synthesis strategies. This approach will provide valuable data to feed back into our machine learning models, enhancing their predictive accuracy and guiding future peptide design efforts.
 

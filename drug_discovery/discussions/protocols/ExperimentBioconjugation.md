@@ -3878,83 +3878,85 @@ By integrating these components, the protocol is robust, detailed, and aligned w
 
 Here is the agenda for the meeting:
 
-You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptide-based therapeutics for a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentBioconjugation protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentBioconjugation[<options>] where you fill in <options> with the appropriate options. Please refer to the ECL documentation that is provided as context. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value.
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentBioconjugation protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentBioconjugation[<inputs>] where you fill in <inputs> with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values (and therefore do not specify them) except for those options that should be changed based on your specific experimental design. For every option that you do specify, please explain why you chose that value instead of the default.
 
 Medicinal Chemist, please provide your response to the agenda.
 
 ## Medicinal Chemist
 
-To implement the `ExperimentBioconjugation` protocol using ECL, we need to carefully select the options that align with our experimental design for peptide-based therapeutics. Here is how we can structure the experiment:
+To implement the `ExperimentBioconjugation` protocol using ECL, we need to carefully consider the inputs and any specific options that need to be set based on our experimental design. Given the context and the goals of the project, here's how we can structure the experiment:
+
+### ExperimentBioconjugation Implementation
 
 ```plaintext
 ExperimentBioconjugation[
-  {
-    {mySample1, mySample2}
-  },
-  {
-    myConjugatedMoleculeIdentityModel
-  },
-  ActivationSampleVolume -> {{100 * Microliter, Null}},
-  ActivationReagent -> {{myActivationReagent, Null}},
-  ActivationReagentVolume -> {{10 * Microliter, Null}},
-  ActivationMixVolume -> (50 * Microliter),
-  ActivationNumberOfMixes -> 3,
-  ActivationTime -> (1 * Minute),
-  ConjugationReactionVolume -> {110 * Microliter},
-  ConjugationTime -> (15 * Minute),
-  ConjugationTemperature -> Ambient,
-  ConjugationMixVolume -> (60 * Microliter),
-  ConjugationNumberOfMixes -> 3,
-  QuenchReactionVolume -> (120 * Microliter),
-  QuenchReagent -> {myQuenchReagent},
-  QuenchReagentVolume -> (10 * Microliter),
-  QuenchTime -> (5 * Minute),
-  QuenchTemperature -> Ambient,
-  QuenchMixVolume -> (60 * Microliter),
-  QuenchNumberOfMixes -> 3,
-  SamplesOutStorageCondition -> {Freezer}
+    {
+        {mySample1, mySample2}
+    },
+    {
+        myConjugatedMoleculeIdentityModel
+    },
+    ActivationSampleVolume -> {{100 * Microliter, Null}},
+    ActivationReagent -> {{myActivationReagent, Null}},
+    ActivationReagentVolume -> {{10 * Microliter, Null}},
+    ActivationMixVolume -> (50 * Microliter),
+    ActivationNumberOfMixes -> 3,
+    ActivationTime -> (1 * Minute),
+    ConjugationReactionVolume -> {110 * Microliter},
+    ConjugationTime -> (15 * Minute),
+    ConjugationTemperature -> Ambient,
+    ConjugationMixVolume -> (60 * Microliter),
+    ConjugationNumberOfMixes -> 3,
+    QuenchReactionVolume -> (120 * Microliter),
+    QuenchReagent -> {myQuenchReagent},
+    QuenchReagentVolume -> (10 * Microliter),
+    QuenchTime -> (5 * Minute),
+    QuenchTemperature -> Ambient,
+    QuenchMixVolume -> (60 * Microliter),
+    QuenchNumberOfMixes -> 3,
+    SamplesOutStorageCondition -> {Freezer}
 ]
 ```
 
-### Explanation of Selected Options:
+### Explanation of Specified Options
 
-1. **ActivationSampleVolume**: Set to 100 microliters to ensure sufficient volume for effective activation of functional groups on the peptide.
+1. **ActivationSampleVolume**: Set to 100 microliters to ensure sufficient volume for effective activation of the sample. This volume is chosen to match the typical scale for bioconjugation reactions, allowing for efficient mixing and reaction kinetics.
 
-2. **ActivationReagent**: Specified as `myActivationReagent` to ensure the correct reagent is used for activating the functional groups necessary for conjugation.
+2. **ActivationReagent**: Specified as `myActivationReagent` to ensure the correct reagent is used for activating the functional groups necessary for conjugation. This is critical for ensuring the reaction proceeds as intended.
 
-3. **ActivationReagentVolume**: Set to 10 microliters to achieve the desired concentration of the activation reagent in the reaction mixture.
+3. **ActivationReagentVolume**: Set to 10 microliters to provide an optimal concentration of the activation reagent, ensuring effective activation without excess reagent that could interfere with subsequent steps.
 
-4. **ActivationMixVolume**: Set to 50 microliters to ensure thorough mixing of the activation components, promoting efficient activation.
+4. **ActivationMixVolume**: Set to 50 microliters to ensure thorough mixing of the activation components, promoting uniform activation across the sample.
 
-5. **ActivationNumberOfMixes**: Set to 3 to ensure adequate mixing cycles for uniform activation.
+5. **ActivationNumberOfMixes**: Set to 3 to ensure adequate mixing cycles for consistent activation.
 
-6. **ActivationTime**: Set to 1 minute to allow sufficient time for the activation reaction to occur.
+6. **ActivationTime**: Set to 1 minute to allow sufficient time for the activation reaction to occur without unnecessary delay.
 
-7. **ConjugationReactionVolume**: Set to 110 microliters to accommodate the total volume of reactants and ensure proper mixing.
+7. **ConjugationReactionVolume**: Set to 110 microliters to accommodate the total volume of reactants and ensure proper mixing and reaction conditions.
 
-8. **ConjugationTime**: Set to 15 minutes to allow sufficient time for the conjugation reaction to proceed to completion.
+8. **ConjugationTime**: Set to 15 minutes to provide adequate time for the conjugation reaction to proceed to completion, based on literature recommendations for similar reactions.
 
-9. **ConjugationTemperature**: Set to Ambient to maintain reaction conditions that are typically optimal for bioconjugation reactions.
+9. **ConjugationTemperature**: Set to Ambient to maintain a consistent and controlled reaction environment, which is typical for bioconjugation reactions.
 
-10. **ConjugationMixVolume**: Set to 60 microliters to ensure effective mixing during the conjugation process.
+10. **ConjugationMixVolume**: Set to 60 microliters to ensure effective mixing of the conjugation components, promoting uniform reaction conditions.
 
-11. **ConjugationNumberOfMixes**: Set to 3 to ensure thorough mixing and uniform reaction conditions.
+11. **ConjugationNumberOfMixes**: Set to 3 to ensure adequate mixing cycles for consistent conjugation.
 
-12. **QuenchReactionVolume**: Set to 120 microliters to ensure the quenching reagent is adequately mixed with the reaction mixture.
+12. **QuenchReactionVolume**: Set to 120 microliters to ensure sufficient volume for effective quenching of the reaction, preventing further conjugation.
 
-13. **QuenchReagent**: Specified as `myQuenchReagent` to ensure the correct reagent is used to stop the conjugation reaction.
+13. **QuenchReagent**: Specified as `myQuenchReagent` to ensure the correct reagent is used to stop the conjugation reaction, preserving the integrity of the conjugated product.
 
-14. **QuenchReagentVolume**: Set to 10 microliters to achieve the desired concentration of the quenching reagent.
+14. **QuenchReagentVolume**: Set to 10 microliters to provide an optimal concentration of the quench reagent, ensuring effective quenching without excess reagent.
 
-15. **QuenchTime**: Set to 5 minutes to allow sufficient time for the quenching reaction to proceed.
+15. **QuenchTime**: Set to 5 minutes to allow sufficient time for the quenching reaction to occur, ensuring all reactive sites are deactivated.
 
-16. **QuenchTemperature**: Set to Ambient to maintain consistent reaction conditions.
+16. **QuenchTemperature**: Set to Ambient to maintain a consistent and controlled reaction environment during quenching.
 
-17. **QuenchMixVolume**: Set to 60 microliters to ensure effective mixing during the quenching process.
+17. **QuenchMixVolume**: Set to 60 microliters to ensure effective mixing of the quenching components, promoting uniform reaction conditions.
 
-18. **QuenchNumberOfMixes**: Set to 3 to ensure thorough mixing and uniform quenching.
+18. **QuenchNumberOfMixes**: Set to 3 to ensure adequate mixing cycles for consistent quenching.
 
 19. **SamplesOutStorageCondition**: Set to Freezer to preserve the stability and integrity of the conjugated samples post-experiment.
 
-These options are chosen to ensure the experiment is conducted under optimal conditions for peptide bioconjugation, aligning with the project's goals of high clinical value and scientific impact. The use of ECL for experimental validation ensures that the process is automated and reproducible, fitting within the 3-month experimental timeline.
+This setup ensures that the bioconjugation experiment is conducted under optimal conditions for successful synthesis and validation of the peptide-based therapeutics, aligning with the project's goals of high clinical value and impactful scientific application.
 
