@@ -11,7 +11,7 @@ git clone https://github.com/swansonk14/virtual_lab.git
 cd virtual_lab
 conda create -y -n virtual_lab python=3.12
 conda activate virtual_lab
-pip install -r requirements.txt
+pip install -r requirements-frozen.txt
 ```
 
 ## Open AI API Key

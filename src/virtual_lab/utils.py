@@ -9,12 +9,12 @@ import tiktoken
 from openai import OpenAI
 from openai.types.beta.threads.run import Run
 
-from constants import (
+from virtual_lab.constants import (
     MODEL_TO_INPUT_PRICE_PER_TOKEN,
     MODEL_TO_OUTPUT_PRICE_PER_TOKEN,
     PUBMED_TOOL_NAME,
 )
-from prompts import format_references
+from virtual_lab.prompts import format_references
 
 
 def run_pubmed_search(query: str, num_articles: int = 3, verbose: bool = True) -> str:

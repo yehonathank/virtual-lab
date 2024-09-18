@@ -2,7 +2,7 @@
 
 from typing import Iterable
 
-from agent import Agent
+from virtual_lab.agent import Agent
 
 
 PRINCIPAL_INVESTIGATOR = Agent(
