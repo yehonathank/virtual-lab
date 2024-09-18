@@ -9,8 +9,11 @@ After following the general `virtual_lab` installation instructions, run the fol
 
 ```bash
 conda activate virtual_lab
-pip install -r nanobody_design/requirements_drug_discovery.txt
+cd /path/to/virtual_lab
+pip install -e .[drug-discovery]
 ```
+
+If there are any version incompatibility issues, please run `pip install -r drug_discovery/requirements_drug_discovery_frozen.txt`.
 
 
 ## Emerald Cloud Labs documentation

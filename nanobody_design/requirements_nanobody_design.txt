@@ -1,4 +1,0 @@
-biopython==1.84
-pandas==2.2.2
-torch==2.4.1
-transformers==4.44.2
