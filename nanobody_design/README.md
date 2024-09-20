@@ -203,3 +203,25 @@ python nanobody_design/scripts/data_processing/select_nanobodies.py \
     --top_n 24
 done
 ```
+
+
+### Prepare nanbodies for synthesis
+
+Replace the 24th nanobody with the wildtype sequence as a control. Then, prepare the nanobodies for synthesis by adding the N-terminal pelB leader sequence (periplasm targeting) `MKYLLPTAAAGLLLLAAQPAMA` and the C-terminal His-tag with stop codon `HHHHHH*`.
+
+```bash
+mkdir -p nanobody_design/designed/combined
+
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python -c "import pandas as pd
+wildtype = pd.read_csv('nanobody_design/designed/round_0/scores/${NANOBODY}.csv')
+wildtype['round_num'] = 0
+wildtype['log_likelihood_ratio_vs_wildtype'] = 0.0
+wildtype['weighted_score_vs_wildtype'] = wildtype['weighted_score']
+selected = pd.read_csv('nanobody_design/designed/selected/${NANOBODY}.csv')
+combined = pd.concat([selected.iloc[:23], wildtype])
+combined['sequence_with_tags'] = [f'MKYLLPTAAAGLLLLAAQPAMA{sequence}HHHHHH*' for sequence in combined['sequence']]
+combined.to_csv('nanobody_design/designed/combined/${NANOBODY}.csv', index=False)"
+done
+```
