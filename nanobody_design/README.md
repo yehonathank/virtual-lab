@@ -233,15 +233,13 @@ Visualize the selected nanobodies using PyMOL. Below is an example for H11-D4.  
 
 Wildtype
 ```
-load H11-D4_KP3_alphafold.pdb
+load H11-D4_KP3.pdb
 <color>
 
 <Draw/Ray>
 
-select interface_A, chain A within 4.0 of chain B
-select interface_B, chain B within 4.0 of chain A
-show sticks, interface_A
-show sticks, interface_B
+select interface, byres (chain A within 4.0 of chain B) or byres (chain B within 4.0 of chain A)
+show sticks, interface
 dist hbonds, (chain A), (chain B), mode=2
 
 <Draw/Ray>
@@ -249,7 +247,7 @@ dist hbonds, (chain A), (chain B), mode=2
 
 Mutant
 ```
-load H11-D4-A14P-Y88V-K74T-R27L_KP3_alphafold.pdb
+load H11-D4-A14P-Y88V-K74T-R27L_KP3.pdb
 <color>
 select mut_res, chain A and resi 14+88+74+27
 show sticks, mut_res
@@ -259,9 +257,7 @@ label mut_atom, resn + resi
 
 <Draw/Ray>
 
-select interface_A, chain A within 4.0 of chain B
-select interface_B, chain B within 4.0 of chain A
-show sticks, interface_A
-show sticks, interface_B
+select interface, byres (chain A within 4.0 of chain B) or byres (chain B within 4.0 of chain A)
+show sticks, interface
 dist hbonds, (chain A), (chain B), mode=2
 ```
