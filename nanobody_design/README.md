@@ -225,3 +225,43 @@ combined['sequence_with_tags'] = [f'MKYLLPTAAAGLLLLAAQPAMA{sequence}HHHHHH*' for
 combined.to_csv('nanobody_design/designed/combined/${NANOBODY}.csv', index=False)"
 done
 ```
+
+
+### Visualize nanobodies
+
+Visualize the selected nanobodies using PyMOL. Below is an example for H11-D4.  For AlphaFold, replace `<color>` with `spectrum b` to show pLDDT values. For Rosetta, replace `<color>` with `util.cbc` to color by chain. For `<Draw/Ray>`, export an image using the `Draw/Ray` button in PyMOL.
+
+Wildtype
+```
+load H11-D4_KP3_alphafold.pdb
+<color>
+
+<Draw/Ray>
+
+select interface_A, chain A within 4.0 of chain B
+select interface_B, chain B within 4.0 of chain A
+show sticks, interface_A
+show sticks, interface_B
+dist hbonds, (chain A), (chain B), mode=2
+
+<Draw/Ray>
+```
+
+Mutant
+```
+load H11-D4-A14P-Y88V-K74T-R27L_KP3_alphafold.pdb
+<color>
+select mut_res, chain A and resi 14+88+74+27
+show sticks, mut_res
+color pink, mut_res
+select mut_atom, chain A and resi 14+88+74+27 and name CA
+label mut_atom, resn + resi
+
+<Draw/Ray>
+
+select interface_A, chain A within 4.0 of chain B
+select interface_B, chain B within 4.0 of chain A
+show sticks, interface_A
+show sticks, interface_B
+dist hbonds, (chain A), (chain B), mode=2
+```
