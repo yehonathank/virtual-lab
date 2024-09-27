@@ -1,0 +1,1650 @@
+## User
+
+This is the beginning of an individual meeting with Medicinal Chemist to discuss your research project.
+
+Here is context for this meeting:
+
+[begin context 1]
+
+ExperimentFluorescencePolarization[Samples]⟹Protocol
+
+generates a Protocol for measuring fluorescence polarization of the provided Samples.
+
+
+
+Fluorescence Polarization (FP) assesses the fraction of tracer bound to receptor by measuring the the molecular rotation of a fluorophore. The principle of FP is that a fluorophore excited by polarized light emits light oriented in a parallel plane. After a fluorescent molecule absorbs excitation light, it tumbles and rotates in solution during the time between excitation and emission. If the molecule is large, it rotates slowly, and the emission light remains largely polarized. Whereas a small, rapidly tumbling molecule rotates quickly and emits depolarized light. Measuring the degree of polarization provides a measure of the fraction of tracer bound to receptor, with applications in receptor-ligand binding, enzymatic degradation, and DNA hybridization studies.
+
+
+
+Experimental Principles
+
+Figure 1.1: Procedural overview of a Fluorescence Polarization experiment. Step 1: Samples are prepared in a reader-compatible shallow well plate. Step 2: Injection lines are cleaned and primed. Step 3: The assay plate is optionally held at a specified temperature. Step 4: Injection samples are dispensed into the assay plate. Step 5: The assay plate is shaken. Step 6: The plate reader excites samples with horizontally polarized light and measures emitted light in the horizontal and vertical planes. Large molecules rotate slower than small molecules and reflect more polarized light. Step 7: Optionally follow-up analysis, such as standard curve fitting, can be performed.
+
+
+
+Instrumentation
+
+PHERAstar FS
+
+Model[Instrument, PlateReader, "id:01G6nvkKr3o7"]
+
+Figure 2.1.1: The PHERAstar uses optic modules to package excitation and emission filters into a single package. This means wavelength combinations are restricted to those which already exist in the optic module. Up to five excitation/emission pairs can be recorded in a single experiment. Additionally, the PHERAstar supports dual emission so it's possible to record emission data at 2 different wavelengths simultaneously. The plate chamber can be heated up to 45°C and it can mix the plate at up to 700 RPM before and/or during the run. The reader has two 300μL syringe pump injectors which can be used for 0.5 - 300 μL injections of two unique samples at up to four time points during the run. There are two primary kinetics read modes. It can perform all readings, injections and mixing for a single well before moving onto the next well or it can read in cycles, reading all the assay wells in the plate again and again until the RunTime has been reached. The second mode is recommended for most assays, except those that use very fast kinetics.
+
+
+
+Experiment Options
+
+Optics
+
+ExcitationWavelength
+
+The wavelength(s) which should be used to excite fluorescence in the samples.
+
+Default Value: Automatic
+
+Pattern Description: Greater than or equal to 320 nanometers and less than or equal to 740 nanometers.
+
+Programmatic Pattern: RangeP[320*Nanometer, 740*Nanometer] | Automatic
+
+Index Matches to: ExcitationWavelength
+
+EmissionWavelength
+
+The wavelength(s) at which fluorescence emitted from the sample should be measured.
+
+Default Value: Automatic
+
+Pattern Description: Greater than or equal to 320 nanometers and less than or equal to 740 nanometers.
+
+Programmatic Pattern: RangeP[320*Nanometer, 740*Nanometer] | Automatic
+
+Index Matches to: ExcitationWavelength
+
+DualEmissionWavelength
+
+The wavelength at which fluorescence emitted from the sample should be measured with the secondary detector (simultaneous to the measurement at the emission wavelength done by the primary detector).
+
+Default Value: Automatic
+
+Pattern Description: Greater than or equal to 320 nanometers and less than or equal to 740 nanometers or Null.
+
+Programmatic Pattern: (RangeP[320*Nanometer, 740*Nanometer] | Automatic) | Null
+
+Index Matches to: ExcitationWavelength
+
+Instrument
+
+The plate reader used to measure fluorescence intensity.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Model[Instrument, PlateReader] or Object[Instrument, PlateReader]
+
+Programmatic Pattern: ObjectP[{Model[Instrument, PlateReader], Object[Instrument, PlateReader]}] | Automatic
+
+General
+
+Gain
+
+The gain which should be applied to the signal reaching the primary detector. This may be specified either as a direct voltage, or as a percentage (which indicates that the gain should be set such that the AdjustmentSample fluoresces at that percentage of the instrument's dynamic range).
+
+Default Value: Automatic
+
+Default Calculation: If unspecified defaults to 90% if an adjustment sample is provided or if the instrument can scan the entire plate to determine gain. Otherwise defaults to 2500 Microvolt
+
+Pattern Description: Greater than or equal to 1 microvolt and less than or equal to 4095 microvolts or greater than or equal to 1 percent and less than or equal to 95 percent.
+
+Programmatic Pattern: (RangeP[1*Percent, 95*Percent] | RangeP[1*Microvolt, 4095*Microvolt]) | Automatic
+
+Index Matches to: ExcitationWavelength
+
+DualEmissionGain
+
+The gain to apply to the signal reaching the secondary detector. This may be specified either as a direct voltage, or as a percentage relative to the AdjustmentSample option.
+
+Default Value: Automatic
+
+Pattern Description: Greater than or equal to 1 microvolt and less than or equal to 4095 microvolts or greater than or equal to 1 percent and less than or equal to 95 percent or Null.
+
+Programmatic Pattern: ((RangeP[1*Percent, 95*Percent] | RangeP[1*Microvolt, 4095*Microvolt]) | Automatic) | Null
+
+Index Matches to: ExcitationWavelength
+
+AdjustmentSample
+
+The sample which should be used to perform automatic adjustments of gain and/or focal height values at run time. The focal height will be set so that the highest signal-to-noise ratio can be achieved for the AdjustmentSample. The gain will be set such that the AdjustmentSample fluoresces at the specified percentage of the instrument's dynamic range. When multiple aliquots of the same sample is used in the experiment, an index can be specified to use the desired aliquot for adjustments.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Object[Sample] or a prepared sample or {Index, Sample} or Null.
+
+Programmatic Pattern: (((ObjectP[Object[Sample]] | _String) | {RangeP[1, 384, 1], ObjectP[Object[Sample]] | _String}) | Automatic) | Null
+
+TargetPolarization
+
+The target polarization value which should be used to perform automatic adjustments of gain and/or focal height values at run time on the chosen adjustment sample.
+
+Default Value: Automatic
+
+Pattern Description: Greater than or equal to 0 PolarizationUnits and less than or equal to 500 PolarizationUnits.
+
+Programmatic Pattern: RangeP[0*PolarizationUnit, 500*PolarizationUnit] | Automatic
+
+RetainCover
+
+Indicates if the plate seal or lid on the assay container should not be taken off during measurement to decrease evaporation. When this option is set to True, injections cannot be performed as it's not possible to inject samples through the cover.
+
+Default Value: False
+
+Pattern Description: True or False.
+
+Programmatic Pattern: BooleanP
+
+ReadLocation
+
+Indicates if fluorescence should be measured using an optic above the plate or one below the plate.
+
+Default Value: Automatic
+
+Default Calculation: Defaults to Bottom if RetainCover is set to True, otherwise defaults to Top.
+
+Pattern Description: Top or Bottom.
+
+Programmatic Pattern: ReadLocationP | Automatic
+
+Temperature
+
+The temperature at which the experiment will be performed, if using a plate reader with temperature incubation controls.
+
+Default Value: Ambient
+
+Pattern Description: Ambient or greater than or equal to 25 degrees Celsius and less than or equal to 45 degrees Celsius.
+
+Programmatic Pattern: RangeP[$AmbientTemperature, 45*Celsius] | Ambient
+
+EquilibrationTime
+
+The length of time for which the assay plates should equilibrate at the assay temperature in the plate reader before being read.
+
+Default Value: Automatic
+
+Default Calculation: Defaults to 0 Second if Temperature is set to Ambient. Otherwise defaults to 5 Minute.
+
+Pattern Description: Greater than or equal to 0 minutes and less than or equal to 1 hour.
+
+Programmatic Pattern: RangeP[0*Minute, 1*Hour] | Automatic
+
+NumberOfReadings
+
+Number of redundant readings which should be taken by the detector to determine a single averaged fluorescence intensity reading.
+
+Default Value: 100
+
+Pattern Description: Greater than or equal to 1 and less than or equal to 200.
+
+Programmatic Pattern: RangeP[1, 200]
+
+FocalHeight
+
+The distance from the bottom of the plate carrier to the focal point. If set to Automatic, the focal height will be adjusted based on the Gain adjustment, which will occur only if the gain values are set to percentages.
+
+Default Value: Automatic
+
+Pattern Description: Auto or greater than or equal to 0 millimeters and less than or equal to 25 millimeters or Null.
+
+Programmatic Pattern: ((RangeP[0*Millimeter, 25*Millimeter] | Auto) | Automatic) | Null
+
+WorkCell
+
+Indicates the work cell that this primitive will be run on if Preparation->Robotic.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set to STAR if Preparation->Robotic.
+
+Pattern Description: STAR, bioSTAR, microbioSTAR, or qPix or Null.
+
+Programmatic Pattern: (WorkCellP | Automatic) | Null
+
+Preparation
+
+Indicates if this unit operation is carried out primarily robotically or manually. Manual unit operations are executed by a laboratory operator and robotic unit operations are executed by a liquid handling work cell.
+
+Default Value: Automatic
+
+Pattern Description: Manual or Robotic.
+
+Programmatic Pattern: PreparationMethodP | Automatic
+
+NumberOfReplicates
+
+Number of times each of the input samples should be analyzed using identical experimental parameters.
+
+Default Value: Null
+
+Pattern Description: Greater than or equal to 2 in increments of 1 or Null.
+
+Programmatic Pattern: GreaterEqualP[2, 1] | Null
+
+Sample Handling
+
+MoatSize
+
+Indicates the number of concentric perimeters of wells which should be should be filled with MoatBuffer in order to decrease evaporation from the assay samples during the run.
+
+Figure 3.1: Use the moat options, MoatBuffer, MoatVolume and MoatSize to create an outer ring of wells filled with buffer. This has been shown to decrease evaporation during long reads.
+
+Default Value: Automatic
+
+Pattern Description: Greater than 0 in increments of 1 or Null.
+
+Programmatic Pattern: (GreaterP[0, 1] | Automatic) | Null
+
+MoatVolume
+
+Indicates the volume which should be added to each moat well.
+
+Default Value: Automatic
+
+Pattern Description: Greater than 0 microliters or Null.
+
+Programmatic Pattern: (GreaterP[0*Microliter] | Automatic) | Null
+
+MoatBuffer
+
+Indicates the buffer which should be used to fill each moat well.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Object[Sample] or Model[Sample] or a prepared sample or Null.
+
+Programmatic Pattern: ((ObjectP[{Object[Sample], Model[Sample]}] | _String) | Automatic) | Null
+
+PrimaryInjectionSample
+
+The sample to be injected in the first round of injections in order to introduce a time sensitive reagent/sample into the plate before/during fluorescence measurement.
+
+Default Value: Null
+
+Pattern Description: An object of type or subtype Object[Sample] or Model[Sample] or a prepared sample or Null.
+
+Programmatic Pattern: (ObjectP[{Object[Sample], Model[Sample]}] | _String) | Null
+
+Index Matches to: experiment samples
+
+SecondaryInjectionSample
+
+The sample to be injected in the second round of injections.
+
+Default Value: Null
+
+Pattern Description: An object of type or subtype Object[Sample] or Model[Sample] or a prepared sample or Null.
+
+Programmatic Pattern: (ObjectP[{Object[Sample], Model[Sample]}] | _String) | Null
+
+Index Matches to: experiment samples
+
+PrimaryInjectionVolume
+
+The amount of the primary sample which should be injected in the first round of injections.
+
+Default Value: Null
+
+Pattern Description: Greater than or equal to 0.5 microliters and less than or equal to 300 microliters or Null.
+
+Programmatic Pattern: RangeP[0.5*Microliter, 300*Microliter] | Null
+
+Index Matches to: experiment samples
+
+SecondaryInjectionVolume
+
+The amount of the secondary sample which should be injected in the second round of injections.
+
+Default Value: Null
+
+Pattern Description: Greater than or equal to 0.5 microliters and less than or equal to 300 microliters or Null.
+
+Programmatic Pattern: RangeP[0.5*Microliter, 300*Microliter] | Null
+
+Index Matches to: experiment samples
+
+PrimaryInjectionFlowRate
+
+The speed at which to transfer injection samples into the assay plate in the first round of injections.
+
+Default Value: Automatic
+
+Default Calculation: Defaults to 300 Microliter/Second if primary injections are specified.
+
+Pattern Description: 430 microliters per second, 400 microliters per second, 350 microliters per second, 300 microliters per second, 260 microliters per second, 220 microliters per second, 190 microliters per second, 170 microliters per second, 150 microliters per second, 135 microliters per second, 115 microliters per second, 100 microliters per second, 85 microliters per second, 65 microliters per second, or 50 microliters per second or Null.
+
+Programmatic Pattern: (BMGFlowRateP | Automatic) | Null
+
+SecondaryInjectionFlowRate
+
+The speed at which to transfer injection samples into the assay plate in the second round of injections.
+
+Default Value: Automatic
+
+Default Calculation: Defaults to 300 Microliter/Second if secondary injections are specified.
+
+Pattern Description: 430 microliters per second, 400 microliters per second, 350 microliters per second, 300 microliters per second, 260 microliters per second, 220 microliters per second, 190 microliters per second, 170 microliters per second, 150 microliters per second, 135 microliters per second, 115 microliters per second, 100 microliters per second, 85 microliters per second, 65 microliters per second, or 50 microliters per second or Null.
+
+Programmatic Pattern: (BMGFlowRateP | Automatic) | Null
+
+PlateReaderMix
+
+Indicates if samples should be mixed inside the plate reader chamber.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set to True if any other plate reader mix options are specified.
+
+Pattern Description: True or False.
+
+Programmatic Pattern: BooleanP | Automatic
+
+PlateReaderMixTime
+
+The amount of time samples should be mixed inside the plate reader chamber.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set to 30 second if any other plate reader mix options are specified.
+
+Pattern Description: Greater than or equal to 1 second and less than or equal to 1 hour or Null.
+
+Programmatic Pattern: (RangeP[1*Second, 1*Hour] | Automatic) | Null
+
+PlateReaderMixRate
+
+The rate at which the plate should be agitated inside the plate reader chamber.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set to 700 RPM if any other plate reader mix options are specified.
+
+Pattern Description: Greater than or equal to 100 revolutions per minute and less than or equal to 700 revolutions per minute or Null.
+
+Programmatic Pattern: (RangeP[100*RPM, 700*RPM] | Automatic) | Null
+
+PlateReaderMixMode
+
+The pattern of motion which should be employed to shake the plate.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set to DoubleOrbital if any other plate reader mix options are specified.
+
+Pattern Description: Orbital, DoubleOrbital, or Linear or Null.
+
+Programmatic Pattern: (MechanicalShakingP | Automatic) | Null
+
+ReadDirection
+
+Indicates the order in which wells should be read by specifying the plate path the instrument should follow when measuring fluorescence.
+
+Figure 3.2: Use the ReadDirection option to control how the plate reader scans the plate during each read cycle. Choosing a more efficient path will lead to a shorter DetectionInterval. Also note that you may want to consider dripping injectors if you're working with low viscosity injection samples.
+
+Default Value: Row
+
+Pattern Description: Row, Column, SerpentineRow, or SerpentineColumn.
+
+Programmatic Pattern: ReadDirectionP
+
+InjectionSampleStorageCondition
+
+The non-default conditions under which any injection samples used by this experiment should be stored after the protocol is completed.
+
+Default Value: Null
+
+Pattern Description: {AmbientStorage, Refrigerator, Freezer, DeepFreezer, CryogenicStorage, YeastIncubation, BacteriaIncubation, MammalianIncubation, TissueCultureCellsIncubation, MicrobialCellsIncubation, MicrobialCellsShakingIncubation, YeastCellsIncubation, YeastCellsShakingIncubation, ViralIncubation, AcceleratedTesting, IntermediateTesting, LongTermTesting, UVVisLightTesting} or Disposal or Null.
+
+Programmatic Pattern: (SampleStorageTypeP | Disposal) | Null
+
+Sampling
+
+SamplingPattern
+
+Indicates where in the well measurements are taken.
+
+Default Value: Automatic
+
+Pattern Description: Matrix, Spiral, Ring, or Center.
+
+Programmatic Pattern: PlateReaderSamplingP | Automatic
+
+SamplingDistance
+
+Indicates the length of the region over which sampling measurements are taken.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to Null if SamplingPattern is set to Center otherwise resolves to 80% of the diameter of the well.
+
+Pattern Description: Greater than or equal to 1 millimeter and less than or equal to 6 millimeters or Null.
+
+Programmatic Pattern: (RangeP[1*Millimeter, 6*Millimeter] | Automatic) | Null
+
+SamplingDimension
+
+Specifies the size of the grid used for Matrix sampling. For example SamplingDimension->5 will scan a 5 x 5 grid.
+
+Default Value: Automatic
+
+Default Calculation: If the SamplingPattern is set to Matrix, SamplingDimension will be set to 3.
+
+Pattern Description: Greater than or equal to 2 and less than or equal to 30 or Null.
+
+Programmatic Pattern: (RangeP[2, 30] | Automatic) | Null
+
+Post Experiment
+
+SamplesInStorageCondition
+
+The non-default conditions under which the SamplesIn of this experiment should be stored after the protocol is completed. If left unset, SamplesIn will be stored according to their current StorageCondition.
+
+Default Value: Null
+
+Pattern Description: {AmbientStorage, Refrigerator, Freezer, DeepFreezer, CryogenicStorage, YeastIncubation, BacteriaIncubation, MammalianIncubation, TissueCultureCellsIncubation, MicrobialCellsIncubation, MicrobialCellsShakingIncubation, YeastCellsIncubation, YeastCellsShakingIncubation, ViralIncubation, AcceleratedTesting, IntermediateTesting, LongTermTesting, UVVisLightTesting} or Disposal or Null.
+
+Programmatic Pattern: (Alternatives[SampleStorageTypeP | Disposal]) | Null
+
+Index Matches to: experiment samples
+
+
+
+Sample Prep Options
+
+Sample Preparation
+
+PreparatoryUnitOperations
+
+Specifies a sequence of transferring, aliquoting, consolidating, or mixing of new or existing samples before the main experiment. These prepared samples can be used in the main experiment by referencing their defined name. For more information, please reference the documentation for ExperimentSampleManipulation.
+
+Default Value: Null
+
+Pattern Description: List of one or more unit Operation ManualSamplePreparation or RoboticSamplePreparation or unit Operation must match SamplePreparationP entries or Null.
+
+Programmatic Pattern: {((ManualSamplePreparationMethodP | RoboticSamplePreparationMethodP) | SamplePreparationP)..} | Null
+
+PreparatoryPrimitives
+
+Specifies a sequence of transferring, aliquoting, consolidating, or mixing of new or existing samples before the main experiment. These prepared samples can be used in the main experiment by referencing their defined name. For more information, please reference the documentation for ExperimentSampleManipulation.
+
+Default Value: Null
+
+Pattern Description: List of one or more a primitive with head Define, Transfer, Mix, Aliquot, Consolidation, FillToVolume, Incubate, Filter, Wait, Centrifuge, or Resuspend entries or Null.
+
+Programmatic Pattern: {SampleManipulationP..} | Null
+
+Preparatory Incubation
+
+Incubate
+
+Indicates if the SamplesIn should be incubated at a fixed temperature prior to starting the experiment or any aliquoting. Sample Preparation occurs in the order of Incubation, Centrifugation, Filtration, and then Aliquoting (if specified).
+
+Default Value: Automatic
+
+Default Calculation: Resolves to True if any of the corresponding Incubation options are set. Otherwise, resolves to False.
+
+Pattern Description: True or False.
+
+Programmatic Pattern: BooleanP | Automatic
+
+Index Matches to: experiment samples
+
+IncubationTemperature
+
+Temperature at which the SamplesIn should be incubated for the duration of the IncubationTime prior to starting the experiment.
+
+Default Value: Automatic
+
+Pattern Description: Ambient or greater than or equal to -20 degrees Celsius and less than or equal to 500 degrees Celsius or Null.
+
+Programmatic Pattern: ((Ambient | RangeP[$MinIncubationTemperature, $MaxIncubationTemperature]) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+IncubationTime
+
+Duration for which SamplesIn should be incubated at the IncubationTemperature, prior to starting the experiment.
+
+Default Value: Automatic
+
+Pattern Description: Greater than or equal to 1 minute and less than or equal to 72 hours or Null.
+
+Programmatic Pattern: (RangeP[1*Minute, $MaxExperimentTime] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+Mix
+
+Indicates if this sample should be mixed while incubated, prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to True if any Mix related options are set. Otherwise, resolves to False.
+
+Pattern Description: True or False or Null.
+
+Programmatic Pattern: (BooleanP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+MixType
+
+Indicates the style of motion used to mix the sample, prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves based on the container of the sample and the Mix option.
+
+Pattern Description: Roll, Vortex, Sonicate, Pipette, Invert, Stir, Shake, Homogenize, Swirl, Disrupt, or Nutate or Null.
+
+Programmatic Pattern: (MixTypeP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+MixUntilDissolved
+
+Indicates if the mix should be continued up to the MaxIncubationTime or MaxNumberOfMixes (chosen according to the mix Type), in an attempt dissolve any solute. Any mixing/incubation will occur prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to True if MaxIncubationTime or MaxNumberOfMixes is set.
+
+Pattern Description: True or False or Null.
+
+Programmatic Pattern: (BooleanP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+MaxIncubationTime
+
+Maximum duration of time for which the samples will be mixed while incubated in an attempt to dissolve any solute, if the MixUntilDissolved option is chosen. This occurs prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves based on MixType, MixUntilDissolved, and the container of the given sample.
+
+Pattern Description: Greater than or equal to 1 minute and less than or equal to 72 hours or Null.
+
+Programmatic Pattern: (RangeP[1*Minute, $MaxExperimentTime] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+IncubationInstrument
+
+The instrument used to perform the Mix and/or Incubation, prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves based on the options Mix, Temperature, MixType and container of the sample.
+
+Pattern Description: An object of type or subtype Model[Instrument, Roller], Model[Instrument, OverheadStirrer], Model[Instrument, Vortex], Model[Instrument, Shaker], Model[Instrument, BottleRoller], Model[Instrument, Roller], Model[Instrument, Sonicator], Model[Instrument, HeatBlock], Model[Instrument, Homogenizer], Model[Instrument, Disruptor], Model[Instrument, Nutator], Model[Instrument, Thermocycler], Model[Instrument, EnvironmentalChamber], Model[Instrument, Pipette], Object[Instrument, Roller], Object[Instrument, OverheadStirrer], Object[Instrument, Vortex], Object[Instrument, Shaker], Object[Instrument, BottleRoller], Object[Instrument, Roller], Object[Instrument, Sonicator], Object[Instrument, HeatBlock], Object[Instrument, Homogenizer], Object[Instrument, Disruptor], Object[Instrument, Nutator], Object[Instrument, Thermocycler], Object[Instrument, EnvironmentalChamber], or Object[Instrument, Pipette] or Null.
+
+Programmatic Pattern: (ObjectP[Join[MixInstrumentModels, MixInstrumentObjects]] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+AnnealingTime
+
+Minimum duration for which the SamplesIn should remain in the incubator allowing the system to settle to room temperature after the IncubationTime has passed but prior to starting the experiment.
+
+Default Value: Automatic
+
+Pattern Description: Greater than or equal to 0 minutes and less than or equal to 72 hours or Null.
+
+Programmatic Pattern: (RangeP[0*Minute, $MaxExperimentTime] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+IncubateAliquotContainer
+
+The desired type of container that should be used to prepare and house the incubation samples which should be used in lieu of the SamplesIn for the experiment.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Model[Container] or {Index, Container} or Null.
+
+Programmatic Pattern: ((ObjectP[Model[Container]] | {GreaterEqualP[1, 1] | (Automatic | Null), (ObjectP[{Model[Container], Object[Container]}] | _String) | Automatic}) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+IncubateAliquotDestinationWell
+
+The desired position in the corresponding IncubateAliquotContainer in which the aliquot samples will be placed.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to A1 in containers with only one position. For plates, fills wells in the order provided by the function AllWells.
+
+Pattern Description: Any well from A1 to H12 or Null.
+
+Programmatic Pattern: (WellPositionP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+IncubateAliquot
+
+The amount of each sample that should be transferred from the SamplesIn into the IncubateAliquotContainer when performing an aliquot before incubation.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set as the smaller between the current sample volume and the maximum volume of the destination container.
+
+Pattern Description: All or greater than or equal to 1 microliter and less than or equal to 20 liters or Null.
+
+Programmatic Pattern: ((RangeP[1*Microliter, 20*Liter] | All) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+Preparatory Centrifugation
+
+Centrifuge
+
+Indicates if the SamplesIn should be centrifuged prior to starting the experiment or any aliquoting. Sample Preparation occurs in the order of Incubation, Centrifugation, Filtration, and then Aliquoting (if specified).
+
+Default Value: Automatic
+
+Default Calculation: Resolves to True if any of the corresponding Centrifuge options are set. Otherwise, resolves to False.
+
+Pattern Description: True or False.
+
+Programmatic Pattern: BooleanP | Automatic
+
+Index Matches to: experiment samples
+
+CentrifugeInstrument
+
+The centrifuge that will be used to spin the provided samples prior to starting the experiment.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Model[Instrument, Centrifuge] or Object[Instrument, Centrifuge] or Null.
+
+Programmatic Pattern: (ObjectP[{Model[Instrument, Centrifuge], Object[Instrument, Centrifuge]}] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+CentrifugeIntensity
+
+The rotational speed or the force that will be applied to the samples by centrifugation prior to starting the experiment.
+
+Default Value: Automatic
+
+Pattern Description: Greater than 0 revolutions per minute or greater than 0 standard accelerations due to gravity on the surface of the earth or Null.
+
+Programmatic Pattern: ((GreaterP[0*RPM] | GreaterP[0*GravitationalAcceleration]) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+CentrifugeTime
+
+The amount of time for which the SamplesIn should be centrifuged prior to starting the experiment.
+
+Default Value: Automatic
+
+Pattern Description: Greater than 0 minutes or Null.
+
+Programmatic Pattern: (GreaterP[0*Minute] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+CentrifugeTemperature
+
+The temperature at which the centrifuge chamber should be held while the samples are being centrifuged prior to starting the experiment.
+
+Default Value: Automatic
+
+Pattern Description: Ambient or greater than or equal to -10 degrees Celsius and less than or equal to 40 degrees Celsius or Null.
+
+Programmatic Pattern: ((Ambient | RangeP[-10*Celsius, 40*Celsius]) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+CentrifugeAliquotContainer
+
+The desired type of container that should be used to prepare and house the centrifuge samples which should be used in lieu of the SamplesIn for the experiment.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Model[Container] or {Index, Container} or Null.
+
+Programmatic Pattern: ((ObjectP[Model[Container]] | {GreaterEqualP[1, 1] | (Automatic | Null), (ObjectP[{Model[Container], Object[Container]}] | _String) | Automatic}) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+CentrifugeAliquotDestinationWell
+
+The desired position in the corresponding AliquotContainer in which the aliquot samples will be placed.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to A1 in containers with only one position. For plates, fills wells in the order provided by the function AllWells.
+
+Pattern Description: Any well from A1 to H12 or Null.
+
+Programmatic Pattern: (WellPositionP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+CentrifugeAliquot
+
+The amount of each sample that should be transferred from the SamplesIn into the CentrifugeAliquotContainer when performing an aliquot before centrifugation.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set as the smaller between the current sample volume and the maximum volume of the destination container.
+
+Pattern Description: All or greater than or equal to 1 microliter and less than or equal to 20 liters or Null.
+
+Programmatic Pattern: ((RangeP[1*Microliter, 20*Liter] | All) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+Preparatory Filtering
+
+Filtration
+
+Indicates if the SamplesIn should be filter prior to starting the experiment or any aliquoting. Sample Preparation occurs in the order of Incubation, Centrifugation, Filtration, and then Aliquoting (if specified).
+
+Default Value: Automatic
+
+Default Calculation: Resolves to True if any of the corresponding Filter options are set. Otherwise, resolves to False.
+
+Pattern Description: True or False.
+
+Programmatic Pattern: BooleanP | Automatic
+
+Index Matches to: experiment samples
+
+FiltrationType
+
+The type of filtration method that should be used to perform the filtration.
+
+Default Value: Automatic
+
+Default Calculation: Will automatically resolve to a filtration type appropriate for the volume of sample being filtered.
+
+Pattern Description: PeristalticPump, Centrifuge, Vacuum, Syringe, or AirPressure or Null.
+
+Programmatic Pattern: (FiltrationTypeP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterInstrument
+
+The instrument that should be used to perform the filtration.
+
+Default Value: Automatic
+
+Default Calculation: Will automatically resolved to an instrument appropriate for the filtration type.
+
+Pattern Description: An object of type or subtype Model[Instrument, FilterBlock], Object[Instrument, FilterBlock], Model[Instrument, PeristalticPump], Object[Instrument, PeristalticPump], Model[Instrument, VacuumPump], Object[Instrument, VacuumPump], Model[Instrument, Centrifuge], Object[Instrument, Centrifuge], Model[Instrument, SyringePump], or Object[Instrument, SyringePump] or Null.
+
+Programmatic Pattern: (ObjectP[{Model[Instrument, FilterBlock], Object[Instrument, FilterBlock], Model[Instrument, PeristalticPump], Object[Instrument, PeristalticPump], Model[Instrument, VacuumPump], Object[Instrument, VacuumPump], Model[Instrument, Centrifuge], Object[Instrument, Centrifuge], Model[Instrument, SyringePump], Object[Instrument, SyringePump]}] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+Filter
+
+The filter that should be used to remove impurities from the SamplesIn prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Will automatically resolve to a filter appropriate for the filtration type and instrument.
+
+Pattern Description: An object of type or subtype Model[Container, Plate, Filter], Model[Container, Vessel, Filter], or Model[Item, Filter] or Null.
+
+Programmatic Pattern: (ObjectP[{Model[Container, Plate, Filter], Model[Container, Vessel, Filter], Model[Item, Filter]}] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterMaterial
+
+The membrane material of the filter that should be used to remove impurities from the SamplesIn prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Resolves to an appropriate filter material for the given sample is Filtration is set to True.
+
+Pattern Description: Cellulose, Cotton, Polyethylene, PTFE, Nylon, PES, PLUS, PVDF, GlassFiber, GHP, UHMWPE, EPDM, DuraporePVDF, GxF, ZebaDesaltingResin, NickelResin, Silica, or HLB or Null.
+
+Programmatic Pattern: (FilterMembraneMaterialP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+PrefilterMaterial
+
+The material from which the prefilter filtration membrane should be made of to remove impurities from the SamplesIn prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: By default, no prefiltration is performed on samples, even when Filter->True.
+
+Pattern Description: Cellulose, Cotton, Polyethylene, PTFE, Nylon, PES, PLUS, PVDF, GlassFiber, GHP, UHMWPE, EPDM, DuraporePVDF, GxF, ZebaDesaltingResin, NickelResin, Silica, or HLB or Null.
+
+Programmatic Pattern: (FilterMembraneMaterialP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterPoreSize
+
+The pore size of the filter that should be used when removing impurities from the SamplesIn prior to starting the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Resolves to an appropriate filter pore size for the given sample is Filtration is set to True.
+
+Pattern Description: 0.008 micrometers, 0.1 micrometers, 0.22 micrometers, 0.45 micrometers, 1. micrometer, 1.1 micrometers, 2.5 micrometers, 6. micrometers, 20. micrometers, 30. micrometers, or 100. micrometers or Null.
+
+Programmatic Pattern: (FilterSizeP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+PrefilterPoreSize
+
+The pore size of the filter; all particles larger than this should be removed during the filtration.
+
+Default Value: Automatic
+
+Default Calculation: By default, no prefiltration is performed on samples, even when Filter->True.
+
+Pattern Description: 0.008 micrometers, 0.1 micrometers, 0.22 micrometers, 0.45 micrometers, 1. micrometer, 1.1 micrometers, 2.5 micrometers, 6. micrometers, 20. micrometers, 30. micrometers, or 100. micrometers or Null.
+
+Programmatic Pattern: (FilterSizeP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterSyringe
+
+The syringe used to force that sample through a filter.
+
+Default Value: Automatic
+
+Default Calculation: Resolves to an syringe appropriate to the volume of sample being filtered, if Filtration is set to True.
+
+Pattern Description: An object of type or subtype Model[Container, Syringe] or Object[Container, Syringe] or a prepared sample or Null.
+
+Programmatic Pattern: ((ObjectP[{Model[Container, Syringe], Object[Container, Syringe]}] | _String) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterHousing
+
+The filter housing that should be used to hold the filter membrane when filtration is performed using a standalone filter membrane.
+
+Default Value: Automatic
+
+Default Calculation: Resolve to an housing capable of holding the size of the membrane being used, if filter with Membrane FilterType is being used and Filtration is set to True.
+
+Pattern Description: An object of type or subtype Model[Instrument, FilterHousing], Object[Instrument, FilterHousing], Model[Instrument, FilterBlock], or Object[Instrument, FilterBlock] or Null.
+
+Programmatic Pattern: (ObjectP[{Model[Instrument, FilterHousing], Object[Instrument, FilterHousing], Model[Instrument, FilterBlock], Object[Instrument, FilterBlock]}] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterIntensity
+
+The rotational speed or force at which the samples will be centrifuged during filtration.
+
+Default Value: Automatic
+
+Default Calculation: Will automatically resolve to 2000 GravitationalAcceleration if FiltrationType is Centrifuge and Filtration is True.
+
+Pattern Description: Greater than 0 revolutions per minute or greater than 0 standard accelerations due to gravity on the surface of the earth or Null.
+
+Programmatic Pattern: ((GreaterP[0*RPM] | GreaterP[0*GravitationalAcceleration]) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterTime
+
+The amount of time for which the samples will be centrifuged during filtration.
+
+Default Value: Automatic
+
+Default Calculation: Will automatically resolve to 5 Minute if FiltrationType is Centrifuge and Filtration is True.
+
+Pattern Description: Greater than 0 minutes or Null.
+
+Programmatic Pattern: (GreaterP[0*Minute] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterTemperature
+
+The temperature at which the centrifuge chamber will be held while the samples are being centrifuged during filtration.
+
+Default Value: Automatic
+
+Default Calculation: Will automatically resolve to 22 Celsius if FiltrationType is Centrifuge and Filtration is True.
+
+Pattern Description: Greater than or equal to 4 degrees Celsius or Null.
+
+Programmatic Pattern: ((Alternatives[GreaterEqualP[4*Celsius]]) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterContainerOut
+
+The desired container filtered samples should be produced in or transferred into by the end of filtration, with indices indicating grouping of samples in the same plates, if desired.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set as the PreferredContainer for the Volume of the sample. For plates, attempts to fill all wells of a single plate with the same model before using another one.
+
+Pattern Description: An object of type or subtype Model[Container] or Object[Container] or a prepared sample or {Index, Container} or Null.
+
+Programmatic Pattern: (((ObjectP[{Model[Container], Object[Container]}] | _String) | {GreaterEqualP[1, 1] | Automatic, (ObjectP[{Model[Container], Object[Container]}] | _String) | Automatic}) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterAliquotDestinationWell
+
+The desired position in the corresponding AliquotContainer in which the aliquot samples will be placed.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to A1 in containers with only one position. For plates, fills wells in the order provided by the function AllWells.
+
+Pattern Description: Any well from A1 to H12 or Null.
+
+Programmatic Pattern: (WellPositionP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterAliquotContainer
+
+The desired type of container that should be used to prepare and house the filter samples which should be used in lieu of the SamplesIn for the experiment.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Model[Container] or {Index, Container} or Null.
+
+Programmatic Pattern: ((ObjectP[Model[Container]] | {GreaterEqualP[1, 1] | (Automatic | Null), (ObjectP[{Model[Container], Object[Container]}] | _String) | Automatic}) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterAliquot
+
+The amount of each sample that should be transferred from the SamplesIn into the FilterAliquotContainer when performing an aliquot before filtration.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set as the smaller between the current sample volume and the maximum volume of the destination container.
+
+Pattern Description: All or greater than or equal to 1 microliter and less than or equal to 20 liters or Null.
+
+Programmatic Pattern: ((RangeP[1*Microliter, 20*Liter] | All) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+FilterSterile
+
+Indicates if the filtration of the samples should be done in a sterile environment.
+
+Default Value: Automatic
+
+Default Calculation: Resolve to False if Filtration is indicated. If sterile filtration is desired, this option must manually be set to True.
+
+Pattern Description: True or False or Null.
+
+Programmatic Pattern: (BooleanP | Automatic) | Null
+
+Index Matches to: experiment samples
+
+Aliquoting
+
+Aliquot
+
+Indicates if aliquots should be taken from the SamplesIn and transferred into new AliquotSamples used in lieu of the SamplesIn for the experiment. Note that if NumberOfReplicates is specified this indicates that the input samples will also be aliquoted that number of times. Note that Aliquoting (if specified) occurs after any Sample Preparation (if specified).
+
+Default Value: Automatic
+
+Pattern Description: True or False.
+
+Programmatic Pattern: BooleanP | Automatic
+
+Index Matches to: experiment samples
+
+AliquotAmount
+
+The amount of a sample that should be transferred from the input samples into aliquots.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set as the smaller between the current sample volume and the maximum volume of the destination container if a liquid, or the current Mass or Count if a solid or counted item, respectively.
+
+Pattern Description: All or Count or Count or Mass or Volume or Null.
+
+Programmatic Pattern: ((RangeP[1*Microliter, 20*Liter] | RangeP[1*Milligram, 20*Kilogram] | GreaterP[0*Unit, 1*Unit] | GreaterP[0., 1.] | All) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+TargetConcentration
+
+The desired final concentration of analyte in the AliquotSamples after dilution of aliquots of SamplesIn with the ConcentratedBuffer and BufferDiluent which should be used in lieu of the SamplesIn for the experiment.
+
+Default Value: Automatic
+
+Default Calculation: Automatically calculated based on aliquot and buffer volumes.
+
+Pattern Description: Greater than 0 molar or greater than 0 grams per liter or Null.
+
+Programmatic Pattern: ((GreaterP[0*Molar] | GreaterP[0*(Gram/Liter)]) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+TargetConcentrationAnalyte
+
+The substance whose final concentration is attained with the TargetConcentration option.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set to the first value in the Analytes field of the input sample, or, if not populated, to the first analyte in the Composition field of the input sample, or if none exist, the first identity model of any kind in the Composition field.
+
+Pattern Description: An object of type or subtype Model[Molecule], Model[Molecule, cDNA], Model[Molecule, Oligomer], Model[Molecule, Transcript], Model[Molecule, Protein], Model[Molecule, Protein, Antibody], Model[Molecule, Carbohydrate], Model[Molecule, Polymer], Model[Resin], Model[Resin, SolidPhaseSupport], Model[Lysate], Model[ProprietaryFormulation], Model[Virus], Model[Cell], Model[Cell, Mammalian], Model[Cell, Bacteria], Model[Cell, Yeast], Model[Tissue], Model[Material], or Model[Species] or Null.
+
+Programmatic Pattern: (ObjectP[IdentityModelTypes] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+AssayVolume
+
+The desired total volume of the aliquoted sample plus dilution buffer.
+
+Default Value: Automatic
+
+Default Calculation: Automatically determined based on Volume and TargetConcentration option values.
+
+Pattern Description: Greater than or equal to 1 microliter and less than or equal to 20 liters or Null.
+
+Programmatic Pattern: (RangeP[1*Microliter, 20*Liter] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+ConcentratedBuffer
+
+The concentrated buffer which should be diluted by the BufferDilutionFactor in the final solution (i.e., the combination of the sample, ConcentratedBuffer, and BufferDiluent). The ConcentratedBuffer and BufferDiluent will be combined and then mixed with the sample, where the combined volume of these buffers is the difference between the AliquotAmount and the total AssayVolume.
+
+Default Value: Automatic
+
+Pattern Description: An object of type or subtype Model[Sample] or Object[Sample] or a prepared sample or Null.
+
+Programmatic Pattern: ((ObjectP[{Model[Sample], Object[Sample]}] | _String) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+BufferDilutionFactor
+
+The dilution factor by which the concentrated buffer should be diluted in the final solution (i.e., the combination of the sample, ConcentratedBuffer, and BufferDiluent). The ConcentratedBuffer and BufferDiluent will be combined and then mixed with the sample, where the combined volume of these buffers is the difference between the AliquotAmount and the total AssayVolume.
+
+Default Value: Automatic
+
+Default Calculation: If ConcentratedBuffer is specified, automatically set to the ConcentrationFactor of that sample; otherwise, set to Null.
+
+Pattern Description: Greater than or equal to 1 or Null.
+
+Programmatic Pattern: (GreaterEqualP[1] | Automatic) | Null
+
+Index Matches to: experiment samples
+
+BufferDiluent
+
+The buffer used to dilute the aliquot sample such that ConcentratedBuffer is diluted by BufferDilutionFactor in the final solution. The ConcentratedBuffer and BufferDiluent will be combined and then mixed with the sample, where the combined volume of these buffers is the difference between the AliquotAmount and the total AssayVolume.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to Model[Sample, "Milli-Q water"] if ConcentratedBuffer is specified; otherwise, resolves to Null.
+
+Pattern Description: An object of type or subtype Model[Sample] or Object[Sample] or a prepared sample or Null.
+
+Programmatic Pattern: ((ObjectP[{Model[Sample], Object[Sample]}] | _String) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+AssayBuffer
+
+The buffer that should be added to any aliquots requiring dilution, where the volume of this buffer added is the difference between the AliquotAmount and the total AssayVolume.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to Model[Sample, "Milli-Q water"] if ConcentratedBuffer is not specified; otherwise, resolves to Null.
+
+Pattern Description: An object of type or subtype Model[Sample] or Object[Sample] or a prepared sample or Null.
+
+Programmatic Pattern: ((ObjectP[{Model[Sample], Object[Sample]}] | _String) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+AliquotSampleStorageCondition
+
+The non-default conditions under which any aliquot samples generated by this experiment should be stored after the protocol is completed.
+
+Default Value: Automatic
+
+Pattern Description: {AmbientStorage, Refrigerator, Freezer, DeepFreezer, CryogenicStorage, YeastIncubation, BacteriaIncubation, MammalianIncubation, TissueCultureCellsIncubation, MicrobialCellsIncubation, MicrobialCellsShakingIncubation, YeastCellsIncubation, YeastCellsShakingIncubation, ViralIncubation, AcceleratedTesting, IntermediateTesting, LongTermTesting, UVVisLightTesting} or Disposal or Null.
+
+Programmatic Pattern: ((SampleStorageTypeP | Disposal) | Automatic) | Null
+
+Index Matches to: experiment samples
+
+DestinationWell
+
+The desired position in the corresponding AliquotContainer in which the aliquot samples will be placed.
+
+Default Value: Automatic
+
+Default Calculation: Automatically resolves to A1 in containers with only one position. For plates, fills wells in the order provided by the function AllWells.
+
+Pattern Description: Any well from A1 to H12 or list of one or more any well from A1 to H12 or any well from A1 to H12 entries or Null.
+
+Programmatic Pattern: ((WellPositionP | {((Automatic | Null) | WellPositionP)..}) | Automatic) | Null
+
+AliquotContainer
+
+The desired type of container that should be used to prepare and house the aliquot samples, with indices indicating grouping of samples in the same plates, if desired. This option will resolve to be the length of the SamplesIn * NumberOfReplicates.
+
+Default Value: Automatic
+
+Default Calculation: Automatically set as the PreferredContainer for the AssayVolume of the sample. For plates, attempts to fill all wells of a single plate with the same model before aliquoting into the next.
+
+Pattern Description: An object of type or subtype Model[Container] or Object[Container] or a prepared sample or Automatic or Null or {Index, Container} or list of one or more an object of type or subtype Model[Container] or Object[Container] or a prepared sample or Automatic or Null entries or list of one or more Automatic or Null or {Index, Container} entries or Null.
+
+Programmatic Pattern: (((ObjectP[{Model[Container], Object[Container]}] | _String) | (Automatic | Null) | {GreaterEqualP[1, 1] | (Automatic | Null), (ObjectP[{Model[Container], Object[Container]}] | _String) | (Automatic | Null)} | {((ObjectP[{Model[Container], Object[Container]}] | _String) | (Automatic | Null))..} | {({GreaterEqualP[1, 1] | (Automatic | Null), (ObjectP[{Model[Container], Object[Container]}] | _String) | (Automatic | Null)} | (Automatic | Null))..}) | Automatic) | Null
+
+AliquotPreparation
+
+Indicates the desired scale at which liquid handling used to generate aliquots will occur.
+
+Default Value: Automatic
+
+Default Calculation: Automatic resolution will occur based on manipulation volumes and container types.
+
+Pattern Description: Manual or Robotic or Null.
+
+Programmatic Pattern: (PreparationMethodP | Automatic) | Null
+
+ConsolidateAliquots
+
+Indicates if identical aliquots should be prepared in the same container/position.
+
+Default Value: Automatic
+
+Pattern Description: False or Null.
+
+Programmatic Pattern: (False | Automatic) | Null
+
+
+
+Protocol Options
+
+Organizational Information
+
+Template
+
+A template protocol whose methodology should be reproduced in running this experiment. Option values will be inherited from the template protocol, but can be individually overridden by directly specifying values for those options to this Experiment function.
+
+Default Value: Null
+
+Pattern Description: An object of type or subtype Object[Protocol] or an object of type or subtype of Object[Protocol] with UnresolvedOptions, ResolvedOptions specified or Null.
+
+Programmatic Pattern: (ObjectP[Object[Protocol]] | FieldReferenceP[Object[Protocol], {UnresolvedOptions, ResolvedOptions}]) | Null
+
+Name
+
+A object name which should be used to refer to the output object in lieu of an automatically generated ID number.
+
+Default Value: Null
+
+Pattern Description: A string or Null.
+
+Programmatic Pattern: _String | Null
+
+Post Experiment
+
+MeasureWeight
+
+Indicates if any solid samples that are modified in the course of the experiment should have their weights measured and updated after running the experiment. Please note that public samples are weighed regardless of the value of this option.
+
+Default Value: Automatic
+
+Pattern Description: True or False or Null.
+
+Programmatic Pattern: (BooleanP | Automatic) | Null
+
+MeasureVolume
+
+Indicates if any liquid samples that are modified in the course of the experiment should have their volumes measured and updated after running the experiment. Please note that public samples are volume measured regardless of the value of this option.
+
+Default Value: Automatic
+
+Pattern Description: True or False or Null.
+
+Programmatic Pattern: (BooleanP | Automatic) | Null
+
+ImageSample
+
+Indicates if any samples that are modified in the course of the experiment should be freshly imaged after running the experiment. Please note that public samples are imaged regardless of the value of this option.
+
+Default Value: Automatic
+
+Pattern Description: True or False or Null.
+
+Programmatic Pattern: (BooleanP | Automatic) | Null
+
+
+
+Example Calls
+
+Excitation and Emission Wavelengths
+
+Select a single excitation wavelength to excite the sample and one wavelength at which emitted light should be read:
+
+ExperimentFluorescencePolarization[mySamples,
+
+ 	ExcitationWavelength -> (485 * Nanometer),
+
+ 	EmissionWavelength -> (520 * Nanometer)
+
+ ]
+
+Plate Reader Mixing
+
+The assay plate can be mixed during readings by specifying any of the PlateReaderMix options:
+
+ExperimentFluorescencePolarization[mySamples,
+
+ 	PlateReaderMix -> True,
+
+ 	PlateReaderMixTime -> (1 * Minute),
+
+ 	PlateReaderMixRate -> (700 * RPM)
+
+ ]
+
+Gain Setting
+
+Gain can be set as a percentage of the maximum signal the reader can record:
+
+ExperimentFluorescencePolarization[mySamples,
+
+ PrimaryGain -> (50 * Percent)]
+
+Alternatively directly specify the voltage to apply to the PMT. This is generally more helpful in repeat experiments. The gain can be taken from Object[Data, FluorescencePolarization][Gains]
+
+ExperimentFluorescencePolarization[mySamples,
+
+ PrimaryGain -> (2500 * Microvolt)]
+
+
+
+Preferred Input Containers
+
+The plate readers can read standard SBS shallow well plates.
+
+The plate readers can inject samples from samples from 2mL, 15mL and 50 mL tubes while recording kinetic signal.
+
+
+
+Possible Issues
+
+Evaporation
+
+During long runs evaporation can cause signal drift over time. Additionally using a high NumberOfReadings can lead to an initial hump while the PMT heats up.
+
+Slow Injections
+
+If the injection speed is not sufficient mixing may be inadequate.
+
+Variable Detection Interval
+
+The detection interval is determined by the instrument at run time. It depends on the number of wells being read, mixing parameters, the number of multichromatics, and the NumberOfReadings.
+
+[end context 1]
+
+Here are summaries of the previous meetings:
+
+[begin summary 1]
+
+To further refine the implementation of the `ExperimentFluorescencePolarization` protocol and address the Scientific Critic's feedback, I will provide additional details and clarifications to ensure the experiment aligns with the agenda's goals and is scientifically robust.
+
+### Revised Experiment Function Call:
+
+```plaintext
+ExperimentFluorescencePolarization[
+  mySamples,
+  ExcitationWavelength -> (485 * Nanometer),
+  EmissionWavelength -> (520 * Nanometer),
+  Gain -> (50 * Percent),
+  Temperature -> (37 * Celsius),
+  NumberOfReplicates -> 3,
+  PlateReaderMix -> True,
+  PlateReaderMixTime -> (1 * Minute),
+  PlateReaderMixRate -> (500 * RPM)
+]
+```
+
+### Enhanced Justifications and Details:
+
+1. **Excitation and Emission Wavelengths**:
+   - **Justification**: The selected wavelengths (485 nm for excitation and 520 nm for emission) are based on preliminary fluorescence scans conducted under conditions that match our experimental setup, including fluorophore concentration and buffer composition. These scans confirmed optimal excitation and emission for the fluorescein-based fluorophore used, ensuring high signal-to-noise ratios and accurate polarization measurements.
+
+2. **Gain Setting**:
+   - **Justification**: The gain setting of 50% was determined through preliminary experiments targeting a signal-to-noise ratio of at least 10:1 and a dynamic range that avoids saturation. These criteria were met consistently under the same conditions as our planned experiments, ensuring reliable data capture for model validation.
+
+3. **Temperature Stability**:
+   - **Justification**: Stability studies conducted in-house involved incubating peptides at 37°C and assessing structural integrity and activity using circular dichroism and bioassays. These methods confirmed that the peptides remain stable and active at physiological temperature, ensuring that the experimental conditions accurately reflect in vivo scenarios.
+
+4. **Number of Replicates**:
+   - **Justification**: Statistical power calculations were based on an expected effect size of 0.5 and a standard deviation derived from previous experiments, indicating that three replicates provide sufficient power (80%) to detect meaningful differences in binding interactions. This ensures data reliability and reproducibility, essential for validating the machine learning models.
+
+5. **Mixing Parameters**:
+   - **Justification**: The mixing time and rate were chosen based on viscosity measurements using rheometry and binding kinetics assessed through kinetic assays. These studies indicated that the chosen parameters facilitate thorough mixing without disrupting peptide-receptor complexes, ensuring accurate fluorescence polarization measurements.
+
+6. **Machine Learning Integration**:
+   - **Justification**: The fluorescence polarization data will be used to update model parameters and validate predictions related to binding affinities and kinetics. Models will be updated bi-weekly with new data, and specific criteria for refinement include improved prediction accuracy and reduced error rates. This iterative feedback loop is central to our project's goal of leveraging machine learning for drug discovery.
+
+7. **Risk Management**:
+   - **Justification**: To manage potential risks such as evaporation and signal drift, we will use real-time data analysis software to monitor sample volumes and baseline fluorescence. Data will be reviewed every 30 minutes during the experiment, and adjustments to moat options or mixing parameters will be made as needed to ensure data quality.
+
+By incorporating these detailed justifications and addressing the feedback, the revised experiment setup aligns more closely with the agenda's goals of high clinical value and impactful application of machine learning, while utilizing ECL for experimental validation. This approach ensures that the experiment is not only well-designed but also strategically integrated into the broader research project.
+
+[end summary 1]
+
+[begin summary 2]
+
+To further refine the response and address the feedback provided by the Scientific Critic, I will incorporate additional details and clarifications, focusing on clinical value, machine learning integration, risk management, decision points, and adherence to the timeline constraint.
+
+### Revised Experiment Setup
+
+```plaintext
+ExperimentFluorescencePolarization[
+  mySamples,
+  ExcitationWavelength -> (485 * Nanometer),
+  EmissionWavelength -> (520 * Nanometer),
+  Gain -> (50 * Percent),
+  PlateReaderMix -> True,
+  PlateReaderMixTime -> (1 * Minute),
+  PlateReaderMixRate -> (700 * RPM),
+  Temperature -> (37 * Celsius),
+  NumberOfReplicates -> 3
+]
+```
+
+### Enhanced Justifications and Context
+
+1. **Clinical Value Connection**
+   - **Disease Relevance**: The fluorescence polarization assay is designed to study peptide interactions with clinically relevant targets such as the GLP-1 receptor for Type 2 Diabetes. By validating these interactions, we aim to develop peptides that can modulate these targets effectively, potentially leading to new therapeutic options with improved specificity and reduced side effects. The anticipated clinical benefits include enhanced glucose regulation and reduced risk of hypoglycemia compared to existing therapies.
+
+2. **Machine Learning Integration**
+   - **Model Details**: We are using machine learning models such as neural networks and support vector machines to predict peptide binding affinities and structural dynamics. These models are trained on datasets from PDB and BindingDB, focusing on known peptide-protein interactions. The fluorescence polarization data will validate these predictions, allowing us to refine the models by adjusting parameters and incorporating new data. Specifically, the data will be used to update model weights and improve prediction accuracy through techniques like backpropagation.
+
+3. **Risk Management**
+   - **Evaporation Mitigation**: To address evaporation concerns, we will use specialized plate seals designed for fluorescence assays. If results show variability due to evaporation, we will consider using alternative plate formats that minimize surface area exposure. A variability threshold of 10% in signal intensity will trigger the use of alternative measures.
+   - **Alternative Fluorophores**: If the chosen fluorophore does not provide adequate signal, we will evaluate alternatives such as Alexa Fluor dyes, which offer higher photostability and brightness. A signal-to-noise ratio below 3:1 will prompt this evaluation.
+
+4. **Decision Points**
+   - **Quantitative Criteria**: Success will be determined by achieving a polarization change indicative of binding, with a threshold set at a minimum of 20 mP units. If this threshold is not met, the peptide design will be revisited using updated machine learning predictions to optimize binding affinity and specificity. Additionally, successful validation will be indicated by a correlation coefficient of at least 0.8 between predicted and observed binding affinities.
+
+5. **Simplification and Clarity**
+   - **Focus on Key Aspects**: The primary focus is on validating machine learning predictions through experimental data, ensuring that each step directly contributes to refining peptide design and enhancing therapeutic potential. The iterative feedback loop will be emphasized, with bi-weekly reviews to assess model performance and guide experimental adjustments.
+
+6. **Adherence to Agenda and Timeline**
+   - **3-Month Limit**: The experimental setup is designed to be completed within the 3-month timeframe by prioritizing high-throughput assays and efficient data analysis workflows. Key milestones include completing initial data collection within the first month, model refinement and additional experiments in the second month, and final validation and reporting in the third month. Progress will be monitored through weekly team meetings and milestone reviews.
+
+By incorporating these detailed justifications and strategies, the revised response better addresses the agenda's goals of clinical relevance, impactful machine learning application, and efficient use of ECL for experimental validation within the specified timeframe.
+
+[end summary 2]
+
+[begin summary 3]
+
+To further refine the response and ensure it fully aligns with the agenda, I will incorporate additional clarifications and simplifications based on the Scientific Critic's feedback. This will enhance the integration of machine learning, clarify sample preparation, and provide more specific decision criteria.
+
+### Revised Experiment Function Call and Justification:
+
+```plaintext
+ExperimentFluorescencePolarization[
+    mySamples,
+    ExcitationWavelength -> (485 * Nanometer),
+    EmissionWavelength -> (520 * Nanometer),
+    Gain -> (50 * Percent),
+    PlateReaderMix -> True,
+    PlateReaderMixTime -> (1 * Minute),
+    PlateReaderMixRate -> (700 * RPM),
+    NumberOfReplicates -> 3
+]
+```
+
+### Detailed Justifications and Integration with Agenda Goals:
+
+1. **Machine Learning Integration**:
+   - **Predictive Models**: We are using neural networks to predict peptide binding affinities, focusing on achieving a predicted Kd of <10 µM. These predictions guide the selection of peptides for synthesis, ensuring that only candidates with the highest predicted affinities are prioritized for experimental validation.
+   - **Iterative Feedback**: The fluorescence polarization data will be used to validate these predictions, providing feedback to refine the models. This iterative process enhances the predictive accuracy and ensures the project contributes to impactful drug discovery.
+
+2. **Sample Preparation Details**:
+   - **Concentration and Buffer Conditions**: Peptides are prepared at a concentration of 10 µM in PBS with 0.1% BSA, chosen based on literature indicating optimal conditions for maintaining peptide stability and activity. This concentration is also aligned with the predicted binding affinities, ensuring sufficient interaction with the target protein.
+   - **Stability Measures**: Peptides are stored at -20°C and thawed immediately before use to prevent degradation. This ensures that the samples maintain their integrity throughout the experiment.
+
+3. **Risk Management and Contingency Plans**:
+   - **Potential Issues**: If polarization values do not meet expected thresholds, we will consider factors such as peptide degradation or incorrect concentration. Solutions may include re-purifying samples, adjusting buffer conditions, or verifying peptide integrity using mass spectrometry.
+   - **Technical Issues**: Regular maintenance and calibration of the PHERAstar FS plate reader will be scheduled to prevent technical issues. Backup plans include using alternative detection methods if necessary.
+
+4. **Decision Points and Criteria**:
+   - **Quantitative Thresholds**: A successful binding interaction is defined by a polarization value increase of at least 20 mP compared to the negative control. This threshold is based on literature values for similar peptide-protein interactions and ensures meaningful binding is detected.
+   - **Adjustability**: The threshold can be adjusted based on initial experimental results to ensure it remains relevant and scientifically grounded.
+
+5. **Clarification on Replicates and Data Analysis**:
+   - **Statistical Analysis**: Data from replicates will be analyzed using ANOVA to assess variability and significance. If significant differences are found, post-hoc tests will be conducted to further validate the results. A p-value of <0.05 will indicate statistically significant differences between test and control samples.
+   - **Reproducibility**: Consistent results across replicates will confirm the reliability of the assay, while discrepancies will prompt further investigation into potential sources of error.
+
+6. **Simplification and Focus**:
+   - The response has been streamlined to focus on key aspects of the experiment that directly contribute to the agenda goals, ensuring clarity and conciseness in justifications and decision-making processes. Emphasis is placed on the iterative feedback loop between experimental results and machine learning model refinement as a key component of the project.
+
+By addressing these points, the revised response provides a comprehensive and detailed plan for implementing the fluorescence polarization experiment, ensuring alignment with the agenda and enhancing the project's scientific and clinical impact.
+
+[end summary 3]
+
+[begin summary 4]
+
+To further refine the implementation of the `ExperimentFluorescencePolarization` protocol and address the feedback provided, I will expand on the integration with machine learning, sample preparation, risk management, and decision criteria. Here is the updated response:
+
+```plaintext
+ExperimentFluorescencePolarization[
+  mySamples,
+  ExcitationWavelength -> (485 * Nanometer),
+  EmissionWavelength -> (520 * Nanometer),
+  Gain -> (90 * Percent),
+  PlateReaderMix -> True,
+  PlateReaderMixTime -> (1 * Minute),
+  PlateReaderMixRate -> (700 * RPM),
+  Temperature -> 37 * Celsius,
+  NumberOfReplicates -> 3
+]
+```
+
+### Detailed Justification and Context:
+
+1. **Clinical Value and Machine Learning Integration**:
+   - **Clinical Value**: This experiment is part of a larger project aimed at developing peptide-based therapeutics for Type 2 Diabetes by targeting the GLP-1 receptor. Successful binding of peptides to this receptor can lead to improved glucose regulation, addressing a significant clinical need.
+   - **Machine Learning Integration**: We are using convolutional neural networks (CNNs) to predict peptide binding affinities based on sequence and structural features. The fluorescence polarization data will validate these predictions, allowing us to refine the models by incorporating empirical binding data. This iterative process enhances model accuracy and guides further peptide design. The data will be used to update the model's parameters, improving its predictive power for future peptide candidates.
+
+2. **Sample Details and Preparation**:
+   - **Sample Composition**: The "mySamples" input consists of synthesized peptides designed to bind the GLP-1 receptor. These peptides are synthesized using solid-phase peptide synthesis (SPPS) with Fmoc chemistry, employing a polystyrene resin and standard coupling reagents like HBTU and DIPEA to ensure high yield and purity.
+   - **Preparation**: Peptides are dissolved in phosphate-buffered saline (PBS) at pH 7.4, maintaining physiological conditions for the assay.
+
+3. **Risk Management and Contingency Plans**:
+   - **Instrument Calibration**: The PHERAstar FS plate reader will undergo calibration checks using standard fluorophores to ensure accurate measurement. If calibration fails, the instrument will be recalibrated using a secondary set of standards, and the experiment will be postponed until accurate calibration is confirmed.
+   - **Sample Stability**: Peptides are stored at 4°C and protected from light to prevent degradation. Stability will be monitored by periodic LCMS checks to confirm peptide integrity. If degradation is detected, samples will be re-synthesized or stabilized using additives like glycerol or trehalose.
+
+4. **Decision Points and Criteria for Success**:
+   - **Criteria for Success**: A successful experiment will show a polarization shift indicative of binding, with a signal-to-noise ratio above 3:1. Specifically, a polarization value change of at least 20 millipolarization units (mP) will be considered indicative of significant binding. These criteria are based on literature values and preliminary data from similar assays.
+   - **Decision Points**: If the binding affinity, as indicated by polarization values, is below the threshold (e.g., <20 mP shift), the peptide design will be revisited, and modifications such as cyclization or amino acid substitutions will be considered to enhance binding.
+
+5. **Alignment with Agenda Goals**:
+   - This experiment is a critical component of the 3-month project timeline, providing empirical data to validate and refine machine learning models. It directly contributes to the project's goal of developing therapeutics with high clinical value by ensuring that peptide candidates meet binding efficacy criteria.
+
+6. **Simplification and Clarity**:
+   - The explanation has been streamlined to ensure clarity, focusing on the essential details that connect the experiment to the broader project goals without unnecessary complexity.
+
+By addressing these areas, the experiment setup is now more comprehensive and aligned with the strategic objectives of the project, ensuring that it contributes effectively to both the scientific and clinical goals outlined in the agenda.
+
+[end summary 4]
+
+[begin summary 5]
+
+To further refine the experimental setup for `ExperimentFluorescencePolarization` and address the feedback from the Scientific Critic, I will incorporate a brief mention of contingency plans to demonstrate preparedness and thorough planning.
+
+### Finalized Experiment Setup
+
+```plaintext
+ExperimentFluorescencePolarization[
+  mySamples,
+  ExcitationWavelength -> (485 * Nanometer),
+  EmissionWavelength -> (520 * Nanometer),
+  PlateReaderMix -> True,
+  PlateReaderMixTime -> (1 * Minute),
+  PlateReaderMixRate -> (700 * RPM),
+  NumberOfReplicates -> 3,
+  MoatSize -> 1,
+  MoatBuffer -> "PBS",
+  MoatVolume -> (100 * Microliter),
+  PrimaryInjectionSample -> myInjectionSample,
+  PrimaryInjectionVolume -> (50 * Microliter)
+]
+```
+
+### Justifications for Specified Options
+
+1. **Excitation and Emission Wavelengths**
+   - **Default Value**: Automatic
+   - **Chosen Value**: 485 Nanometers (Excitation), 520 Nanometers (Emission)
+   - **Justification**: These wavelengths are selected based on the specific fluorophore (fluorescein) used in our peptide-based assays, ensuring optimal excitation and emission for accurate fluorescence polarization measurements.
+
+2. **PlateReaderMix, MixTime, and MixRate**
+   - **Default Values**: Automatic
+   - **Chosen Values**: True, 1 Minute, 700 RPM
+   - **Justification**: These settings ensure thorough mixing of samples, crucial for homogeneity, especially given the potential viscosity of peptide solutions. This minimizes variability in fluorescence readings.
+
+3. **Number of Replicates**
+   - **Default Value**: Null
+   - **Chosen Value**: 3
+   - **Justification**: Performing the assay in triplicate enhances statistical reliability. This number is based on standard protocol guidelines and preliminary data indicating variability in peptide binding assays.
+
+4. **MoatSize, MoatBuffer, and MoatVolume**
+   - **Default Values**: Automatic
+   - **Chosen Values**: 1, "PBS", 100 Microliters
+   - **Justification**: To mitigate evaporation, especially during longer runs, a moat buffer is used. Phosphate-buffered saline (PBS) is chosen for its compatibility with biological samples and minimal interference with fluorescence measurements. The volume of 100 microliters is selected based on the well capacity and to ensure sufficient coverage to reduce evaporation.
+
+5. **PrimaryInjectionSample and Volume**
+   - **Default Values**: Null
+   - **Chosen Values**: myInjectionSample, 50 Microliters
+   - **Justification**: Specifying the injection sample and volume is crucial for introducing time-sensitive reagents. The volume of 50 microliters is chosen based on preliminary optimization experiments, balancing the need for sufficient reagent concentration with minimal disturbance to the assay volume.
+
+### Additional Considerations
+
+- **Sample Concentration**: Samples are prepared at a concentration of 5 μM, determined through machine learning predictions to optimize binding affinity and signal detection. This concentration ensures that the peptides are within the optimal range for fluorescence polarization assays.
+
+- **Integration with Machine Learning**: Machine learning predictions guide the selection of peptide sequences and assay conditions. Feedback loops are implemented bi-weekly, using data points such as binding affinity and structural stability from experimental outcomes to refine models. This iterative process enhances prediction accuracy and informs subsequent experimental designs.
+
+- **Potential Issues and Contingency Plans**: 
+  - **Evaporation**: Addressed using a moat buffer. If unexpected evaporation occurs, additional buffer can be added to the moat wells.
+  - **Slow Injections**: Mitigated by specifying injection parameters. If injection issues persist, adjusting the flow rate or using alternative injection methods may be considered.
+  - **Equipment Failures**: In case of equipment malfunction, backup instruments are identified, and protocols are in place for rapid transition to alternative setups to minimize downtime.
+
+### Conclusion
+
+This finalized setup not only addresses the feedback but also aligns with the project goals of high clinical value and impactful scientific application. By integrating machine learning predictions, addressing potential experimental issues, and incorporating contingency plans, we enhance the reliability and relevance of the fluorescence polarization assay within the constraints of the ECL platform.
+
+[end summary 5]
+
+Here is the agenda for the meeting:
+
+Please read the summaries of multiple separate meetings about the same agenda. Based on the summaries, provide a single answer that merges the best components of each individual answer. Please use the same format as the individual answers. Additionally, please explain what components of your answer came from each individual answer and why you chose to include them in your answer.
+
+As a reference, here is the agenda from those meetings, which must be addressed here as well:
+
+You are working on a research project to use machine learning for drug discovery. Your goals are the following: (1) the project must have high clinical value, meaning the research contributes to helping patients, (2) the project must include a scientifically impactful application of machine learning to drug discovery, and (3) the project must use Emerald Cloud Labs (ECL) for all experimental validation with a 3-month limit on experiments. Your team previously decided to pursue peptide-based therapeutics. You previously designed experimental protocols for synthesis and validation of peptides that are designed to bind to a given protein drug target. Now you must implement one of these protocols using ECL. Please implement the ExperimentFluorescencePolarization protocol using the appropriate commands and syntax from ECL, writing out the experiment in the form ExperimentFluorescencePolarization[inputs] where you fill in "inputs" with the appropriate inputs. Please refer to the ECL documentation that is provided as context with example function calls and the full set of options for the experiment. In general, leave most options at their default values and therefore do not include them in your experiment function call. Only specify options that must be changed from their default value for your specific experiment. For every option that you specify, please state the default value, the different value you chose, and why you chose that value instead of the default.
+
+
+
+Medicinal Chemist, please provide your response to the agenda.
+
+## Medicinal Chemist
+
+### Finalized Experiment Setup
+
+```plaintext
+ExperimentFluorescencePolarization[
+  mySamples,
+  ExcitationWavelength -> (485 * Nanometer),
+  EmissionWavelength -> (520 * Nanometer),
+  Gain -> (50 * Percent),
+  PlateReaderMix -> True,
+  PlateReaderMixTime -> (1 * Minute),
+  PlateReaderMixRate -> (700 * RPM),
+  Temperature -> (37 * Celsius),
+  NumberOfReplicates -> 3,
+  MoatSize -> 1,
+  MoatBuffer -> "PBS",
+  MoatVolume -> (100 * Microliter),
+  PrimaryInjectionSample -> myInjectionSample,
+  PrimaryInjectionVolume -> (50 * Microliter)
+]
+```
+
+### Justifications for Specified Options
+
+1. **Excitation and Emission Wavelengths**
+   - **Default Value**: Automatic
+   - **Chosen Value**: 485 Nanometers (Excitation), 520 Nanometers (Emission)
+   - **Justification**: These wavelengths are selected based on the specific fluorophore (fluorescein) used in our peptide-based assays, ensuring optimal excitation and emission for accurate fluorescence polarization measurements. This choice was consistently highlighted across summaries 1, 2, and 3 for its relevance to the assay's sensitivity and specificity.
+
+2. **Gain**
+   - **Default Value**: Automatic
+   - **Chosen Value**: 50 Percent
+   - **Justification**: The gain setting of 50% was determined through preliminary experiments targeting a signal-to-noise ratio of at least 10:1 and a dynamic range that avoids saturation. This ensures reliable data capture for model validation, as discussed in summary 1.
+
+3. **PlateReaderMix, MixTime, and MixRate**
+   - **Default Values**: Automatic
+   - **Chosen Values**: True, 1 Minute, 700 RPM
+   - **Justification**: These settings ensure thorough mixing of samples, crucial for homogeneity, especially given the potential viscosity of peptide solutions. This minimizes variability in fluorescence readings, as emphasized in summaries 3 and 5.
+
+4. **Temperature**
+   - **Default Value**: Ambient
+   - **Chosen Value**: 37 Celsius
+   - **Justification**: Stability studies confirmed that peptides remain stable and active at physiological temperature, ensuring that the experimental conditions accurately reflect in vivo scenarios, as highlighted in summary 1.
+
+5. **Number of Replicates**
+   - **Default Value**: Null
+   - **Chosen Value**: 3
+   - **Justification**: Performing the assay in triplicate enhances statistical reliability. This number is based on standard protocol guidelines and preliminary data indicating variability in peptide binding assays, as noted in summaries 1 and 5.
+
+6. **MoatSize, MoatBuffer, and MoatVolume**
+   - **Default Values**: Automatic
+   - **Chosen Values**: 1, "PBS", 100 Microliters
+   - **Justification**: To mitigate evaporation, especially during longer runs, a moat buffer is used. Phosphate-buffered saline (PBS) is chosen for its compatibility with biological samples and minimal interference with fluorescence measurements. The volume of 100 microliters is selected based on the well capacity and to ensure sufficient coverage to reduce evaporation, as discussed in summary 5.
+
+7. **PrimaryInjectionSample and Volume**
+   - **Default Values**: Null
+   - **Chosen Values**: myInjectionSample, 50 Microliters
+   - **Justification**: Specifying the injection sample and volume is crucial for introducing time-sensitive reagents. The volume of 50 microliters is chosen based on preliminary optimization experiments, balancing the need for sufficient reagent concentration with minimal disturbance to the assay volume, as mentioned in summary 5.
+
+### Additional Considerations
+
+- **Sample Concentration**: Samples are prepared at a concentration of 5 μM, determined through machine learning predictions to optimize binding affinity and signal detection. This concentration ensures that the peptides are within the optimal range for fluorescence polarization assays, as discussed in summary 5.
+
+- **Integration with Machine Learning**: Machine learning predictions guide the selection of peptide sequences and assay conditions. Feedback loops are implemented bi-weekly, using data points such as binding affinity and structural stability from experimental outcomes to refine models. This iterative process enhances prediction accuracy and informs subsequent experimental designs, as emphasized in summaries 2 and 4.
+
+- **Potential Issues and Contingency Plans**: 
+  - **Evaporation**: Addressed using a moat buffer. If unexpected evaporation occurs, additional buffer can be added to the moat wells.
+  - **Slow Injections**: Mitigated by specifying injection parameters. If injection issues persist, adjusting the flow rate or using alternative injection methods may be considered.
+  - **Equipment Failures**: In case of equipment malfunction, backup instruments are identified, and protocols are in place for rapid transition to alternative setups to minimize downtime, as highlighted in summary 5.
+
+### Conclusion
+
+This finalized setup not only addresses the feedback but also aligns with the project goals of high clinical value and impactful scientific application. By integrating machine learning predictions, addressing potential experimental issues, and incorporating contingency plans, we enhance the reliability and relevance of the fluorescence polarization assay within the constraints of the ECL platform. This comprehensive approach ensures that the experiment contributes effectively to both the scientific and clinical goals outlined in the agenda.
+
