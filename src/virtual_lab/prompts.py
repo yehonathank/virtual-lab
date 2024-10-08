@@ -49,7 +49,11 @@ def create_merge_prompt(
 
 
 def summary_structure_prompt(has_agenda_questions: bool) -> str:
-    """"""
+    """Formats the structure of a summary prompt.
+
+    :param has_agenda_questions: Whether the summary prompt includes agenda questions.
+    :return: The structure of a summary prompt.
+    """
     if has_agenda_questions:
         agenda_questions_structure = [
             "### Answers",
