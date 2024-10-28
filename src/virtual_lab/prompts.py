@@ -7,9 +7,9 @@ from virtual_lab.agent import Agent
 
 PRINCIPAL_INVESTIGATOR = Agent(
     title="Principal Investigator",
-    expertise="applying artificial intelligence to biomedical research",
+    expertise="running a science research lab",
     goal="perform research in your area of expertise that maximizes the scientific impact of the work",
-    role="lead a team of experts to solve an important problem in artificial intelligence for biomedicine, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
+    role="lead a team of experts to solve an important scientific problem, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
 )
 
 SCIENTIFIC_CRITIC = Agent(
