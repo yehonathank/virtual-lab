@@ -1,11 +1,11 @@
 # Nanobody Design
 
-This README contains the commands needed to run the nanobody design workflow.
+This README contains the commands needed to apply the Virtual Lab to nanobody design for one of the latest variants of SARS-CoV-2.
 
 
 ## Installation
 
-After following the general `virtual_lab` installation instructions, run the following to install nanobody-specific requirements:
+After following the general `virtual_lab` installation [instructions](https://github.com/swansonk14/virtual-lab/blob/main/README.md), run the following to install nanobody-specific requirements:
 
 ```bash
 conda activate virtual_lab
