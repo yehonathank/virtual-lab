@@ -5,7 +5,7 @@ This README contains the commands needed to apply the Virtual Lab to nanobody de
 
 ## Installation
 
-After following the general `virtual_lab` installation [instructions](https://github.com/swansonk14/virtual-lab/blob/main/README.md), run the following to install nanobody-specific requirements:
+After following the general `virtual_lab` installation [instructions](https://github.com/zou-group/virtual-lab/blob/main/README.md), run the following to install nanobody-specific requirements:
 
 ```bash
 conda activate virtual_lab
