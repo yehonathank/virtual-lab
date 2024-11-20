@@ -261,3 +261,42 @@ select interface, byres (chain A within 4.0 of chain B) or byres (chain B within
 show sticks, interface
 dist hbonds, (chain A), (chain B), mode=2
 ```
+
+
+## Nanobody improvement
+
+Improve two experimentally validated nanobody mutants by iteratively adding more mutations and scoring them using ESM, AlphaFold-Multimer, and Rosetta for four rounds. This workflow uses slightly different hyperparameters and a new weighted score calculations that simultaneously optimizes for JN.1 and KP.3 RBD binding.
+
+First, copy the two mutant nanobodies (`Nb21-I77V-L59E-Q87A-R37Q` and `Ty1-V32F-G59D-N54S-F32S`) and their scores from `nanobody_design/designed/combined` to `nanobody_design/improved/round_0` (in files named `Nb21.csv` and `Ty1.csv`).
+
+
+### ESM
+
+Run the ESM model.
+
+```bash
+ROUND_NUM=1
+PREV_ROUND_NUM=$((ROUND_NUM - 1))
+
+for NANOBODY in Nb21 Ty1
+do
+mkdir -p nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY}
+python nanobody_design/scripts/improved/esm.py \
+    nanobody_design/improved/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
+    nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY} \
+    --top-n 50
+done
+```
+
+Then, merge the ESM scores into a single file.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Nb21 Ty1
+do
+python -c "from pathlib import Path;import pandas as pd
+data = pd.concat([pd.read_csv(path).assign(name=path.stem) for path in Path('nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY}').glob('*.csv')])
+data.to_csv('nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY}.csv', index=False)"
+done
+```

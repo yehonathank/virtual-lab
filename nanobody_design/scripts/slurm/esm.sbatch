@@ -30,15 +30,17 @@ cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
 experiments=()
 
+DIR_NAME="designed"
+
 ROUND_NUM=1
 PREV_ROUND_NUM=$((ROUND_NUM - 1))
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-mkdir -p nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}
+mkdir -p nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY}
 experiments+=("python nanobody_design/scripts/improved/esm.py \
-    nanobody_design/designed/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
-    nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
+    nanobody_design/${DIR_NAME}/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
+    nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY} \
     --top-n 20")
 done
 

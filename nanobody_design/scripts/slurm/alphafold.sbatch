@@ -30,14 +30,16 @@ cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
 experiments=()
 
+DIR_NAME="designed"
+
 ROUND_NUM=1
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-for FILE in nanobody_design/designed/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY}/*.fasta
+for FILE in nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY}/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
-experiments+=("colabfold_batch $FILE nanobody_design/designed/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/$NAME")
+experiments+=("colabfold_batch $FILE nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/$NAME")
 done
 done
 
