@@ -110,7 +110,7 @@ Ty1: The wild-type only binds to the Wuhan RBD. Many mutant nanobodies do not sh
 
 VHH-72: The wild-type only binds to the Wuhan RBD. Most mutants show binding to the Wuhan RBD as well, including several with a higher binding level than the wild-type. Two mutant nanobodies bind non-specifically to BSA and several RBD strains. No mutant nanobody shows specific binding to any strain other than the Wuhan RBD.
 
-Your team has decided to design further improved nanobodies for recent variants of SARS-CoV-2 as described in the summary using the same general ESM, AlphaFold-Multimer, and Rosetta computational design pipeline. Now, you need to specify more details for this updated design workflow.
+Your team has decided to design further improved nanobodies for recent variants of SARS-CoV-2 as described in the summary using the same general ESM, AlphaFold-Multimer, and Rosetta computational design pipeline. ESM will again be used to evaluate the overall quality of mutated nanobodies while AlphaFold-Multimer and Rosetta will be used to determine their specific binding to your selected SARS-CoV-2 variants. Now, you need to specify more details for this updated design workflow.
 
 Here are the agenda questions that must be answered:
 
@@ -134,33 +134,35 @@ Principal Investigator, please provide your response to the agenda.
 
 ## Principal Investigator
 
-Given the agenda for the meeting, I will address the questions systematically:
+To address the agenda questions and refine our design workflow for developing improved nanobodies against the newest SARS-CoV-2 variants, I propose the following approach:
 
-1. **Number of Top Ranked Mutations by ESM LLR to Keep for Further Analysis:**
-   - **Answer**: We will analyze the top 50 mutations by ESM LLR for each nanobody. This will increase our chances of capturing potentially beneficial mutations that might have been missed previously due to computational constraints.
+### 1. Number of Top Ranked Mutations to Keep for AlphaFold-Multimer and Rosetta Analysis
+- **Answer**: We will keep the top 50 mutations based on the ESM LLR scores for further analysis using AlphaFold-Multimer and Rosetta.
 
-2. **Rationale for Changing the Number of Mutations:**
-   - **Answer**: Previously, we evaluated the top 20 mutations. The rationale for increasing this number to 50 is to broaden our exploration of the mutational landscape, especially considering the need to improve binding against both JN.1 and KP.3 variants. This expansion is feasible due to improved computational resources and aims to capture a greater diversity of potentially beneficial mutations.
+### 2. Rationale for Change
+- **Rationale**: Previously, we evaluated 20 mutations per iteration, but given the current need to enhance cross-variant specificity and binding affinity, expanding to 50 allows us to explore a broader mutation landscape. This expansion is particularly crucial given the complexities of targeting both JN.1 and KP.3 RBDs, and the potential for discovering more diverse binding profiles.
 
-3. **Formula for Computing a Weighted Score (WS):**
-   - **Answer**: The revised formula for WS is as follows:
-     \[ \text{WS} = 0.15 \times \text{(ESM LLR)} + 0.35 \times (\text{AF ipLDDT}_{\text{JN.1}} + \text{AF ipLDDT}_{\text{KP.3}})/2 - 0.25 \times (\text{RS dG}_{\text{JN.1}} + \text{RS dG}_{\text{KP.3}})/2 \]
-     - This formula considers both JN.1 and KP.3 RBDs by averaging the AlphaFold-Multimer and Rosetta scores for these variants, thereby accounting for dual specificity and broader neutralization potential.
+### 3. Weighted Score (WS) Formula
+- **Answer**: The revised WS formula will be:
+  \[
+  \text{WS} = 0.15 \times \text{(ESM LLR)} + 0.4 \times \left(\frac{\text{AF ipLDDT}_{\text{JN.1}} + \text{AF ipLDDT}_{\text{KP.3}}}{2}\right) - 0.25 \times \left(\frac{\text{RS dG}_{\text{JN.1}} + \text{RS dG}_{\text{KP.3}}}{2}\right)
+  \]
+- **Justification**: This formula balances the contributions of each component while explicitly considering binding to both JN.1 and KP.3 RBDs. It emphasizes structural stability (AF ipLDDT) and binding affinity (RS dG) across both variants, reflecting the project's dual-targeting goal.
 
-4. **Rationale for Changing the WS Formula:**
-   - **Answer**: The previous formula did not explicitly account for simultaneous binding to multiple strains. By integrating the average scores for both JN.1 and KP.3 RBDs, we place a stronger emphasis on designing nanobodies that can bind effectively to both variants, enhancing the potential for cross-reactivity and robustness against variant evolution.
+### 4. Rationale for WS Formula Change
+- **Rationale**: The adjustment is necessary to address the dual-target nature of the project, ensuring that nanobodies are prioritized based on their potential to bind both RBDs effectively. The weights have been slightly adjusted to reflect the heightened importance of achieving cross-variant activity.
 
-5. **Number of Top Ranked Mutated Nanobodies to Select for Next Round:**
-   - **Answer**: We will select the top 10 nanobodies for the next round of mutation.
-   
-6. **Rationale for Changing the Number of Mutated Nanobodies:**
-   - **Answer**: Previously, we kept the top 5 mutations. Expanding to 10 allows us to maintain a diverse pool of promising candidates, capturing more opportunities for optimization and ensuring that potentially successful variants are not prematurely discarded.
+### 5. Number of Top Ranked Mutated Nanobodies to Select for Next Round
+- **Answer**: We will select the top 10 mutated nanobodies for the subsequent round of mutations.
 
-7. **Total Number of Rounds of Mutation Starting with Nb21 and Ty1 Mutants:**
-   - **Answer**: We will conduct a total of 4 rounds of mutation.
-   
-8. **Rationale for Changing the Number of Rounds:**
-   - **Answer**: The suggestion was 3-4 rounds. By firmly planning for 4 iterations, we ensure adequate opportunity for optimization while allowing enough time for convergence and analysis. This decision also accounts for the expanded number of mutations and candidates, providing sufficient scope for iterative improvements.
+### 6. Rationale for Change
+- **Rationale**: We previously kept 5 mutations per iteration, but increasing this to 10 allows us to maintain diversity and leverage new insights from the expanded mutation set. This is crucial as we aim to develop nanobodies with enhanced cross-reactive profiles.
 
-This plan aims to refine the nanobody candidates effectively while accommodating the emerging challenges posed by multiple SARS-CoV-2 variants. By broadening our mutation pool and emphasizing cross-variant binding, we are better positioned to develop antibodies with enhanced therapeutic potential.
+### 7. Total Number of Mutation Rounds
+- **Answer**: We will conduct 4 rounds of mutation, starting with the Nb21 and Ty1 mutants.
+
+### 8. Rationale for Change
+- **Rationale**: While 3-4 iterations were initially planned, confirming 4 rounds ensures thorough exploration and refinement, accommodating new insights and adjustments from each round, while aligning with the project's timeline and resource availability.
+
+These decisions are aimed at enhancing the probability of identifying nanobodies with strong and specific binding to both JN.1 and KP.3 RBDs, while maintaining a focus on computational efficiency and project timelines. With these changes, we aim to maximize the discovery of nanobodies with broad neutralization potential against multiple SARS-CoV-2 variants.
 

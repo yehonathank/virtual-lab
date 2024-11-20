@@ -110,7 +110,7 @@ Ty1: The wild-type only binds to the Wuhan RBD. Many mutant nanobodies do not sh
 
 VHH-72: The wild-type only binds to the Wuhan RBD. Most mutants show binding to the Wuhan RBD as well, including several with a higher binding level than the wild-type. Two mutant nanobodies bind non-specifically to BSA and several RBD strains. No mutant nanobody shows specific binding to any strain other than the Wuhan RBD.
 
-Your team has decided to design further improved nanobodies for recent variants of SARS-CoV-2 as described in the summary using the same general ESM, AlphaFold-Multimer, and Rosetta computational design pipeline. Now, you need to specify more details for this updated design workflow.
+Your team has decided to design further improved nanobodies for recent variants of SARS-CoV-2 as described in the summary using the same general ESM, AlphaFold-Multimer, and Rosetta computational design pipeline. ESM will again be used to evaluate the overall quality of mutated nanobodies while AlphaFold-Multimer and Rosetta will be used to determine their specific binding to your selected SARS-CoV-2 variants. Now, you need to specify more details for this updated design workflow.
 
 Here are the agenda questions that must be answered:
 
@@ -134,43 +134,35 @@ Principal Investigator, please provide your response to the agenda.
 
 ## Principal Investigator
 
-To address the agenda questions, we need to fine-tune our design and evaluation process based on previous findings and the current project requirements. Here's a detailed response to each question:
+Based on the information provided and the goals of the project, here are my responses to the agenda questions:
 
-1. **When using ESM to evaluate all single point mutations to an input nanobody sequence, how many of the top ranked mutations by ESM LLR will you keep for analysis by AlphaFold-Multimer and Rosetta out of the ~2,000 possible mutations?**
+1. **Number of Top Ranked Mutations to Keep for Analysis by AlphaFold-Multimer and Rosetta:**
+   - **Answer**: I recommend selecting the top 50 mutations based on ESM log-likelihood ratios (LLR) for further analysis using AlphaFold-Multimer and Rosetta.
 
-   - **Answer**: We will keep the top 50 mutations based on ESM LLR for further analysis by AlphaFold-Multimer and Rosetta.
+2. **Rationale for the Change (if Different from Previous Process):**
+   - **Reason**: Previously, we selected the top 20 mutations for downstream structural analysis. Increasing this number to 50 allows us to capture a broader range of potentially beneficial mutations, particularly given the observed success of certain mutants in introducing new binding capabilities. This change is motivated by our goal to enhance cross-variant binding and specificity, while still balancing computational resources.
 
-2. **If this number differs from your previous design process, what is the rationale for the change?**
-
-   - **Rationale**: Previously, we evaluated the top 20 mutations, but increasing this to 50 allows for greater exploration of the mutation landscape, potentially uncovering beneficial mutations that were previously overlooked. This adjustment is feasible given our computational resources and is informed by the need to enhance binding across multiple variants, as shown in the ELISA results.
-
-3. **After evaluating those mutated nanobodies with ESM, AlphaFold-Multimer, and Rosetta, what formula will you use to compute a weighted score (WS) for each mutated nanobody, and how will this factor in binding to both the JN.1 and KP.3 RBDs for the AlphaFold-Multimer and Rosetta portions of the score?**
-
-   - **Answer**: The weighted score (WS) will be computed as follows:
+3. **Formula to Compute Weighted Score (WS) for Each Mutated Nanobody:**
+   - **Answer**: The updated formula to compute the WS will be:
      \[
-     \text{WS} = 0.2 \times \text{(ESM LLR)} + 0.25 \times \text{(AF ipLDDT for JN.1)} + 0.25 \times \text{(AF ipLDDT for KP.3)} - 0.15 \times \text{(RS dG for JN.1)} - 0.15 \times \text{(RS dG for KP.3)}
+     \text{WS} = w_1 \times \text{(ESM LLR)} + \frac{w_2}{2} \times (\text{AF ipLDDT}_{\text{JN.1}} + \text{AF ipLDDT}_{\text{KP.3}}) - \frac{w_3}{2} \times (\text{RS dG}_{\text{JN.1}} + \text{RS dG}_{\text{KP.3}})
      \]
-   - This formula balances the scores for binding confidence and binding energy across both the JN.1 and KP.3 RBDs, reflecting their importance in our target.
+   - Where \( w_1 = 0.2 \), \( w_2 = 0.5 \), and \( w_3 = 0.3 \). This formula averages the AlphaFold-Multimer and Rosetta scores across both the JN.1 and KP.3 RBDs.
 
-4. **If this WS formula differs from your previous design process, what is the rationale for the change?**
+4. **Rationale for the Change in WS Formula (if Different from Previous Process):**
+   - **Reason**: The previous formula focused on a single RBD variant. Given our focus on cross-variant binding, the new formula equally considers binding to both JN.1 and KP.3, thereby enhancing our ability to design nanobodies with broader neutralization potential. This dual consideration aligns with our objective to target multiple variants effectively.
 
-   - **Rationale**: The revised formula incorporates separate terms for JN.1 and KP.3, acknowledging the need to evaluate binding to both RBDs separately. This emphasizes the importance of dual-variant binding, which emerged as a critical factor in the ELISA results, where cross-variant binding was a key desirable trait.
+5. **Number of Top Ranked Mutated Nanobodies to Select for Next Round of Mutation:**
+   - **Answer**: Select the top 10 mutated nanobodies for the next iteration of mutations.
 
-5. **After computing the WS for each mutated nanobody, how many of the top ranked mutated nanobodies will you select for the next round of mutation?**
+6. **Rationale for Change in Number Selected (if Different from Previous Process):**
+   - **Reason**: Previously, we kept the top 5 mutations. By increasing this to 10, we allow for more exploration of promising candidates, which is crucial in the pursuit of cross-variant binding capabilities. This increase provides a larger pool for potential improvements and encourages innovation within our candidate set.
 
-   - **Answer**: We will select the top 10 mutated nanobodies for the next round of mutation.
+7. **Number of Rounds of Mutation Starting with Nb21 and Ty1 Mutants:**
+   - **Answer**: Plan for 4 rounds of mutation.
 
-6. **If this number differs from your previous design process, what is the rationale for the change?**
+8. **Rationale for Change in Number of Rounds (if Different from Previous Process):**
+   - **Reason**: The original plan was for 3-4 iterations. Committing to 4 rounds ensures a thorough exploration and refinement process, allowing for successive enhancements based on empirical results and computational predictions. This extended timeline is justified by the observed potential in previous mutants and the need for robust cross-variant binding properties.
 
-   - **Rationale**: Previously, we kept 5 mutations per iteration. Increasing this to 10 allows for a broader exploration of favorable mutation combinations, as the initial mutants showed potential for cross-reactive binding.
-
-7. **How many rounds of mutation will you run in total starting with the Nb21 and Ty1 mutants?**
-
-   - **Answer**: We will run a total of 4 rounds of mutation.
-
-8. **If this number differs from your previous design process, what is the rationale for the change?**
-
-   - **Rationale**: This is consistent with our initial plan, allowing enough iterations to refine binding properties while managing computational and time constraints. Monitoring the convergence of scores and binding profiles will guide adjustments if needed.
-
-These steps will refine our design workflow, maximizing the potential for developing nanobodies with enhanced and broad-spectrum binding capabilities against SARS-CoV-2 variants.
+By implementing these changes, we aim to maximize the scientific impact of our research by identifying nanobodies with enhanced binding affinities and specificities across both the JN.1 and KP.3 variants, while maintaining a feasible and resource-efficient workflow.
 
