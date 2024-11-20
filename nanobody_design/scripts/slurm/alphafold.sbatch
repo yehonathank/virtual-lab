@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --array=0-79%15
-#SBATCH --partition=jamesz,sfgf,owners
+#SBATCH --partition=jamesz,gpu,owners
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/alphafold/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/alphafold/%a.err
 #SBATCH --time=24:00:00

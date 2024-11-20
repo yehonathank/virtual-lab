@@ -8,7 +8,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --array=0-3
-#SBATCH --partition=jamesz,sfgf,owners
+#SBATCH --partition=jamesz,gpu,owners
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/esm/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/esm/%a.err
 #SBATCH --time=24:00:00
