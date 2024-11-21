@@ -90,7 +90,7 @@ for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --spike_sequences_path nanobody_design/sequences/spike.csv \
-    --spike_name KP3 \
+    --spike_name KP.3 \
     --nanobody_sequences_dir nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
     --save_dir nanobody_design/designed/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY} \
     --top_n 20
@@ -269,6 +269,8 @@ Improve two experimentally validated nanobody mutants by iteratively adding more
 
 First, copy the two mutant nanobodies (`Nb21-I77V-L59E-Q87A-R37Q` and `Ty1-V32F-G59D-N54S-F32S`) and their scores from `nanobody_design/designed/combined` to `nanobody_design/improved/round_0/scores` (in files named `Nb21.csv` and `Ty1.csv`).
 
+TODO: run these mutants with JN.1 RBD
+
 
 ### ESM
 
@@ -298,5 +300,129 @@ do
 python -c "from pathlib import Path;import pandas as pd
 data = pd.concat([pd.read_csv(path).assign(name=path.stem) for path in Path('nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY}').glob('*.csv')])
 data.to_csv('nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY}.csv', index=False)"
+done
+```
+
+### ESM to AlphaFold-Multimer
+
+Convert the ESM-designed mutated nanobody sequences to AlphaFold-Multimer nanobody-spike sequence inputs.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Nb21 Ty1
+do
+for SPIKE in KP.3 JN.1
+do
+python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
+    --spike_sequences_path nanobody_design/sequences/spike.csv \
+    --spike_name ${SPIKE} \
+    --nanobody_sequences_dir nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY} \
+    --save_dir nanobody_design/improved/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY} \
+    --top_n 50
+done
+done
+```
+
+### AlphaFold-Multimer
+
+Run AlphaFold-Multimer on the nanobody-spike complexes.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Nb21 Ty1
+do
+for SPIKE in KP.3 JN.1
+do
+for FILE in nanobody_design/improved/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}/*.fasta
+do
+NAME=$(basename "$FILE" .fasta)
+colabfold_batch $FILE nanobody_design/improved/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/$NAME
+done
+done
+done
+```
+
+Process the AlphaFold-Multimer complexes to extract interface pLDDT scores.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Nb21 Ty1
+do
+for SPIKE in KP.3 JN.1
+do
+python nanobody_design/scripts/improved/alphafold.py \
+    nanobody_design/improved/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY} \
+    A \
+    B \
+    nanobody_design/improved/round_${ROUND_NUM}/alphafold/${SPIKE}/${NANOBODY}.csv
+done
+done
+```
+
+### Rosetta
+
+Run Rosetta to calculate interface binding energies.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+for SPIKE in KP.3 JN.1
+do
+OUTPUT_DIR="nanobody_design/improved/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}"
+mkdir -p "${OUTPUT_DIR}"
+
+for FILE in nanobody_design/improved/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/*/*unrelaxed_rank_001*.pdb
+do
+NAME=$(basename "$(dirname "$FILE")")
+rosetta_scripts.default.linuxgccrelease \
+    -s $FILE \
+    -parser:protocol nanobody_design/scripts/improved/rosetta.xml \
+    -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc \
+    -out:path:pdb ${OUTPUT_DIR}
+done
+done
+done
+```
+
+Then, collate the outputs.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Nb21 Ty1
+do
+for SPIKE in KP.3 JN.1
+do
+python nanobody_design/scripts/improved/rosetta.py \
+    nanobody_design/improved/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY} \
+    nanobody_design/improved/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}.csv
+done
+done
+```
+
+
+### Combine scores
+
+TODO: update weighted score to include JN.1 and KP.3 RBD binding (and with different weights)
+
+Combine scores from ESM, AlphaFold-Multimer, and Rosetta.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+do
+python nanobody_design/scripts/data_processing/combine_scores.py \
+    --esm_scores_path nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
+    --alphafold_scores_path nanobody_design/improved/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv \
+    --rosetta_scores_path nanobody_design/improved/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv \
+    --all_save_path nanobody_design/improved/round_${ROUND_NUM}/scores/${NANOBODY}_all.csv \
+    --top_save_path nanobody_design/improved/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
+    --top_n 10
 done
 ```
