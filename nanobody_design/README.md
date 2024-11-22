@@ -353,6 +353,7 @@ for NANOBODY in Nb21 Ty1
 do
 for SPIKE in KP.3 JN.1
 do
+mkdir -p  nanobody_design/improved/round_${ROUND_NUM}/alphafold/${SPIKE}
 python nanobody_design/scripts/improved/alphafold.py \
     nanobody_design/improved/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY} \
     A \
@@ -369,7 +370,7 @@ Run Rosetta to calculate interface binding energies.
 ```bash
 ROUND_NUM=1
 
-for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+for NANOBODY in Nb21 Ty1
 do
 for SPIKE in KP.3 JN.1
 do
