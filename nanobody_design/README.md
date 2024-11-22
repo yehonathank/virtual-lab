@@ -409,19 +409,19 @@ done
 
 ### Combine scores
 
-TODO: update weighted score to include JN.1 and KP.3 RBD binding (and with different weights)
-
 Combine scores from ESM, AlphaFold-Multimer, and Rosetta.
 
 ```bash
 ROUND_NUM=1
 
-for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+for NANOBODY in Nb1 Ty1
 do
-python nanobody_design/scripts/data_processing/combine_scores.py \
-    --esm_scores_path nanobody_design/improved/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
-    --alphafold_scores_path nanobody_design/improved/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv \
-    --rosetta_scores_path nanobody_design/improved/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv \
+python nanobody_design/scripts/data_processing/combine_scores_improved.py \
+    --esm_scores_dir nanobody_design/improved/round_${ROUND_NUM}/esm \
+    --alphafold_scores_dir nanobody_design/improved/round_${ROUND_NUM}/alphafold \
+    --rosetta_scores_dir nanobody_design/improved/round_${ROUND_NUM}/rosetta \
+    --nanobody ${NANOBODY} \
+    --spikes KP.3 JN.1 \
     --all_save_path nanobody_design/improved/round_${ROUND_NUM}/scores/${NANOBODY}_all.csv \
     --top_save_path nanobody_design/improved/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
     --top_n 10
