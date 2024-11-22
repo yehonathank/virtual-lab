@@ -414,7 +414,7 @@ Combine scores from ESM, AlphaFold-Multimer, and Rosetta.
 ```bash
 ROUND_NUM=1
 
-for NANOBODY in Nb1 Ty1
+for NANOBODY in Nb21 Ty1
 do
 python nanobody_design/scripts/data_processing/combine_scores_improved.py \
     --esm_scores_dir nanobody_design/improved/round_${ROUND_NUM}/esm \
