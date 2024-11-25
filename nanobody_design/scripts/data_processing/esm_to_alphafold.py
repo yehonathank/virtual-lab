@@ -18,7 +18,7 @@ def esm_to_alphafold(
     spike_name_col: str = "name",
     nanobody_sequence_col: str = "mutated_sequence",
     nanobody_pos_col: str = "position",
-    nanobodoy_original_aa_col: str = "original_aa",
+    nanobody_original_aa_col: str = "original_aa",
     nanobody_mutated_aa_col: str = "mutated_aa",
     nanobody_llr_col: str = "log_likelihood_ratio",
 ) -> None:
@@ -33,7 +33,7 @@ def esm_to_alphafold(
     :param spike_name_col: Column name for the spike protein name in the CSV file.
     :param nanobody_sequence_col: Column name for the nanobody sequence in the CSV file.
     :param nanobody_pos_col: Column name for the nanobody mutation position in the CSV file.
-    :param nanobodoy_original_aa_col: Column name for the original amino acid in the nanobody mutation in the CSV file.
+    :param nanobody_original_aa_col: Column name for the original amino acid in the nanobody mutation in the CSV file.
     :param nanobody_mutated_aa_col: Column name for the mutant amino acid in the nanobody mutation in the CSV file.
     :param nanobody_llr_col: Column name for the log-likelihood ratio in the nanobody mutation in the CSV file.
     """
@@ -72,7 +72,7 @@ def esm_to_alphafold(
 
             if nanobody_sequence_col == "mutated_sequence":
                 nanobody_position = nanobody[nanobody_pos_col].iloc[nanobody_index]
-                nanobody_original_aa = nanobody[nanobodoy_original_aa_col].iloc[
+                nanobody_original_aa = nanobody[nanobody_original_aa_col].iloc[
                     nanobody_index
                 ]
                 nanobody_mutant_aa = nanobody[nanobody_mutated_aa_col].iloc[

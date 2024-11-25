@@ -267,14 +267,24 @@ dist hbonds, (chain A), (chain B), mode=2
 
 Improve two experimentally validated nanobody mutants by iteratively adding more mutations and scoring them using ESM, AlphaFold-Multimer, and Rosetta for four rounds. This workflow uses slightly different hyperparameters and a new weighted score calculations that simultaneously optimizes for JN.1 and KP.3 RBD binding.
 
-First, copy the two mutant nanobodies (`Nb21-I77V-L59E-Q87A-R37Q` and `Ty1-V32F-G59D-N54S-F32S`) and their scores from `nanobody_design/designed/combined` to `nanobody_design/improved/round_0/scores` (in files named `Nb21.csv` and `Ty1.csv`).
-
-TODO: run these mutants with JN.1 RBD
-
-
 ### ESM
 
-Run the ESM model.
+For round 0, copy the mutated nanobodies and assign an ESM log-likelihood ratio of 0.
+
+```bash
+python -c "from pathlib import Path; import pandas as pd
+for name in ['Nb21-I77V-L59E-Q87A-R37Q', 'Ty1-V32F-G59D-N54S-F32S']:
+    nanobody = name.split('-')[0]
+    data = pd.read_csv(f'nanobody_design/designed/combined/{nanobody}.csv')
+    data = data[data['name'] == name]
+    data = data[['sequence']]
+    data['log_likelihood_ratio'] = 0.0
+    save_dir = Path(f'nanobody_design/improved/round_0/esm/{nanobody}')
+    save_dir.mkdir(parents=True, exist_ok=True)
+    data.to_csv(save_dir / f'{name}.csv', index=False)"
+```
+
+For all subsequent rounds, run the ESM model.
 
 ```bash
 ROUND_NUM=1
@@ -305,7 +315,7 @@ done
 
 ### ESM to AlphaFold-Multimer
 
-Convert the ESM-designed mutated nanobody sequences to AlphaFold-Multimer nanobody-spike sequence inputs.
+Convert the ESM-designed mutated nanobody sequences to AlphaFold-Multimer nanobody-spike sequence inputs.  (For round 0, add `--nanobody_sequence_col sequence`.)
 
 ```bash
 ROUND_NUM=1
