@@ -344,6 +344,31 @@ done
 done
 ```
 
+Check that AlphaFold-Multimer ran correctly on all complexes.
+
+```bash
+ROUND_NUM=1
+
+for NANOBODY in Nb21 Ty1
+do
+for SPIKE in KP.3 JN.1
+do
+python -c "from pathlib import Path
+sequences = [path.stem for path in Path('nanobody_design/improved/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}').glob('*.fasta')]
+structures = [path.parent.name for path in Path('nanobody_design/improved/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}').glob('*/*unrelaxed_rank_001*.pdb')]
+
+print(f'${NANOBODY} ${SPIKE}')
+print(f'Number of sequences: {len(sequences):,}')
+print(f'Number of structures: {len(structures):,}')
+
+missing = sorted(set(sequences) - set(structures))
+if missing:
+    print(f'Sequences without structures: {\" \".join(missing)}')
+print()"
+done
+done
+```
+
 Process the AlphaFold-Multimer complexes to extract interface pLDDT scores.
 
 ```bash
