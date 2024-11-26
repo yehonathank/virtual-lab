@@ -12,7 +12,7 @@ def combine_scores(
     all_save_path: Path,
     top_save_path: Path,
     top_n: int = 5,
-    wildtype_sequence: bool = False,
+    starting_sequence: bool = False,
 ) -> None:
     """Combines scores from ESM, AlphaFold-Multimer, and Rosetta into a single file.
 
@@ -22,7 +22,7 @@ def combine_scores(
     :param all_save_path: Path to save all the combined scores.
     :param top_save_path: Path to save the top N combined scores.
     :param top_n: Number of top sequences to display.
-    :param wildtype_sequence: Whether there is only a single wildtype sequence.
+    :param starting_sequence: Whether the sequences are the starting sequences.
     """
     # Load scores from all three files
     esm_scores = pd.read_csv(esm_scores_path)
@@ -30,7 +30,7 @@ def combine_scores(
     rosetta_scores = pd.read_csv(rosetta_scores_path)
 
     # Get ESM names
-    if wildtype_sequence:
+    if starting_sequence:
         names = esm_scores["name"]
         sequences = esm_scores["sequence"]
     else:

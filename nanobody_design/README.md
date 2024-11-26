@@ -171,7 +171,7 @@ done
 
 ### Combine scores
 
-Combine scores from ESM, AlphaFold-Multimer, and Rosetta. (For round 0, add `--wildtype_sequence`.)
+Combine scores from ESM, AlphaFold-Multimer, and Rosetta. (For round 0, add `--starting_sequence`.)
 
 ```bash
 ROUND_NUM=1
@@ -444,7 +444,7 @@ done
 
 ### Combine scores
 
-Combine scores from ESM, AlphaFold-Multimer, and Rosetta.
+Combine scores from ESM, AlphaFold-Multimer, and Rosetta. (For round 0, add `--starting_sequence`.)
 
 ```bash
 ROUND_NUM=1

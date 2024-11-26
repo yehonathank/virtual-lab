@@ -15,6 +15,7 @@ def combine_scores(
     all_save_path: Path,
     top_save_path: Path,
     top_n: int = 10,
+    starting_sequence: bool = False,
 ) -> None:
     """Combines scores from ESM, AlphaFold-Multimer, and Rosetta into a single file  using the improved weighted score.
 
@@ -26,6 +27,7 @@ def combine_scores(
     :param all_save_path: Path to save all the combined scores.
     :param top_save_path: Path to save the top N combined scores.
     :param top_n: Number of top sequences to display.
+    :param starting_sequence: Whether the sequences are the starting sequences.
     """
     # Load scores from the files
     esm_scores = pd.read_csv(esm_scores_dir / f"{nanobody}.csv")
@@ -39,16 +41,20 @@ def combine_scores(
     }
 
     # Get ESM names
-    names = [
-        f"{name}-{original}{position}{mutant}"
-        for name, original, position, mutant in zip(
-            esm_scores["name"],
-            esm_scores["original_aa"],
-            esm_scores["position"],
-            esm_scores["mutated_aa"],
-        )
-    ]
-    sequences = esm_scores["mutated_sequence"]
+    if starting_sequence:
+        names = esm_scores["name"]
+        sequences = esm_scores["sequence"]
+    else:
+        names = [
+            f"{name}-{original}{position}{mutant}"
+            for name, original, position, mutant in zip(
+                esm_scores["name"],
+                esm_scores["original_aa"],
+                esm_scores["position"],
+                esm_scores["mutated_aa"],
+            )
+        ]
+        sequences = esm_scores["mutated_sequence"]
 
     # Set up new DataFrame with ESM scores
     combined_scores = pd.DataFrame(
