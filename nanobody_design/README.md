@@ -15,7 +15,7 @@ pip install -e .[nanobody-design]
 
 If there are any version incompatibility issues, please run `pip install -r nanobody_design/requirements_nanobody_design_frozen.txt`.
 
-Additionally, create separate virtual environment for running AlphaFold-Multimer via LocalColabFold by following these instructions: https://github.com/YoshitakaMo/localcolabfold (or by running `install_localcolabfold.sh`). Make sure the following versions are installed:
+Additionally, create a separate virtual environment for running AlphaFold-Multimer via LocalColabFold by following these instructions: https://github.com/YoshitakaMo/localcolabfold (or by running `install_localcolabfold.sh`). Make sure the following versions are installed:
 
 ```
 alphafold-colabfold==2.3.6
@@ -25,7 +25,7 @@ colabfold==1.5.5
 
 ## LLM project design
 
-Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobody design workflow. The outputs of this notebook are the `nanobody_design/discussions` directory. The relevant ESM, AlphaFold-Multimer, and Rosetta scripts have been copied from those discussion to the `nanobody_design/scripts` folder. Additionally, the sequences for the relevant nanobodies selected by the LLM agents, along with SARS-CoV-2 spike RBD sequences, are in the `nanobody_design/sequences` directory.
+Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobody design workflow. Each meeting with the LLM agents should only take a few minutes. The outputs of this notebook are the `nanobody_design/discussions` directory. The relevant ESM, AlphaFold-Multimer, and Rosetta scripts have been copied from those discussion to the `nanobody_design/scripts` folder. Additionally, the sequences for the relevant nanobodies selected by the LLM agents, along with SARS-CoV-2 spike RBD sequences, are in the `nanobody_design/sequences` directory.
 
 
 ## Nanobody design
