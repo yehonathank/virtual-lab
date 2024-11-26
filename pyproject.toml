@@ -45,6 +45,7 @@ keywords = [
 nanobody-design = [
     "biopython",
     "pandas",
+    "seaborn",
     "torch",
     "transformers",
 ]
@@ -53,5 +54,5 @@ nanobody-design = [
 path = "src/virtual_lab/__about__.py"
 
 [project.urls]
-Homepage = "https://github.com/swansonk14/virtual-lab"
-Issues = "https://github.com/swansonk14/virtual-lab/issues"
+Homepage = "https://github.com/zou-group/virtual-lab"
+Issues = "https://github.com/zou-group/virtual-lab/issues"
