@@ -7,11 +7,11 @@
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --array=0-3
+#SBATCH --array=0-1
 #SBATCH --partition=jamesz,owners
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/esm/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/esm/%a.err
-#SBATCH --time=24:00:00
+#SBATCH --time=4:00:00
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=swansonk@stanford.edu
 
@@ -30,18 +30,17 @@ cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
 experiments=()
 
-DIR_NAME="designed"
+DIR_NAME="nanobody_design/designed/workflow_2"
 
 ROUND_NUM=1
 PREV_ROUND_NUM=$((ROUND_NUM - 1))
 
-for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+for NANOBODY in Nb21 Ty1
 do
-mkdir -p nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY}
+mkdir -p "${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY}"
 experiments+=("python nanobody_design/scripts/improved/esm.py \
-    nanobody_design/${DIR_NAME}/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
-    nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY} \
-    --top-n 20")
+    ${DIR_NAME}/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
+    ${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY}")
 done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}

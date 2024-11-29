@@ -1,4 +1,4 @@
-"""Combines scores from ESM, AlphaFold-Multimer, and Rosetta into a single file using the improved weighted score."""
+"""Combines scores from ESM, AlphaFold-Multimer, and Rosetta into a single file."""
 
 from pathlib import Path
 
@@ -17,7 +17,7 @@ def combine_scores(
     top_n: int = 10,
     starting_sequence: bool = False,
 ) -> None:
-    """Combines scores from ESM, AlphaFold-Multimer, and Rosetta into a single file  using the improved weighted score.
+    """Combines scores from ESM, AlphaFold-Multimer, and Rosetta into a single file.
 
     :param esm_scores_dir: Path to a directory containing ESM scores.
     :param alphafold_scores_dir: Path to a directory containing AlphaFold-Multimer scores.

@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
-#SBATCH --array=0-79
+#SBATCH --array=0-999
 #SBATCH --partition=jamesz,owners
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/rosetta/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/rosetta/%a.err
@@ -29,23 +29,26 @@ cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
 experiments=()
 
-DIR_NAME="designed"
+DIR_NAME="nanobody_design/designed/workflow_2"
 
 ROUND_NUM=1
 
-for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+for NANOBODY in Nb21 Ty1
 do
-OUTPUT_DIR="nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/rosetta/${NANOBODY}"
+for SPIKE in KP.3 JN.1
+do
+OUTPUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}"
 mkdir -p "${OUTPUT_DIR}"
 
-for FILE in nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/*/*unrelaxed_rank_001*.pdb
+for FILE in "${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
 experiments+=("rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
-    -parser:protocol nanobody_design/scripts/improved/rosetta.xml \
+    -parser:protocol nanobody_design/scripts/workflow_2/models/rosetta.xml \
     -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc \
     -out:path:pdb ${OUTPUT_DIR}")
+done
 done
 done
 

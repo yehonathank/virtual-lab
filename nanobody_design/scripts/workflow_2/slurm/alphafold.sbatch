@@ -7,11 +7,11 @@
 #SBATCH --gpus=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --array=0-79%15
+#SBATCH --array=0-999%15
 #SBATCH --partition=jamesz,owners
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/alphafold/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/alphafold/%a.err
-#SBATCH --time=24:00:00
+#SBATCH --time=4:00:00
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=swansonk@stanford.edu
 
@@ -30,16 +30,19 @@ cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
 experiments=()
 
-DIR_NAME="designed"
+DIR_NAME="nanobody_design/designed/workflow_2"
 
 ROUND_NUM=1
 
-for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
+for NANOBODY in Nb21 Ty1
 do
-for FILE in nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY}/*.fasta
+for SPIKE in KP.3 JN.1
+do
+for FILE in "${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}"/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
-experiments+=("colabfold_batch $FILE nanobody_design/${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/$NAME")
+experiments+=("colabfold_batch $FILE ${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/$NAME")
+done
 done
 done
 
