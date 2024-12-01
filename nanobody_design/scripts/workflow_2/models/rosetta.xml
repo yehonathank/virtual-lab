@@ -5,7 +5,7 @@
     </SCOREFXNS>
 
     <RESIDUE_SELECTORS>
-        <!-- Corrected chain identifiers: nanobody as chain A, antigen as chain B -->
+        <!-- Corrected chain identifiers -->
         <Chain name="nanobody_chain" chains="A"/>
         <Chain name="antigen_chain" chains="B"/>
     </RESIDUE_SELECTORS>

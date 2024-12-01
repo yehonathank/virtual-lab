@@ -142,7 +142,7 @@ Here is the agenda for the meeting:
 You previously wrote a RosettaScripts XML file to calculate the binding affinity of a nanobody-antigen complex and a Python script to aggregate multiple Rosetta binding energy score files into one CSV file (see summary). This script needs to be improved. Please rewrite the script to make the following improvements without changing anything else.
 
 1. Correct the RosettaScripts XML file so that the nanobody is labeled as chain "A" and the antigen is labeled as chain "B".
-2. Modify the Python script so that for each subdirectory of the "input_dir" variable, it loads all score files (.sc files) in that directory (there should be five). Then, compute the average dG_separated across those files and save those average values to a CSV.
+2. Modify the Python script so that for each subdirectory of the "input_dir" variable, it loads all score files under that subdirectory by globbing for **/*.sc (there should be five). Then, compute the average dG_separated across those files and save those average values to a CSV.
 
 Computational Biologist, please provide your response to the agenda.
 
@@ -152,7 +152,7 @@ Certainly! Let's address the agenda by making the specified improvements to both
 
 ### Revised RosettaScripts XML File
 
-Here is the corrected XML file with the chain identifiers swapped:
+In the XML file, we'll correct the chain identifiers so that the nanobody is labeled as chain "A" and the antigen is labeled as chain "B":
 
 ```xml
 <ROSETTASCRIPTS>
@@ -162,7 +162,7 @@ Here is the corrected XML file with the chain identifiers swapped:
     </SCOREFXNS>
 
     <RESIDUE_SELECTORS>
-        <!-- Corrected chain identifiers: nanobody as chain A, antigen as chain B -->
+        <!-- Corrected chain identifiers -->
         <Chain name="nanobody_chain" chains="A"/>
         <Chain name="antigen_chain" chains="B"/>
     </RESIDUE_SELECTORS>
@@ -189,13 +189,14 @@ Here is the corrected XML file with the chain identifiers swapped:
 
 ### Revised Python Script
 
-Here is the updated Python script to handle subdirectories and compute average `dG_separated` values:
+For the Python script, we'll modify it to process each subdirectory under `input_dir`, compute the average `dG_separated` score across all score files in each subdirectory, and save these averages to a CSV file:
 
 ```python
 import os
 import pandas as pd
 import argparse
 import logging
+from glob import glob
 
 def extract_scores_from_file(score_file: str) -> float:
     """
@@ -225,34 +226,40 @@ def extract_scores_from_file(score_file: str) -> float:
 
 def main(input_dir: str, output_csv: str) -> None:
     """
-    Process multiple Rosetta score files in subdirectories and output a CSV with average scores.
+    Process multiple Rosetta score files and output a CSV with average scores per subdirectory.
     
     Parameters:
     input_dir (str): Directory containing subdirectories with score files.
     output_csv (str): Output CSV file path.
     """
     logging.basicConfig(level=logging.INFO)
-    subdirs = [os.path.join(input_dir, d) for d in os.listdir(input_dir) if os.path.isdir(os.path.join(input_dir, d))]
-    results = []
+    subdirectories = [os.path.join(input_dir, d) for d in os.listdir(input_dir) if os.path.isdir(os.path.join(input_dir, d))]
+    averages = []
+    errors = []
 
-    for subdir in subdirs:
-        score_files = [os.path.join(subdir, f) for f in os.listdir(subdir) if f.endswith('.sc')]
+    for subdir in subdirectories:
+        score_files = glob(os.path.join(subdir, '**/*.sc'), recursive=True)
         scores = []
-
         for score_file in score_files:
             score = extract_scores_from_file(score_file)
             if score is not None:
                 scores.append(score)
-
+            else:
+                errors.append(os.path.basename(score_file))
+        
         if scores:
             average_score = sum(scores) / len(scores)
-            results.append((os.path.basename(subdir), average_score))
-        else:
-            logging.warning(f"No valid scores found in subdirectory {subdir}")
+            averages.append((os.path.basename(subdir), average_score))
 
     # Convert to DataFrame and save to CSV
-    df = pd.DataFrame(results, columns=['Subdirectory', 'Average dG_separated'])
+    df = pd.DataFrame(averages, columns=['Subdirectory', 'Average dG_separated'])
     df.to_csv(output_csv, index=False)
+
+    # Log errors if any
+    if errors:
+        logging.warning("Encountered errors in the following files; these files may have invalid or missing data:")
+        for error_file in errors:
+            logging.warning(f" - {error_file}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process Rosetta score files and output CSV.")
@@ -264,8 +271,9 @@ if __name__ == "__main__":
 ```
 
 ### Key Changes:
-1. **RosettaScripts XML File**: Corrected the chain identifiers so that the nanobody is labeled as chain "A" and the antigen as chain "B".
-2. **Python Script**: Modified to iterate over subdirectories within the `input_dir`, compute the average `dG_separated` score from the score files in each subdirectory, and save these averages to a CSV file.
+1. **Chain Identifier Correction**: The XML file now correctly labels the nanobody as chain "A" and the antigen as chain "B".
+2. **Subdirectory Processing**: The Python script now processes each subdirectory under `input_dir`, computes the average `dG_separated` score for all score files in each subdirectory, and saves these averages to a CSV file.
+3. **Globbing for Files**: The script uses `glob` to find all `.sc` files recursively within each subdirectory.
 
-These changes should align with your requirements and improve the workflow for analyzing nanobody-antigen interactions. If you have any further questions or need additional modifications, feel free to ask!
+These changes should align with your requirements and improve the functionality of both the XML and Python scripts. If you have any further questions or need additional modifications, feel free to ask!
 
