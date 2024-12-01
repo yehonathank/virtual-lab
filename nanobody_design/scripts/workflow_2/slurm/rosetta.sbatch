@@ -40,7 +40,7 @@ do
 OUTPUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}"
 mkdir -p "${OUTPUT_DIR}"
 
-for FILE in "${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}"/*/*unrelaxed_rank_001*.pdb
+for FILE in "${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}"/*/median_iplddt.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
 experiments+=("rosetta_scripts.default.linuxgccrelease \

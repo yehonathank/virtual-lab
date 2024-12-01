@@ -147,7 +147,7 @@ do
 OUTPUT_DIR="nanobody_design/designed/workflow_2/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}"
 mkdir -p "${OUTPUT_DIR}"
 
-for FILE in nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/*/*unrelaxed_rank_001*.pdb
+for FILE in nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/*/median_iplddt.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
 rosetta_scripts.default.linuxgccrelease \
