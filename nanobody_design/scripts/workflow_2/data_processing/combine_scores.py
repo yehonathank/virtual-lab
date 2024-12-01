@@ -68,10 +68,10 @@ def combine_scores(
     # Merge AlphaFold-Multimer scores
     for spike, alphafold_scores in alphafold_spike_to_scores.items():
         alphafold_scores["name"] = [
-            Path(path).parent.name.split("_")[0]
-            for path in alphafold_scores["PDB_File"]
+            Path(path).name.split("_")[0]
+            for path in alphafold_scores["Subdirectory"]
         ]
-        del alphafold_scores["PDB_File"]
+        del alphafold_scores["Subdirectory"]
 
         alphafold_scores.rename(
             columns={
@@ -87,9 +87,9 @@ def combine_scores(
     # Merge Rosetta scores
     for spike, rosetta_scores in rosetta_spike_to_scores.items():
         rosetta_scores["name"] = [
-            Path(path).stem.split("_")[0] for path in rosetta_scores["File Name"]
+            dirname.split("_")[0] for dirname in rosetta_scores["Subdirectory"]
         ]
-        del rosetta_scores["File Name"]
+        del rosetta_scores["Subdirectory"]
 
         rosetta_scores.rename(
             columns={
@@ -107,10 +107,10 @@ def combine_scores(
         0.2 * combined_scores["log_likelihood_ratio"]
         + 0.4
         * float(
-            np.mean([combined_scores[f"Interface_pLDDT_{spike}"] for spike in spikes])
+            np.mean([combined_scores[f"Average_Interface_pLDDT_{spike}"] for spike in spikes])
         )
         - 0.4
-        * float(np.mean([combined_scores[f"dG_separated_{spike}"] for spike in spikes]))
+        * float(np.mean([combined_scores[f"Average dG_separated_{spike}"] for spike in spikes]))
     )
 
     # Sort by weighted score

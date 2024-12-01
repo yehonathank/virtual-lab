@@ -43,7 +43,7 @@ NAME=$(basename "$(dirname "$FILE")")
 experiment=""
 for ITER in 1 2 3 4 5
 do
-OUTPUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${ITER}"
+OUTPUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${NAME}/${ITER}"
 mkdir -p "${OUTPUT_DIR}"
 experiment+="rosetta_scripts.default.linuxgccrelease \
     -s $FILE \

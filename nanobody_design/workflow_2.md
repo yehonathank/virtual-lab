@@ -98,17 +98,17 @@ for NANOBODY in Nb21 Ty1
 do
 for SPIKE in KP.3 JN.1
 do
-python -c "from pathlib import Path
-sequences = [path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}').glob('*.fasta')]
-structures = [path.parent.name for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}').glob('*/*unrelaxed_rank_001*.pdb')]
+python -c "from collections import Counter;from pathlib import Path
+sequences = {path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}').glob('*.fasta')}
+structures = Counter(path.parent.name for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}').glob('**/*rank*.pdb'))
 
 print(f'${NANOBODY} ${SPIKE}')
 print(f'Number of sequences: {len(sequences):,}')
 print(f'Number of structures: {len(structures):,}')
 
-missing = sorted(set(sequences) - set(structures))
+missing = [name for name in sequences if structures[name] != 5]
 if missing:
-    print(f'Sequences without structures: {\" \".join(missing)}')
+    print(f'Sequences without all five structures: {\" \".join(missing)}')
 print()"
 done
 done
@@ -149,7 +149,7 @@ do
 NAME=$(basename "$(dirname "$FILE")")
 for ITER in 1 2 3 4 5
 do
-OUTPUT_DIR="nanobody_design/designed/workflow_2/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${ITER}"
+OUTPUT_DIR="nanobody_design/designed/workflow_2/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${NAME}/${ITER}"
 mkdir -p "${OUTPUT_DIR}"
 rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
@@ -171,17 +171,17 @@ for NANOBODY in Nb21 Ty1
 do
 for SPIKE in KP.3 JN.1
 do
-python -c "from pathlib import Path
-sequences = [path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}').glob('*.fasta')]
-structures = [path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}').glob('*_1.sc')]
+python -c "from collections import Counter;from pathlib import Path
+sequences = {path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}').glob('*.fasta')}
+structures = Counter(path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}').glob('**/*.sc'))
 
 print(f'${NANOBODY} ${SPIKE}')
 print(f'Number of sequences: {len(sequences):,}')
 print(f'Number of structures: {len(structures):,}')
 
-missing = sorted(set(sequences) - set(structures))
+missing = [name for name in sequences if structures[name] != 5]
 if missing:
-    print(f'Sequences without structures: {\" \".join(missing)}')
+    print(f'Sequences without all five structures: {\" \".join(missing)}')
 print()"
 done
 done
