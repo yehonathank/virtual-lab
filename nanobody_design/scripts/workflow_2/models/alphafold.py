@@ -114,25 +114,22 @@ def process_directory(
         ]
 
         # Calculate averages
-        avg_plddt = np.mean([result[1] for result in subdir_results])
+        avg_iplddt = np.mean([result[1] for result in subdir_results])
         avg_residue_count = np.mean([result[2] for result in subdir_results])
         avg_atom_count = np.mean([result[3] for result in subdir_results])
 
-        results.append((subdir, avg_plddt, avg_residue_count, avg_atom_count))
+        results.append((subdir, avg_iplddt, avg_residue_count, avg_atom_count))
 
-        # Find the median ipLDDT file
-        median_index = np.argsort([result[1] for result in subdir_results])[
-            len(subdir_results) // 2
-        ]
+        # Identify median ipLDDT file
+        subdir_results.sort(key=lambda x: x[1])
+        median_index = len(subdir_results) // 2
         median_file = subdir_results[median_index][0]
-
-        # Create symlink for the median ipLDDT file
         median_symlink = os.path.join(subdir, "median_iplddt.pdb")
+
         if os.path.exists(median_symlink):
             os.remove(median_symlink)
-        os.symlink(median_file, median_symlink)
+        os.symlink(os.path.abspath(median_file), median_symlink)
 
-    # Write results to CSV
     with open(output_file, mode="w", newline="") as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(
@@ -147,7 +144,7 @@ def process_directory(
         for result in results:
             csv_writer.writerow(result)
 
-    print(f"Interface pLDDT scores have been written to {output_file}")
+    print(f"Average interface pLDDT scores have been written to {output_file}")
 
 
 def main():

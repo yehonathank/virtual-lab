@@ -180,13 +180,13 @@ Here is the agenda for the meeting:
 You previously wrote a Python script that processes the outputs of AlphaFold-Multimer to calculate the confidence of nanobody-antigen complexes (see summary). This script needs to be improved. Please rewrite the script to make the following improvements without changing anything else.
 
 1. For each subdirectory of the "directory" variable, instead of just loading the one file that matches the pattern *unrelaxed_rank_001*.pdb, load all PDB files in that directory (there should be five). Then, compute the average ipLDDT, residue count, and atom count across those PDB files and save those average values to a CSV.
-2. For each of those subdirectories, identify the PDB file with the median ipLDDT within that directory. Create a simlink with the name "median_iplddt.pdb" within that subdirectory linking to that median ipLDDT PDB file.
+2. For each of those subdirectories, identify the PDB file with the median ipLDDT within that directory. Create an absolute symlink with the name "median_iplddt.pdb" within that subdirectory linking to that median ipLDDT PDB file.
 
 Computational Biologist, please provide your response to the agenda.
 
 ## Computational Biologist
 
-To address the agenda for our meeting, I'll provide a revised version of the Python script that incorporates the requested improvements. The script will now process all PDB files within each subdirectory, compute average values, and create a symlink for the PDB file with the median interface pLDDT score. Here's the updated script:
+Certainly! Let's address the improvements required for the Python script based on the agenda provided. The goal is to modify the script to process all PDB files within each subdirectory, compute average values, and identify the median ipLDDT PDB file. Here's how we can achieve this:
 
 ```python
 import os
@@ -262,27 +262,26 @@ def process_directory(directory: str, nanobody_chain_id: str, antigen_chain_id: 
         if not pdb_files:
             print(f"No PDB files found in the directory '{subdir}'.")
             continue
-        
+
         subdir_results = [calculate_interface_pLDDT(pdb_file, nanobody_chain_id, antigen_chain_id, distance_threshold) for pdb_file in pdb_files]
         
         # Calculate averages
-        avg_plddt = np.mean([result[1] for result in subdir_results])
+        avg_iplddt = np.mean([result[1] for result in subdir_results])
         avg_residue_count = np.mean([result[2] for result in subdir_results])
         avg_atom_count = np.mean([result[3] for result in subdir_results])
-        
-        results.append((subdir, avg_plddt, avg_residue_count, avg_atom_count))
-        
-        # Find the median ipLDDT file
-        median_index = np.argsort([result[1] for result in subdir_results])[len(subdir_results) // 2]
+
+        results.append((subdir, avg_iplddt, avg_residue_count, avg_atom_count))
+
+        # Identify median ipLDDT file
+        subdir_results.sort(key=lambda x: x[1])
+        median_index = len(subdir_results) // 2
         median_file = subdir_results[median_index][0]
-        
-        # Create symlink for the median ipLDDT file
         median_symlink = os.path.join(subdir, 'median_iplddt.pdb')
+
         if os.path.exists(median_symlink):
             os.remove(median_symlink)
-        os.symlink(median_file, median_symlink)
-    
-    # Write results to CSV
+        os.symlink(os.path.abspath(median_file), median_symlink)
+
     with open(output_file, mode='w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(['Subdirectory', 'Average_Interface_pLDDT', 'Average_Interface_Residue_Count', 'Average_Interface_Atom_Count'])
@@ -290,7 +289,7 @@ def process_directory(directory: str, nanobody_chain_id: str, antigen_chain_id: 
         for result in results:
             csv_writer.writerow(result)
     
-    print(f"Interface pLDDT scores have been written to {output_file}")
+    print(f"Average interface pLDDT scores have been written to {output_file}")
 
 def main():
     parser = argparse.ArgumentParser(description="Calculate interface pLDDT scores for nanobody-antigen complexes.")
@@ -312,13 +311,15 @@ if __name__ == '__main__':
     main()
 ```
 
-### Key Improvements:
+### Key Changes:
 
-1. **Subdirectory Processing**: The script now processes each subdirectory individually, loading all PDB files within each subdirectory.
+1. **Subdirectory Processing**: The script now iterates over each subdirectory within the specified directory, processing all PDB files found in each subdirectory.
 
-2. **Average Calculations**: Computes the average interface pLDDT, residue count, and atom count across all PDB files in each subdirectory.
+2. **Average Calculations**: For each subdirectory, the script calculates the average ipLDDT, residue count, and atom count across all PDB files.
 
-3. **Median Symlink**: Identifies the PDB file with the median interface pLDDT score in each subdirectory and creates a symlink named `median_iplddt.pdb` pointing to that file.
+3. **Median ipLDDT Identification**: The script identifies the PDB file with the median ipLDDT score within each subdirectory and creates a symlink named `median_iplddt.pdb` pointing to this file.
 
-These changes ensure that the script meets the specified improvements while maintaining its original functionality. Let me know if there are any further modifications or questions!
+4. **CSV Output**: The script writes the average values for each subdirectory to the specified CSV file.
+
+These changes ensure the script meets the new requirements while maintaining its original functionality.
 
