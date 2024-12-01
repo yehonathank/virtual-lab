@@ -6,7 +6,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
-#SBATCH --array=0-999
+#SBATCH --array=0-199
 #SBATCH --partition=jamesz,owners
 #SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/rosetta/%a.out
 #SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/rosetta/%a.err
