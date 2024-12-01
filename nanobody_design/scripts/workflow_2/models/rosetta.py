@@ -12,7 +12,7 @@ def extract_scores_from_file(score_file: str) -> list:
     score_file (str): Path to the score file.
 
     Returns:
-    list: A list of extracted dG_separated scores for each relaxation.
+    list: A list of extracted dG_separated scores.
     """
     scores = []
     try:
@@ -22,14 +22,14 @@ def extract_scores_from_file(score_file: str) -> list:
             for line in lines:
                 if line.startswith("SCORE:") and "dG_separated" in line:
                     columns = line.split()
+                    # Find the index of the dG_separated column
                     dg_separated_index = columns.index("dG_separated")
-                elif (
-                    line.startswith("SCORE:")
-                    and not line.startswith("SCORE: total_score")
-                    and dg_separated_index is not None
+                elif line.startswith("SCORE:") and not line.startswith(
+                    "SCORE: total_score"
                 ):
                     values = line.split()
-                    scores.append(float(values[dg_separated_index]))
+                    if dg_separated_index is not None:
+                        scores.append(float(values[dg_separated_index]))
         if not scores:
             raise ValueError(f"No valid dG_separated scores found in {score_file}")
     except Exception as e:

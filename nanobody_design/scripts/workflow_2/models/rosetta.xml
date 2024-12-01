@@ -16,23 +16,17 @@
 
     <MOVERS>
         <!-- Relaxation mover to optimize structure -->
-        <FastRelax name="relax" scorefxn="ref15" repeats="5"/>
+        <FastRelax name="relax" scorefxn="ref15"/>
         <!-- Interface Analyzer Mover for detailed analysis -->
         <InterfaceAnalyzerMover name="analyze_interface" scorefxn="ref15" jump="1"/>
     </MOVERS>
 
     <PROTOCOLS>
-        <!-- Run five relaxations and analyze interface after each -->
-        <Add mover="relax"/>
-        <Add mover="analyze_interface"/>
-        <Add mover="relax"/>
-        <Add mover="analyze_interface"/>
-        <Add mover="relax"/>
-        <Add mover="analyze_interface"/>
-        <Add mover="relax"/>
-        <Add mover="analyze_interface"/>
-        <Add mover="relax"/>
-        <Add mover="analyze_interface"/>
+        <!-- Loop to perform five relaxations and analyses -->
+        <Repeat count="5">
+            <Add mover="relax"/>
+            <Add mover="analyze_interface"/>
+        </Repeat>
     </PROTOCOLS>
 
     <OUTPUT scorefxn="ref15"/>
