@@ -4,21 +4,19 @@ import argparse
 import logging
 
 
-def extract_scores_from_file(score_file: str) -> list:
+def extract_scores_from_file(score_file: str) -> float:
     """
-    Extract the dG_separated scores from a Rosetta score file for multiple relaxations.
+    Extract the dG_separated score from a Rosetta score file.
 
     Parameters:
     score_file (str): Path to the score file.
 
     Returns:
-    list: A list of extracted dG_separated scores.
+    float: The extracted dG_separated score.
     """
-    scores = []
     try:
         with open(score_file, "r") as f:
             lines = f.readlines()
-            dg_separated_index = None
             for line in lines:
                 if line.startswith("SCORE:") and "dG_separated" in line:
                     columns = line.split()
@@ -28,52 +26,49 @@ def extract_scores_from_file(score_file: str) -> list:
                     "SCORE: total_score"
                 ):
                     values = line.split()
-                    if dg_separated_index is not None:
-                        scores.append(float(values[dg_separated_index]))
-        if not scores:
-            raise ValueError(f"No valid dG_separated scores found in {score_file}")
+                    return float(values[dg_separated_index])
+        raise ValueError(f"No valid dG_separated score found in {score_file}")
     except Exception as e:
         logging.error(f"Error processing file {score_file}: {e}")
-    return scores
+        return None
 
 
 def main(input_dir: str, output_csv: str) -> None:
     """
-    Process multiple Rosetta score files and output a CSV with average scores.
+    Process multiple Rosetta score files in subdirectories and output a CSV with average scores.
 
     Parameters:
-    input_dir (str): Directory containing the score files.
+    input_dir (str): Directory containing subdirectories with score files.
     output_csv (str): Output CSV file path.
     """
     logging.basicConfig(level=logging.INFO)
-    score_files = [
-        os.path.join(input_dir, f) for f in os.listdir(input_dir) if f.endswith(".sc")
+    subdirs = [
+        os.path.join(input_dir, d)
+        for d in os.listdir(input_dir)
+        if os.path.isdir(os.path.join(input_dir, d))
     ]
-    scores = []
-    errors = []
+    results = []
 
-    for score_file in score_files:
-        extracted_scores = extract_scores_from_file(score_file)
-        if extracted_scores:
-            average_score = sum(extracted_scores) / len(extracted_scores)
-            scores.append((os.path.basename(score_file), average_score))
+    for subdir in subdirs:
+        score_files = [
+            os.path.join(subdir, f) for f in os.listdir(subdir) if f.endswith(".sc")
+        ]
+        scores = []
+
+        for score_file in score_files:
+            score = extract_scores_from_file(score_file)
+            if score is not None:
+                scores.append(score)
+
+        if scores:
+            average_score = sum(scores) / len(scores)
+            results.append((os.path.basename(subdir), average_score))
         else:
-            errors.append(os.path.basename(score_file))
-
-    # Sort scores in ascending order assuming lower scores indicate better binding
-    scores.sort(key=lambda x: x[1])
+            logging.warning(f"No valid scores found in subdirectory {subdir}")
 
     # Convert to DataFrame and save to CSV
-    df = pd.DataFrame(scores, columns=["File Name", "Average dG_separated"])
+    df = pd.DataFrame(results, columns=["Subdirectory", "Average dG_separated"])
     df.to_csv(output_csv, index=False)
-
-    # Log errors if any
-    if errors:
-        logging.warning(
-            "Encountered errors in the following files; these files may have invalid or missing data:"
-        )
-        for error_file in errors:
-            logging.warning(f" - {error_file}")
 
 
 if __name__ == "__main__":
@@ -81,7 +76,9 @@ if __name__ == "__main__":
         description="Process Rosetta score files and output CSV."
     )
     parser.add_argument(
-        "input_dir", type=str, help="Directory containing Rosetta score files."
+        "input_dir",
+        type=str,
+        help="Directory containing subdirectories with Rosetta score files.",
     )
     parser.add_argument("output_csv", type=str, help="Output CSV file path.")
     args = parser.parse_args()

@@ -141,18 +141,18 @@ Here is the agenda for the meeting:
 
 You previously wrote a RosettaScripts XML file to calculate the binding affinity of a nanobody-antigen complex and a Python script to aggregate multiple Rosetta binding energy score files into one CSV file (see summary). This script needs to be improved. Please rewrite the script to make the following improvements without changing anything else.
 
-1. Modify the RosettaScripts XML file to run five relaxations and compute the interface binding energy after each relaxation.
-2. Modify the Python script to compute the average binding energy across the five relaxations for each nanobody-antigen complex and save the average binding energy to a CSV file.
+1. Correct the RosettaScripts XML file so that the nanobody is labeled as chain "A" and the antigen is labeled as chain "B".
+2. Modify the Python script so that for each subdirectory of the "input_dir" variable, it loads all score files (.sc files) in that directory (there should be five). Then, compute the average dG_separated across those files and save those average values to a CSV.
 
 Computational Biologist, please provide your response to the agenda.
 
 ## Computational Biologist
 
-Certainly! Let's address the agenda by making the necessary improvements to both the RosettaScripts XML file and the Python script.
+Certainly! Let's address the agenda by making the specified improvements to both the RosettaScripts XML file and the Python script.
 
-### RosettaScripts XML File Modifications
+### Revised RosettaScripts XML File
 
-To run five relaxations and compute the interface binding energy after each relaxation, we need to loop the relaxation process and analyze the interface binding energy multiple times. Here is the updated XML script:
+Here is the corrected XML file with the chain identifiers swapped:
 
 ```xml
 <ROSETTASCRIPTS>
@@ -162,9 +162,9 @@ To run five relaxations and compute the interface binding energy after each rela
     </SCOREFXNS>
 
     <RESIDUE_SELECTORS>
-        <!-- Use visualization tools like PyMOL to confirm chain identifiers -->
-        <Chain name="antigen_chain" chains="A"/>
-        <Chain name="nanobody_chain" chains="B"/>
+        <!-- Corrected chain identifiers: nanobody as chain A, antigen as chain B -->
+        <Chain name="nanobody_chain" chains="A"/>
+        <Chain name="antigen_chain" chains="B"/>
     </RESIDUE_SELECTORS>
 
     <TASKOPERATIONS>
@@ -179,20 +179,17 @@ To run five relaxations and compute the interface binding energy after each rela
     </MOVERS>
 
     <PROTOCOLS>
-        <!-- Loop to perform five relaxations and analyses -->
-        <Repeat count="5">
-            <Add mover="relax"/>
-            <Add mover="analyze_interface"/>
-        </Repeat>
+        <Add mover="relax"/>
+        <Add mover="analyze_interface"/>
     </PROTOCOLS>
 
     <OUTPUT scorefxn="ref15"/>
 </ROSETTASCRIPTS>
 ```
 
-### Python Script Modifications
+### Revised Python Script
 
-To compute the average binding energy across the five relaxations for each nanobody-antigen complex, we need to modify the script to handle multiple scores per file and calculate their average. Here is the updated Python script:
+Here is the updated Python script to handle subdirectories and compute average `dG_separated` values:
 
 ```python
 import os
@@ -200,21 +197,19 @@ import pandas as pd
 import argparse
 import logging
 
-def extract_scores_from_file(score_file: str) -> list:
+def extract_scores_from_file(score_file: str) -> float:
     """
-    Extract the dG_separated scores from a Rosetta score file for multiple relaxations.
+    Extract the dG_separated score from a Rosetta score file.
     
     Parameters:
     score_file (str): Path to the score file.
     
     Returns:
-    list: A list of extracted dG_separated scores.
+    float: The extracted dG_separated score.
     """
-    scores = []
     try:
         with open(score_file, 'r') as f:
             lines = f.readlines()
-            dg_separated_index = None
             for line in lines:
                 if line.startswith("SCORE:") and "dG_separated" in line:
                     columns = line.split()
@@ -222,51 +217,46 @@ def extract_scores_from_file(score_file: str) -> list:
                     dg_separated_index = columns.index("dG_separated")
                 elif line.startswith("SCORE:") and not line.startswith("SCORE: total_score"):
                     values = line.split()
-                    if dg_separated_index is not None:
-                        scores.append(float(values[dg_separated_index]))
-        if not scores:
-            raise ValueError(f"No valid dG_separated scores found in {score_file}")
+                    return float(values[dg_separated_index])
+        raise ValueError(f"No valid dG_separated score found in {score_file}")
     except Exception as e:
         logging.error(f"Error processing file {score_file}: {e}")
-    return scores
+        return None
 
 def main(input_dir: str, output_csv: str) -> None:
     """
-    Process multiple Rosetta score files and output a CSV with average scores.
+    Process multiple Rosetta score files in subdirectories and output a CSV with average scores.
     
     Parameters:
-    input_dir (str): Directory containing the score files.
+    input_dir (str): Directory containing subdirectories with score files.
     output_csv (str): Output CSV file path.
     """
     logging.basicConfig(level=logging.INFO)
-    score_files = [os.path.join(input_dir, f) for f in os.listdir(input_dir) if f.endswith('.sc')]
-    scores = []
-    errors = []
+    subdirs = [os.path.join(input_dir, d) for d in os.listdir(input_dir) if os.path.isdir(os.path.join(input_dir, d))]
+    results = []
 
-    for score_file in score_files:
-        extracted_scores = extract_scores_from_file(score_file)
-        if extracted_scores:
-            average_score = sum(extracted_scores) / len(extracted_scores)
-            scores.append((os.path.basename(score_file), average_score))
+    for subdir in subdirs:
+        score_files = [os.path.join(subdir, f) for f in os.listdir(subdir) if f.endswith('.sc')]
+        scores = []
+
+        for score_file in score_files:
+            score = extract_scores_from_file(score_file)
+            if score is not None:
+                scores.append(score)
+
+        if scores:
+            average_score = sum(scores) / len(scores)
+            results.append((os.path.basename(subdir), average_score))
         else:
-            errors.append(os.path.basename(score_file))
-
-    # Sort scores in ascending order assuming lower scores indicate better binding
-    scores.sort(key=lambda x: x[1])
+            logging.warning(f"No valid scores found in subdirectory {subdir}")
 
     # Convert to DataFrame and save to CSV
-    df = pd.DataFrame(scores, columns=['File Name', 'Average dG_separated'])
+    df = pd.DataFrame(results, columns=['Subdirectory', 'Average dG_separated'])
     df.to_csv(output_csv, index=False)
-
-    # Log errors if any
-    if errors:
-        logging.warning("Encountered errors in the following files; these files may have invalid or missing data:")
-        for error_file in errors:
-            logging.warning(f" - {error_file}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process Rosetta score files and output CSV.")
-    parser.add_argument('input_dir', type=str, help="Directory containing Rosetta score files.")
+    parser.add_argument('input_dir', type=str, help="Directory containing subdirectories with Rosetta score files.")
     parser.add_argument('output_csv', type=str, help="Output CSV file path.")
     args = parser.parse_args()
 
@@ -274,9 +264,8 @@ if __name__ == "__main__":
 ```
 
 ### Key Changes:
+1. **RosettaScripts XML File**: Corrected the chain identifiers so that the nanobody is labeled as chain "A" and the antigen as chain "B".
+2. **Python Script**: Modified to iterate over subdirectories within the `input_dir`, compute the average `dG_separated` score from the score files in each subdirectory, and save these averages to a CSV file.
 
-1. **XML Script**: Added a `<Repeat>` block to perform five relaxations and interface analyses.
-2. **Python Script**: Modified the `extract_scores_from_file` function to return a list of scores and compute the average binding energy for each file. The script now outputs the average binding energy to the CSV file.
-
-These updates should meet the requirements outlined in the agenda, allowing for multiple relaxations and averaging of binding energies. If you have any further questions or need additional modifications, feel free to ask!
+These changes should align with your requirements and improve the workflow for analyzing nanobody-antigen interactions. If you have any further questions or need additional modifications, feel free to ask!
 

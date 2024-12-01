@@ -150,11 +150,14 @@ mkdir -p "${OUTPUT_DIR}"
 for FILE in nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/*/median_iplddt.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
+for ITER in 1 2 3 4 5
+do
 rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
     -parser:protocol nanobody_design/scripts/workflow_2/models/rosetta.xml \
-    -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc \
-    -out:path:pdb ${OUTPUT_DIR}
+    -out:file:scorefile ${OUTPUT_DIR}/${NAME}_${ITER}.sc \
+    -out:path:pdb ${OUTPUT_DIR}/median_iplddt_${ITER}.pdb
+done
 done
 done
 done
@@ -171,7 +174,7 @@ for SPIKE in KP.3 JN.1
 do
 python -c "from pathlib import Path
 sequences = [path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}').glob('*.fasta')]
-structures = [path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}').glob('*.sc')]
+structures = [path.stem for path in Path('nanobody_design/designed/workflow_2/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}').glob('*_1.sc')]
 
 print(f'${NANOBODY} ${SPIKE}')
 print(f'Number of sequences: {len(sequences):,}')

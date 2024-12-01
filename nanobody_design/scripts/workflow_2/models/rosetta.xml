@@ -5,9 +5,9 @@
     </SCOREFXNS>
 
     <RESIDUE_SELECTORS>
-        <!-- Use visualization tools like PyMOL to confirm chain identifiers -->
-        <Chain name="antigen_chain" chains="A"/>
-        <Chain name="nanobody_chain" chains="B"/>
+        <!-- Corrected chain identifiers: nanobody as chain A, antigen as chain B -->
+        <Chain name="nanobody_chain" chains="A"/>
+        <Chain name="antigen_chain" chains="B"/>
     </RESIDUE_SELECTORS>
 
     <TASKOPERATIONS>
@@ -22,11 +22,8 @@
     </MOVERS>
 
     <PROTOCOLS>
-        <!-- Loop to perform five relaxations and analyses -->
-        <Repeat count="5">
-            <Add mover="relax"/>
-            <Add mover="analyze_interface"/>
-        </Repeat>
+        <Add mover="relax"/>
+        <Add mover="analyze_interface"/>
     </PROTOCOLS>
 
     <OUTPUT scorefxn="ref15"/>
