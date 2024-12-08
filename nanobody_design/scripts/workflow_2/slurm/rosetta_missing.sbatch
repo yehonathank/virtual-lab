@@ -37,7 +37,7 @@ for EXP in Ty1-V32F-G59D-N54S-F32S-T7S-N101S_JN.1 Ty1-V32F-G59D-N54S-F32S-L102S-
 do
 NANOBODY=$(echo "$EXP" | cut -d'-' -f1)
 SPIKE=$(echo "$EXP" | cut -d'_' -f2)
-FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}/${EXP}/median_iplddt.pdb"
+FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/${EXP}/median_iplddt.pdb"
 NAME=$(basename "$(dirname "$FILE")")
 experiment=""
 for ITER in 1 2 3 4 5
