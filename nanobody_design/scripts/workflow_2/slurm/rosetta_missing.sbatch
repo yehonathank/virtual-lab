@@ -1,16 +1,15 @@
 #!/bin/bash
 #
-#SBATCH --job-name=alphafold_missing
+#SBATCH --job-name=rosetta_missing
 #
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --gpus=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=16G
-#SBATCH --array=0-1%15
+#SBATCH --mem=8G
+#SBATCH --array=0-199
 #SBATCH --partition=jamesz,owners
-#SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/alphafold_missing/%a.out
-#SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/alphafold_missing/%a.err
+#SBATCH --output=/oak/stanford/groups/jamesz/swansonk/slurm/output/rosetta_missing/%a.out
+#SBATCH --error=/oak/stanford/groups/jamesz/swansonk/slurm/error/rosetta_missing/%a.err
 #SBATCH --time=4:00:00
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=swansonk@stanford.edu
@@ -24,7 +23,7 @@ echo "working directory=$SLURM_SUBMIT_DIR"
 
 source /home/users/swansonk/.bashrc
 
-conda activate localcolabfold
+ml biology rosetta
 
 cd /oak/stanford/groups/jamesz/swansonk/virtual_lab || exit
 
@@ -38,9 +37,20 @@ for EXP in Ty1-V32F-G59D-N54S-F32S-T7S-N101S_JN.1 Ty1-V32F-G59D-N54S-F32S-L102S-
 do
 NANOBODY=$(echo "$EXP" | cut -d'-' -f1)
 SPIKE=$(echo "$EXP" | cut -d'_' -f2)
-FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}/${EXP}.fasta"
-NAME=$(basename "$FILE" .fasta)
-experiments+=("colabfold_batch $FILE ${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/$NAME")
+FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}/${EXP}/median_iplddt.pdb"
+NAME=$(basename "$(dirname "$FILE")")
+experiment=""
+for ITER in 1 2 3 4 5
+do
+OUTPUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${NAME}/${ITER}"
+mkdir -p "${OUTPUT_DIR}"
+experiment+="rosetta_scripts.default.linuxgccrelease \
+    -s $FILE \
+    -parser:protocol nanobody_design/scripts/workflow_2/models/rosetta.xml \
+    -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc \
+    -out:path:pdb ${OUTPUT_DIR}; "
+done
+experiments+=("${experiment}")
 done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}
