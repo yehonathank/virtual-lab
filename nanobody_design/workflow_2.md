@@ -221,7 +221,7 @@ python nanobody_design/scripts/workflow_2/data_processing/combine_scores.py \
     --spikes KP.3 JN.1 \
     --all_save_path nanobody_design/designed/workflow_2/round_${ROUND_NUM}/scores/${NANOBODY}_all.csv \
     --top_save_path nanobody_design/designed/workflow_2/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
-    --top_n 10 --starting_sequence
+    --top_n 10
 done
 ```
 
