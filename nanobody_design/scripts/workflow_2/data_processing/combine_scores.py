@@ -68,8 +68,7 @@ def combine_scores(
     # Merge AlphaFold-Multimer scores
     for spike, alphafold_scores in alphafold_spike_to_scores.items():
         alphafold_scores["name"] = [
-            Path(path).name.split("_")[0]
-            for path in alphafold_scores["Subdirectory"]
+            Path(path).name.split("_")[0] for path in alphafold_scores["Subdirectory"]
         ]
         del alphafold_scores["Subdirectory"]
 
@@ -106,11 +105,13 @@ def combine_scores(
     combined_scores["weighted_score"] = (
         0.2 * combined_scores["log_likelihood_ratio"]
         + 0.4
-        * float(
-            np.mean([combined_scores[f"Average_Interface_pLDDT_{spike}"] for spike in spikes])
-        )
+        * combined_scores[
+            [f"Average_Interface_pLDDT_{spike}" for spike in spikes]
+        ].mean(axis=1)
         - 0.4
-        * float(np.mean([combined_scores[f"Average dG_separated_{spike}"] for spike in spikes]))
+        * combined_scores[[f"Average dG_separated_{spike}" for spike in spikes]].mean(
+            axis=1
+        )
     )
 
     # Sort by weighted score

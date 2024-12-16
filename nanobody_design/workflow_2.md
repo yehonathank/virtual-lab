@@ -221,6 +221,21 @@ python nanobody_design/scripts/workflow_2/data_processing/combine_scores.py \
     --spikes KP.3 JN.1 \
     --all_save_path nanobody_design/designed/workflow_2/round_${ROUND_NUM}/scores/${NANOBODY}_all.csv \
     --top_save_path nanobody_design/designed/workflow_2/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
-    --top_n 10
+    --top_n 10 --starting_sequence
+done
+```
+
+### Select nanobodies
+
+After all the rounds have been run, select the best nanobodies.
+
+```bash
+for NANOBODY in Nb21 Ty1
+do
+python nanobody_design/scripts/workflow_2/data_processing/select_nanobodies.py \
+    --score_path_pattern nanobody_design/designed/workflow_2/round_{round_num}/scores/${NANOBODY}_all.csv \
+    --max_round 4 \
+    --save_path nanobody_design/designed/workflow_2/selected/${NANOBODY}.csv \
+    --top_n 24
 done
 ```

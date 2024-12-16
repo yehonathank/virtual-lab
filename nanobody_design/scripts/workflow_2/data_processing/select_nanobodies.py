@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 
@@ -9,6 +10,7 @@ def select_nanobodies(
     score_path_pattern: str,
     max_round: int,
     save_path: Path,
+    spikes: list[str],
     top_n: int = 24,
 ) -> None:
     """Select top-scoring mutated nanobodies for experimental validation.
@@ -16,6 +18,7 @@ def select_nanobodies(
     :param score_path_pattern: The pattern to use to find score files by replacing "{round_num}" with the round number.
     :param max_round: The maximum round number to include.
     :param save_path: Path to save the selected nanobodies.
+    :param spikes: List of spike names.
     :param top_n: Number of nanobodies to select.
     """
     # Load scores from all files
@@ -31,13 +34,13 @@ def select_nanobodies(
 
         # Correct ESM log likelihoods to compare to wildtype instead of previous mutant
         if round_num == 1:
-            scores["log_likelihood_ratio_vs_wildtype"] = scores["log_likelihood_ratio"]
+            scores["log_likelihood_ratio_vs_original"] = scores["log_likelihood_ratio"]
         else:
             previous_mutant_names = [
                 "-".join(name.split("-")[:-1]) for name in scores.index
             ]
 
-            scores["log_likelihood_ratio_vs_wildtype"] = (
+            scores["log_likelihood_ratio_vs_original"] = (
                 scores["log_likelihood_ratio"].to_numpy()
                 + all_scores[-1]
                 .loc[previous_mutant_names, "log_likelihood_ratio"]
@@ -51,15 +54,19 @@ def select_nanobodies(
     all_scores = pd.concat(all_scores)
 
     # Compute corrected weighted score
-    all_scores["weighted_score_vs_wildtype"] = (
-        0.2 * all_scores["log_likelihood_ratio_vs_wildtype"]
-        + 0.5 * all_scores["Interface_pLDDT"]
-        - 0.3 * all_scores["dG_separated"]
+    all_scores["weighted_score_vs_original"] = (
+        0.2 * all_scores["log_likelihood_ratio_vs_original"]
+        + 0.4
+        * all_scores[[f"Average_Interface_pLDDT_{spike}" for spike in spikes]].mean(
+            axis=1
+        )
+        - 0.4
+        * all_scores[[f"Average dG_separated_{spike}" for spike in spikes]].mean(axis=1)
     )
 
     # Sort by weighted score
     all_scores.sort_values(
-        by="weighted_score_vs_wildtype", ascending=False, inplace=True
+        by="weighted_score_vs_original", ascending=False, inplace=True
     )
 
     # Select top nanobodies
