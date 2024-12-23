@@ -25,20 +25,21 @@ PUBMED_TOOL_DESCRIPTION = {
     "type": "function",
     "function": {
         "name": PUBMED_TOOL_NAME,
-        "description": "Get full text biomedical and life sciences articles from PubMed Central. "
-        "Recommended use: either query for 1 specific article by title or query for 3 articles by topic.",
+        "description": "Get abstracts or the full text of biomedical and life sciences articles from PubMed Central.",
         "parameters": {
             "type": "object",
             "properties": {
                 "query": {
                     "type": "string",
-                    "description": "The search query to use to search PubMed Central for scientific articles. "
-                    "More specific search queries are more likely to return relevant articles.",
+                    "description": "The search query to use to search PubMed Central for scientific articles.",
                 },
                 "num_articles": {
                     "type": "integer",
-                    "enum": [1, 2, 3],
                     "description": "The number of articles to return from the search query.",
+                },
+                "abstract_only": {
+                    "type": "boolean",
+                    "description": "Whether to return only the abstract of the articles.",
                 },
             },
             "required": ["query", "num_articles"],

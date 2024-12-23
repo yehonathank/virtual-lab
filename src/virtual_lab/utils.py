@@ -17,33 +17,37 @@ from virtual_lab.constants import (
 from virtual_lab.prompts import format_references
 
 
-def run_pubmed_search(query: str, num_articles: int = 3, verbose: bool = True) -> str:
+def run_pubmed_search(
+    query: str, num_articles: int = 3, abstract_only: bool = False, verbose: bool = True
+) -> str:
     """Runs a PubMed search, returning the full text of the top matching article.
 
     :param query: The query to search PubMed with.
     :param num_articles: The number of articles to search for.
+    :param abstract_only: Whether to return only the abstract.
     :param verbose: Whether to print verbose output.
     :return: The full text of the top matching article.
     """
     # Print search query
     if verbose:
         print(
-            f'Searching PubMed Central for {num_articles} articles with query: "{query}"'
+            f'Searching PubMed Central for {num_articles} articles ({'abstracts' if abstract_only else 'full text'}) with query: "{query}"'
         )
 
     # Perform PubMed Central search for query to get PMC ID
     search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term={urllib.parse.quote_plus(query)}&retmax={2 * num_articles}&retmode=json&sort=relevance"
     response = requests.get(search_url)
     response.raise_for_status()
-    pmc_ids = response.json()["esearchresult"]["idlist"]
+    pmc_ids_found = response.json()["esearchresult"]["idlist"]
 
     # Loop through top articles
-    full_texts = []
-    pmc_ids_used = []
+    texts = []
+    titles = []
+    pmc_ids = []
 
-    for pmc_id in pmc_ids:
+    for pmc_id in pmc_ids_found:
         # Break if reached desired number of articles
-        if len(pmc_ids_used) >= num_articles:
+        if len(pmc_ids) >= num_articles:
             break
 
         # Get full text of article from PMC ID in JSON form
@@ -64,29 +68,52 @@ def run_pubmed_search(query: str, num_articles: int = 3, verbose: bool = True) -
         if len(article) != 1 or len(article[0]["documents"]) != 1:
             raise ValueError("Expected exactly one article")
 
-        # Get full text of article (excluding references)
+        # Get document
         document = article[0]["documents"][0]
 
-        full_text = "\n".join(
+        # Get abstract or full text of article (excluding references)
+        if abstract_only:
+            passages = [
+                passage
+                for passage in document["passages"]
+                if passage["infons"]["section_type"] in ["TITLE", "ABSTRACT"]
+            ]
+        else:
+            passages = [
+                passage
+                for passage in document["passages"]
+                if passage["infons"]["section_type"] != "REF"
+            ]
+
+        # Get text
+        text = f"PMCID = {pmc_id}\n" + "\n".join(
             f"{passage['infons']['section_type']} ({passage['infons']['type']}): {passage['text']}"
-            for passage in document["passages"]
-            if passage["infons"]["section_type"] != "REF"
+            for passage in passages
         )
 
-        full_texts.append(full_text)
-        pmc_ids_used.append(pmc_id)
+        # Get title
+        title = next(
+            passage["text"]
+            for passage in passages
+            if passage["infons"]["section_type"] == "TITLE"
+        )
+
+        texts.append(text)
+        titles.append(title)
+        pmc_ids.append(pmc_id)
 
     # Print articles found
-    article_count = len(full_texts)
+    article_count = len(texts)
 
     if verbose:
         print(
-            f"Found {article_count} articles on PubMed Central: {', '.join(pmc_ids_used)}"
+            f"Found {article_count} articles on PubMed Central:\n"
+            + "\n".join(f"{pmc_id}: {title}" for pmc_id, title in zip(pmc_ids, titles))
         )
 
-    # Combine full texts
+    # Combine texts
     combined_text = format_references(
-        references=tuple(full_texts),
+        references=tuple(texts),
         reference_type="paper",
         intro=f'Here are the top {article_count} articles on PubMed Central for the query "{query}":',
     )
@@ -107,15 +134,13 @@ def run_tools(run: Run) -> list[dict[str, str]]:
     for tool in run.required_action.submit_tool_outputs.tool_calls:
         if tool.function.name == PUBMED_TOOL_NAME:
             # Extract the query from the tool arguments
-            arguments = json.loads(tool.function.arguments)
-            query = arguments["query"]
-            num_articles = arguments["num_articles"]
+            args_dict = json.loads(tool.function.arguments)
 
             # Run the tool and append the output to the list of tool outputs
             tool_outputs.append(
                 {
                     "tool_call_id": tool.id,
-                    "output": run_pubmed_search(query=query, num_articles=num_articles),
+                    "output": run_pubmed_search(**args_dict),
                 }
             )
         else:
