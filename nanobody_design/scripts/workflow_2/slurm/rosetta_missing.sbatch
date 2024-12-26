@@ -40,8 +40,8 @@ SPIKE=$(echo "$EXP" | cut -d'_' -f2)
 FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/${EXP}/median_iplddt.pdb"
 NAME=$(basename "$(dirname "$FILE")")
 EXP_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${NAME}"
-experiment="if [ -d $EXP_DIR ]; then \
-rm -r $EXP_DIR \
+experiment="if [ -d $EXP_DIR ]; then
+rm -r $EXP_DIR
 fi; "
 for ITER in 1 2 3 4 5
 do

@@ -41,9 +41,9 @@ SPIKE=$(echo "$EXP" | cut -d'_' -f2)
 FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}/${EXP}.fasta"
 NAME=$(basename "$FILE" .fasta)
 OUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/$NAME"
-experiments+=("if [ -d $OUT_DIR ]; then \
-rm -r $OUT_DIR \
-fi \
+experiments+=("if [ -d $OUT_DIR ]; then
+rm -r $OUT_DIR
+fi
 colabfold_batch $FILE $OUT_DIR")
 done
 
