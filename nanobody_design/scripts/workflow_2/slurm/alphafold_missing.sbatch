@@ -40,7 +40,11 @@ NANOBODY=$(echo "$EXP" | cut -d'-' -f1)
 SPIKE=$(echo "$EXP" | cut -d'_' -f2)
 FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/sequences/${SPIKE}/${NANOBODY}/${EXP}.fasta"
 NAME=$(basename "$FILE" .fasta)
-experiments+=("colabfold_batch $FILE ${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/$NAME")
+OUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/$NAME"
+if [ -d "$OUT_DIR" ]; then
+rm -r "$OUT_DIR"
+fi
+experiments+=("colabfold_batch $FILE $OUT_DIR")
 done
 
 command=${experiments[SLURM_ARRAY_TASK_ID]}

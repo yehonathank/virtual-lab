@@ -39,10 +39,14 @@ NANOBODY=$(echo "$EXP" | cut -d'-' -f1)
 SPIKE=$(echo "$EXP" | cut -d'_' -f2)
 FILE="${DIR_NAME}/round_${ROUND_NUM}/alphafold/structures/${SPIKE}/${NANOBODY}/${EXP}/median_iplddt.pdb"
 NAME=$(basename "$(dirname "$FILE")")
+EXP_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${NAME}"
+if [ -d "$EXP_DIR" ]; then
+rm -r "$EXP_DIR"
+fi
 experiment=""
 for ITER in 1 2 3 4 5
 do
-OUTPUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${NAME}/${ITER}"
+OUTPUT_DIR="${EXP_DIR}/${ITER}"
 mkdir -p "${OUTPUT_DIR}"
 experiment+="rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
