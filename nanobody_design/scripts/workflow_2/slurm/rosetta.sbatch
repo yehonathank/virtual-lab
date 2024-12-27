@@ -44,8 +44,8 @@ experiment=""
 for ITER in 1 2 3 4 5
 do
 OUTPUT_DIR="${DIR_NAME}/round_${ROUND_NUM}/rosetta/${SPIKE}/${NANOBODY}/${NAME}/${ITER}"
-mkdir -p "${OUTPUT_DIR}"
-experiment+="rosetta_scripts.default.linuxgccrelease \
+experiment+="mkdir -p ${OUTPUT_DIR} \
+rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
     -parser:protocol nanobody_design/scripts/workflow_2/models/rosetta.xml \
     -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc \
