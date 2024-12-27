@@ -46,7 +46,7 @@ fi; "
 for ITER in 1 2 3 4 5
 do
 OUTPUT_DIR="${EXP_DIR}/${ITER}"
-experiment+="mkdir -p ${OUTPUT_DIR} \
+experiment+="mkdir -p $OUTPUT_DIR
 rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
     -parser:protocol nanobody_design/scripts/workflow_2/models/rosetta.xml \

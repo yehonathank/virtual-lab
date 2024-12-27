@@ -37,7 +37,7 @@ PREV_ROUND_NUM=$((ROUND_NUM - 1))
 
 for NANOBODY in Nb21 Ty1
 do
-experiments+=("mkdir -p ${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY} \
+experiments+=("mkdir -p ${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY}
 python nanobody_design/scripts/workflow_2/models/esm.py \
     ${DIR_NAME}/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
     ${DIR_NAME}/round_${ROUND_NUM}/esm/${NANOBODY}")
