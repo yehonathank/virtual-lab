@@ -112,11 +112,14 @@ def run_pubmed_search(
         )
 
     # Combine texts
-    combined_text = format_references(
-        references=tuple(texts),
-        reference_type="paper",
-        intro=f'Here are the top {article_count} articles on PubMed Central for the query "{query}":',
-    )
+    if article_count == 0:
+        combined_text = f'No articles found on PubMed Central for the query "{query}".'
+    else:
+        combined_text = format_references(
+            references=tuple(texts),
+            reference_type="paper",
+            intro=f'Here are the top {article_count} articles on PubMed Central for the query "{query}":',
+        )
 
     return combined_text
 
