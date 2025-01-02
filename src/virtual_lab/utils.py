@@ -17,6 +17,66 @@ from virtual_lab.constants import (
 from virtual_lab.prompts import format_references
 
 
+def get_pubmed_central_article(
+    pmcid: str, abstract_only: bool = False
+) -> tuple[str, list[str]] | None:
+    """Gets the title and content (abstract or full text) of a PubMed Central article given a PMC ID.
+
+    Note: This only returns main text, ignoring tables, figures, and references.
+
+    :param pmcid: The PMC ID of the article.
+    :param abstract_only: Whether to return only the abstract instead of the full text.
+    :return: The title and content (abstract or full text of the article as a list of paragraphs)
+        or None if the article is not found.
+    """
+    # Get article from PMC ID in JSON form
+    text_url = f"https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_JSON/PMC{pmcid}/unicode"
+    response = requests.get(text_url)
+    response.raise_for_status()
+    article = response.json()  # May raise JSONDecodeError
+
+    # Check if only one article is found
+    if len(article) != 1 or len(article[0]["documents"]) != 1:
+        raise ValueError("Expected exactly one article")
+
+    # Get document
+    document = article[0]["documents"][0]
+
+    # Get title
+    title = next(
+        passage["text"]
+        for passage in document["passages"]
+        if passage["infons"]["section_type"] == "TITLE"
+    )
+
+    # Get relevant passages
+    passages = [
+        passage
+        for passage in document["passages"]
+        if passage["infons"]["type"] in {"abstract", "paragraph"}
+    ]
+
+    # Get abstract or full text of article (excluding references)
+    if abstract_only:
+        passages = [
+            passage
+            for passage in passages
+            if passage["infons"]["section_type"] == "ABSTRACT"
+        ]
+    else:
+        passages = [
+            passage
+            for passage in passages
+            if passage["infons"]["section_type"]
+            in ["ABSTRACT", "INTRO", "RESULTS", "DISCUSS", "CONCL", "METHODS"]
+        ]
+
+    # Get content
+    content = [passage["text"] for passage in passages]
+
+    return title, content
+
+
 def run_pubmed_search(
     query: str, num_articles: int = 3, abstract_only: bool = False, verbose: bool = True
 ) -> str:
@@ -24,7 +84,7 @@ def run_pubmed_search(
 
     :param query: The query to search PubMed with.
     :param num_articles: The number of articles to search for.
-    :param abstract_only: Whether to return only the abstract.
+    :param abstract_only: Whether to return only the abstract instead of the full text.
     :param verbose: Whether to print verbose output.
     :return: The full text of the top matching article.
     """
@@ -38,69 +98,33 @@ def run_pubmed_search(
     search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term={urllib.parse.quote_plus(query)}&retmax={2 * num_articles}&retmode=json&sort=relevance"
     response = requests.get(search_url)
     response.raise_for_status()
-    pmc_ids_found = response.json()["esearchresult"]["idlist"]
+    pmcids_found = response.json()["esearchresult"]["idlist"]
 
     # Loop through top articles
     texts = []
     titles = []
-    pmc_ids = []
+    pmcids = []
 
-    for pmc_id in pmc_ids_found:
+    for pmcid in pmcids_found:
         # Break if reached desired number of articles
-        if len(pmc_ids) >= num_articles:
+        if len(pmcids) >= num_articles:
             break
 
-        # Get full text of article from PMC ID in JSON form
-        text_url = f"https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_JSON/PMC{pmc_id}/unicode"
-        response = requests.get(text_url)
-        response.raise_for_status()
-
         try:
-            article = response.json()
+            title, content = get_pubmed_central_article(
+                pmcid=pmcid,
+                abstract_only=abstract_only,
+            )
         except json.JSONDecodeError:
             if verbose:
                 print(
-                    f'Warning: Error decoding JSON for PMC ID {pmc_id}, "{response.text}"'
+                    f'Warning: Error decoding JSON for PMC ID {pmcid}, "{response.text}"'
                 )
             continue
 
-        # Check if article is valid
-        if len(article) != 1 or len(article[0]["documents"]) != 1:
-            raise ValueError("Expected exactly one article")
-
-        # Get document
-        document = article[0]["documents"][0]
-
-        # Get abstract or full text of article (excluding references)
-        if abstract_only:
-            passages = [
-                passage
-                for passage in document["passages"]
-                if passage["infons"]["section_type"] in ["TITLE", "ABSTRACT"]
-            ]
-        else:
-            passages = [
-                passage
-                for passage in document["passages"]
-                if passage["infons"]["section_type"] != "REF"
-            ]
-
-        # Get text
-        text = f"PMCID = {pmc_id}\n" + "\n".join(
-            f"{passage['infons']['section_type']} ({passage['infons']['type']}): {passage['text']}"
-            for passage in passages
-        )
-
-        # Get title
-        title = next(
-            passage["text"]
-            for passage in passages
-            if passage["infons"]["section_type"] == "TITLE"
-        )
-
-        texts.append(text)
+        texts.append(f"PMCID = {pmcid}\n{'\n'.join(content)}")
         titles.append(title)
-        pmc_ids.append(pmc_id)
+        pmcids.append(pmcid)
 
     # Print articles found
     article_count = len(texts)
@@ -108,7 +132,7 @@ def run_pubmed_search(
     if verbose:
         print(
             f"Found {article_count} articles on PubMed Central:\n"
-            + "\n".join(f"{pmc_id}: {title}" for pmc_id, title in zip(pmc_ids, titles))
+            + "\n".join(f"{pmcid}: {title}" for pmcid, title in zip(pmcids, titles))
         )
 
     # Combine texts
