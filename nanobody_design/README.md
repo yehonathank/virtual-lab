@@ -25,7 +25,7 @@ colabfold==1.5.5
 
 ## LLM project design
 
-Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobody design workflow. Each meeting with the LLM agents should only take a few minutes. The outputs of this notebook are the `nanobody_design/discussions` directory. The relevant ESM, AlphaFold-Multimer, and Rosetta scripts have been copied from those discussion to the `nanobody_design/scripts` folder. Additionally, the sequences for the relevant nanobodies selected by the LLM agents, along with SARS-CoV-2 spike RBD sequences, are in the `nanobody_design/sequences` directory.
+Run the `run_nanobody_design_1.ipynb` and `run_nanobody_design_2.ipynb` notebooks to have LLM agents create a nanobody design workflow. Each meeting with the LLM agents should only take a few minutes. The outputs of these notebooks are in the `nanobody_design/discussions` directory. The relevant ESM, AlphaFold-Multimer, and Rosetta scripts have been copied from those discussions to the `nanobody_design/scripts` folder. Additionally, the sequences for the relevant nanobodies selected by the LLM agents, along with SARS-CoV-2 spike RBD sequences, are in the `nanobody_design/sequences` directory.
 
 
 ## Nanobody design - workflow 1
@@ -33,6 +33,7 @@ Run the `run_nanobody_design.ipynb` notebook to have LLM agents create a nanobod
 Starting with four nanobodies designed to bind to the original Wuhan strain of SARS-CoV-2---Ty1, H11-D4, Nb21, and VHH-72---improve them by iteratively adding mutations and scoring them using ESM, AlphaFold-Multimer, and Rosetta for four rounds.
 
 See commands in `nanobody_design/workflow_1.md`.
+
 
 ## Nanobody design - workflow 2
 
