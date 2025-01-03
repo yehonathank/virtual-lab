@@ -15,8 +15,7 @@ finetuning_base_model = "gpt-4o-mini-2024-07-18"
 
 # Discussion paths
 discussions_dir = Path("discussions")
-phases = [
-    # Workflow 1
+workflow_1_phases = [
     "team_selection",
     "project_specification",
     "tools_selection",
@@ -25,17 +24,17 @@ phases = [
     "alphafold",
     "rosetta",
     "workflow_design",
-    # Fine-tuning
+]
+finetuning_phases = [
     "finetuning",
-    # Workflow 2
+]
+workflow_2_phases = [
     "nanobody_improvement",
     "updated_workflow",
     "workflow_questions",
 ]
-discussions_phase_to_dir = {
-    phase: discussions_dir / phase
-    for phase in phases
-}
+phases = workflow_1_phases + finetuning_phases + workflow_2_phases
+discussions_phase_to_dir = {phase: discussions_dir / phase for phase in phases}
 
 # Prompts
 background_prompt = "You are working on a research project to use machine learning to develop antibodies or nanobodies for the newest variant of the SARS-CoV-2 spike protein that also, ideally, have activity against other circulating minor variants and past variants."
