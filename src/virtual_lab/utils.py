@@ -19,7 +19,7 @@ from virtual_lab.prompts import format_references
 
 def get_pubmed_central_article(
     pmcid: str, abstract_only: bool = False
-) -> tuple[str, list[str]] | None:
+) -> tuple[str | None, list[str] | None]:
     """Gets the title and content (abstract or full text) of a PubMed Central article given a PMC ID.
 
     Note: This only returns main text, ignoring tables, figures, and references.
@@ -33,11 +33,12 @@ def get_pubmed_central_article(
     text_url = f"https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_JSON/PMC{pmcid}/unicode"
     response = requests.get(text_url)
     response.raise_for_status()
-    article = response.json()  # May raise JSONDecodeError
 
-    # Check if only one article is found
-    if len(article) != 1 or len(article[0]["documents"]) != 1:
-        raise ValueError("Expected exactly one article")
+    # Try to parse JSON
+    try:
+        article = response.json()
+    except json.JSONDecodeError:
+        return None, None
 
     # Get document
     document = article[0]["documents"][0]
@@ -61,7 +62,7 @@ def get_pubmed_central_article(
         passages = [
             passage
             for passage in passages
-            if passage["infons"]["section_type"] == "ABSTRACT"
+            if passage["infons"]["section_type"] in ["ABSTRACT"]
         ]
     else:
         passages = [
@@ -78,21 +79,19 @@ def get_pubmed_central_article(
 
 
 def run_pubmed_search(
-    query: str, num_articles: int = 3, abstract_only: bool = False, verbose: bool = True
+    query: str, num_articles: int = 3, abstract_only: bool = False
 ) -> str:
     """Runs a PubMed search, returning the full text of the top matching article.
 
     :param query: The query to search PubMed with.
     :param num_articles: The number of articles to search for.
     :param abstract_only: Whether to return only the abstract instead of the full text.
-    :param verbose: Whether to print verbose output.
     :return: The full text of the top matching article.
     """
     # Print search query
-    if verbose:
-        print(
-            f'Searching PubMed Central for {num_articles} articles ({'abstracts' if abstract_only else 'full text'}) with query: "{query}"'
-        )
+    print(
+        f'Searching PubMed Central for {num_articles} articles ({'abstracts' if abstract_only else 'full text'}) with query: "{query}"'
+    )
 
     # Perform PubMed Central search for query to get PMC ID
     search_url = f"https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term={urllib.parse.quote_plus(query)}&retmax={2 * num_articles}&retmode=json&sort=relevance"
@@ -110,30 +109,22 @@ def run_pubmed_search(
         if len(pmcids) >= num_articles:
             break
 
-        try:
-            title, content = get_pubmed_central_article(
-                pmcid=pmcid,
-                abstract_only=abstract_only,
-            )
-        except json.JSONDecodeError:
-            if verbose:
-                print(
-                    f'Warning: Error decoding JSON for PMC ID {pmcid}, "{response.text}"'
-                )
+        title, content = get_pubmed_central_article(
+            pmcid=pmcid,
+            abstract_only=abstract_only,
+        )
+
+        if title is None:
             continue
 
-        texts.append(f"PMCID = {pmcid}\n{'\n'.join(content)}")
+        texts.append(f"PMCID = {pmcid}\n\nTitle = {title}\n\n{'\n\n'.join(content)}")
         titles.append(title)
         pmcids.append(pmcid)
 
     # Print articles found
     article_count = len(texts)
 
-    if verbose:
-        print(
-            f"Found {article_count} articles on PubMed Central:\n"
-            + "\n".join(f"{pmcid}: {title}" for pmcid, title in zip(pmcids, titles))
-        )
+    print(f"Found {article_count:,} articles on PubMed Central")
 
     # Combine texts
     if article_count == 0:

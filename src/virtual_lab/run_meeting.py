@@ -226,6 +226,16 @@ def run_meeting(
                     thread_id=thread.id, run_id=run.id, tool_outputs=tool_outputs
                 )
 
+                # Add tool outputs to the thread so it's visible for later rounds
+                client.beta.threads.messages.create(
+                    thread_id=thread.id,
+                    role="user",
+                    content="Tool Output:\n\n"
+                    + "\n\n".join(
+                        tool_output["output"] for tool_output in tool_outputs
+                    ),
+                )
+
             # Check run status
             if run.status != "completed":
                 raise ValueError(f"Run failed: {run.status}")
