@@ -230,12 +230,33 @@ done
 After all the rounds have been run, select the best nanobodies.
 
 ```bash
+python nanobody_design/scripts/workflow_2/data_processing/select_nanobodies.py \
+    --score_path_pattern nanobody_design/designed/workflow_2/round_{round_num}/scores/Nb21_all.csv \
+    --max_round 4 \
+    --save_path nanobody_design/designed/workflow_2/selected/Nb21.csv \
+    --spikes KP.3 JN.1 \
+    --top_n 60
+
+python nanobody_design/scripts/workflow_2/data_processing/select_nanobodies.py \
+    --score_path_pattern nanobody_design/designed/workflow_2/round_{round_num}/scores/Ty1_all.csv \
+    --max_round 4 \
+    --save_path nanobody_design/designed/workflow_2/selected/Ty1.csv \
+    --spikes KP.3 JN.1 \
+    --top_n 36
+```
+
+### Prepare nanbodies for synthesis
+
+Prepare the nanobodies for synthesis by adding the N-terminal pelB leader sequence (periplasm targeting) `MKYLLPTAAAGLLLLAAQPAMA` and the C-terminal His-tag with stop codon `HHHHHH*`.
+
+```bash
+mkdir -p nanobody_design/designed/workflow_2/combined
+
 for NANOBODY in Nb21 Ty1
 do
-python nanobody_design/scripts/workflow_2/data_processing/select_nanobodies.py \
-    --score_path_pattern nanobody_design/designed/workflow_2/round_{round_num}/scores/${NANOBODY}_all.csv \
-    --max_round 4 \
-    --save_path nanobody_design/designed/workflow_2/selected/${NANOBODY}.csv \
-    --top_n 24
+python -c "import pandas as pd
+selected = pd.read_csv('nanobody_design/designed/workflow_2/selected/${NANOBODY}.csv')
+selected['sequence_with_tags'] = [f'MKYLLPTAAAGLLLLAAQPAMA{sequence}HHHHHH*' for sequence in selected['sequence']]
+selected.to_csv('nanobody_design/designed/workflow_2/combined/${NANOBODY}.csv', index=False)"
 done
 ```
