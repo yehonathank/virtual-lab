@@ -247,7 +247,7 @@ python nanobody_design/scripts/workflow_2/data_processing/select_nanobodies.py \
 
 ### Prepare nanbodies for synthesis
 
-Prepare the nanobodies for synthesis by adding the N-terminal pelB leader sequence (periplasm targeting) `MKYLLPTAAAGLLLLAAQPAMA` and the C-terminal His-tag with stop codon `HHHHHH*`.
+Prepare the nanobodies for synthesis by adding the N-terminal pelB leader sequence (periplasm targeting) `KYLLPTAAAGLLLLAAQPAMA`.
 
 ```bash
 mkdir -p nanobody_design/designed/workflow_2/combined
@@ -256,7 +256,7 @@ for NANOBODY in Nb21 Ty1
 do
 python -c "import pandas as pd
 selected = pd.read_csv('nanobody_design/designed/workflow_2/selected/${NANOBODY}.csv')
-selected['sequence_with_tags'] = [f'MKYLLPTAAAGLLLLAAQPAMA{sequence}HHHHHH*' for sequence in selected['sequence']]
+selected['sequence_with_tags'] = [f'KYLLPTAAAGLLLLAAQPAMA{sequence}' for sequence in selected['sequence']]
 selected.to_csv('nanobody_design/designed/workflow_2/combined/${NANOBODY}.csv', index=False)"
 done
 ```
