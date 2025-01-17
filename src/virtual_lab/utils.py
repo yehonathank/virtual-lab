@@ -6,7 +6,7 @@ from pathlib import Path
 
 import requests
 import tiktoken
-from openai import OpenAI
+from openai import AsyncOpenAI, OpenAI
 from openai.types.beta.threads.run import Run
 
 from virtual_lab.constants import (
@@ -191,11 +191,56 @@ def get_messages(client: OpenAI, thread_id: str) -> list[dict]:
         elif "after" in params:
             del params["after"]
 
-        # Get page of messages
-        new_messages = client.beta.threads.messages.list(**params)
+        # Get messages
+        new_messages = [
+            message.to_dict() for message in client.beta.threads.messages.list(**params)
+        ]
 
-        # Convert messages to dictionary
-        new_messages: list[dict] = new_messages.to_dict()["data"]
+        # Append new messages
+        messages += new_messages
+
+        # Break if no more messages
+        if len(new_messages) < params["limit"]:
+            break
+
+        # Get last message
+        last_message = messages[-1]
+
+    # Verify all message content is length 1
+    assert all(len(message["content"]) == 1 for message in messages)
+
+    return messages
+
+
+async def async_get_messages(client: AsyncOpenAI, thread_id: str) -> list[dict]:
+    """Gets messages from a thread.
+
+    :param client: The async OpenAI client.
+    :param thread_id: The ID of the thread to get messages from.
+    :return: A list of messages.
+    """
+    # Set up
+    messages = []
+    last_message = None
+    params = {
+        "thread_id": thread_id,
+        "limit": 100,
+        "order": "asc",
+    }
+
+    # Get all messages from the thread page by page
+    while True:
+        # Set up params
+        if last_message is not None:
+            params["after"] = last_message["id"]
+        elif "after" in params:
+            del params["after"]
+
+        # Get messages
+        new_messages = [
+            message.to_dict()
+            async for message in client.beta.threads.messages.list(**params)
+        ]
 
         # Append new messages
         messages += new_messages
