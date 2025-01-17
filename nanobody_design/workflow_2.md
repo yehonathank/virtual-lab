@@ -252,11 +252,15 @@ Prepare the nanobodies for synthesis by adding the N-terminal pelB leader sequen
 ```bash
 mkdir -p nanobody_design/designed/workflow_2/combined
 
-for NANOBODY in Nb21 Ty1
-do
 python -c "import pandas as pd
-selected = pd.read_csv('nanobody_design/designed/workflow_2/selected/${NANOBODY}.csv')
+selected = pd.read_csv('nanobody_design/designed/workflow_2/selected/Nb21.csv')
+selected['name'] = selected['name'].str.replace('Nb21-I77V-L59E-Q87A-R37Q', 'Nb21.2')
 selected['sequence_with_tags'] = [f'KYLLPTAAAGLLLLAAQPAMA{sequence}' for sequence in selected['sequence']]
-selected.to_csv('nanobody_design/designed/workflow_2/combined/${NANOBODY}.csv', index=False)"
-done
+selected.to_csv('nanobody_design/designed/workflow_2/combined/Nb21.csv', index=False)"
+
+python -c "import pandas as pd
+selected = pd.read_csv('nanobody_design/designed/workflow_2/selected/Ty1.csv')
+selected['name'] = selected['name'].str.replace('Ty1-V32F-G59D-N54S-F32S', 'Ty.2')
+selected['sequence_with_tags'] = [f'KYLLPTAAAGLLLLAAQPAMA{sequence}' for sequence in selected['sequence']]
+selected.to_csv('nanobody_design/designed/workflow_2/combined/Ty1.csv', index=False)"
 ```
