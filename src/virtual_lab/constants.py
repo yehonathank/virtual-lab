@@ -1,21 +1,38 @@
 """Holds constants."""
 
-# Prices in USD as of December 2, 2024 (https://openai.com/api/pricing/)
+# Prices in USD as of January 18, 2025 (https://openai.com/api/pricing/)
 MODEL_TO_INPUT_PRICE_PER_TOKEN = {
     "gpt-3.5-turbo-0125": 0.5 / 10**6,
-    "gpt-4o": 2.5 / 10**6,
     "gpt-4o-2024-08-06": 2.5 / 10**6,
     "gpt-4o-2024-05-13": 5 / 10**6,
+    "gpt-4o-mini-2024-07-18": 0.15 / 10**6,
     "o1-mini-2024-09-12": 3 / 10**6,
 }
 
 MODEL_TO_OUTPUT_PRICE_PER_TOKEN = {
     "gpt-3.5-turbo-0125": 1.5 / 10**6,
-    "gpt-4o": 10 / 10**6,
     "gpt-4o-2024-08-06": 10 / 10**6,
     "gpt-4o-2024-05-13": 15 / 10**6,
+    "gpt-4o-mini-2024-07-18": 0.6 / 10**6,
     "o1-mini-2024-09-12": 12 / 10**6,
 }
+
+FINETUNING_MODEL_TO_INPUT_PRICE_PER_TOKEN = {
+    "gpt-4o-2024-08-06": 3.75 / 10**6,
+    "gpt-4o-mini-2024-07-18": 0.3 / 10**6,
+}
+
+FINETUNING_MODEL_TO_OUTPUT_PRICE_PER_TOKEN = {
+    "gpt-4o-2024-08-06": 15 / 10**6,
+    "gpt-4o-mini-2024-07-18": 1.2 / 10**6,
+}
+
+FINETUNING_MODEL_TO_TRAINING_PRICE_PER_TOKEN = {
+    "gpt-4o-2024-08-06": 25 / 10**6,
+    "gpt-4o-mini-2024-07-18": 3 / 10**6,
+}
+
+DEFAULT_FINETUNING_EPOCHS = 4
 
 CONSISTENT_TEMPERATURE = 0.2
 CREATIVE_TEMPERATURE = 0.8
