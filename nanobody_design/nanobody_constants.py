@@ -57,6 +57,7 @@ principal_investigator = Agent(
     expertise="applying artificial intelligence to biomedical research",
     goal="perform research in your area of expertise that maximizes the scientific impact of the work",
     role="lead a team of experts to solve an important problem in artificial intelligence for biomedicine, make key decisions about the project direction based on team member input, and manage the project timeline and resources",
+    model=model,
 )
 
 immunologist = Agent(
@@ -64,6 +65,7 @@ immunologist = Agent(
     expertise="antibody engineering and immune response characterization",
     goal="guide the development of antibodies/nanobodies that elicit a strong and broad immune response",
     role="advise on immunogenicity, cross-reactivity with other variants, and potential for therapeutic application, ensuring the designs are viable for experimental validation and downstream applications",
+    model=model,
 )
 
 machine_learning_specialist = Agent(
@@ -71,6 +73,7 @@ machine_learning_specialist = Agent(
     expertise="developing algorithms for protein-ligand interactions and optimization",
     goal="create and apply machine learning models to predict antibody efficacy and optimize binding affinity across SARS-CoV-2 variants",
     role="lead the development of AI tools for predicting interactions and refining antibody designs based on computational results",
+    model=model,
 )
 
 computational_biologist = Agent(
@@ -78,6 +81,7 @@ computational_biologist = Agent(
     expertise="protein structure prediction and molecular dynamics simulations",
     goal="develop predictive models to identify potential antibody/nanobody candidates and simulate interactions with the SARS-CoV-2 spike protein",
     role="provide insights into structural dynamics, guide virtual screening efforts, and validate computational predictions with simulations",
+    model=model,
 )
 
 scientific_critic = SCIENTIFIC_CRITIC

@@ -1,5 +1,7 @@
 """Holds constants."""
 
+DEFAULT_MODEL = "gpt-4o-2024-08-06"
+
 # Prices in USD as of January 18, 2025 (https://openai.com/api/pricing/)
 MODEL_TO_INPUT_PRICE_PER_TOKEN = {
     "gpt-3.5-turbo-0125": 0.5 / 10**6,

@@ -4,7 +4,7 @@
 class Agent:
     """An LLM agent."""
 
-    def __init__(self, title: str, expertise: str, goal: str, role: str) -> None:
+    def __init__(self, title: str, expertise: str, goal: str, role: str, model: str) -> None:
         """Initializes the agent.
 
         :param title: The title of the agent.
@@ -14,9 +14,9 @@ class Agent:
         """
         self.title = title
         self.expertise = expertise
-        self.role = role
         self.goal = goal
         self.role = role
+        self.model = model
 
     @property
     def prompt(self) -> str:
@@ -45,7 +45,13 @@ class Agent:
         if not isinstance(other, Agent):
             return False
 
-        return self.title == other.title
+        return (
+            self.title == other.title
+            and self.expertise == other.expertise
+            and self.goal == other.goal
+            and self.role == other.role
+            and self.model == other.model
+        )
 
     def __str__(self) -> str:
         """Returns the string representation of the agent (i.e., the agent's title)."""

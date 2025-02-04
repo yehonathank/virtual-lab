@@ -46,7 +46,6 @@ def run_meeting(
     contexts: tuple[str, ...] = (),
     num_rounds: int = 0,
     temperature: float = CONSISTENT_TEMPERATURE,
-    model: str = "gpt-4o-2024-08-06",
     pubmed_search: bool = False,
     return_summary: bool = False,
 ) -> str:
@@ -65,7 +64,6 @@ def run_meeting(
     :param contexts: The contexts for the meeting.
     :param num_rounds: The number of rounds of discussion.
     :param temperature: The sampling temperature.
-    :param model: The OpenAI model to use.
     :param pubmed_search: Whether to include a PubMed search tool.
     :param return_summary: Whether to return the summary of the meeting.
     :return: The summary of the meeting (i.e., the last message) if return_summary is True, else None.
@@ -110,7 +108,7 @@ def run_meeting(
         agent: client.beta.assistants.create(
             name=agent.title,
             instructions=agent.prompt,
-            model=model,
+            model=agent.model,
             **assistant_params,
         )
         for agent in team
@@ -207,7 +205,7 @@ def run_meeting(
             run = client.beta.threads.runs.create_and_poll(
                 thread_id=thread.id,
                 assistant_id=agent_to_assistant[agent].id,
-                model=model,
+                model=agent.model,
                 temperature=temperature,
             )
 
@@ -259,9 +257,10 @@ def run_meeting(
     token_counts["tool"] = tool_token_count
 
     # Print cost and time
+    # TODO: handle different models for different agents
     print_cost_and_time(
         token_counts=token_counts,
-        model=model,
+        model=team_lead.model if meeting_type == "team" else team_member.model,
         elapsed_time=time.time() - start_time,
     )
 
