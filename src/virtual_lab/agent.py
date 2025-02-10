@@ -56,3 +56,7 @@ class Agent:
     def __str__(self) -> str:
         """Returns the string representation of the agent (i.e., the agent's title)."""
         return self.title
+
+    def __repr__(self) -> str:
+        """Returns the string representation of the agent (i.e., the agent's title)."""
+        return self.title
