@@ -11,6 +11,7 @@ num_rounds = 3
 
 # Models
 model = "gpt-4o-2024-08-06"
+model_mini = "gpt-4o-mini-2024-07-18"
 
 # Discussion paths
 discussions_dir = Path("discussions")
@@ -51,6 +52,17 @@ Ty1: The wild-type only binds to the Wuhan RBD. Many mutant nanobodies do not sh
 VHH-72: The wild-type only binds to the Wuhan RBD. Most mutants show binding to the Wuhan RBD as well, including several with a higher binding level than the wild-type. Two mutant nanobodies bind non-specifically to BSA and several RBD strains. No mutant nanobody shows specific binding to any strain other than the Wuhan RBD."""
 
 # Set up agents
+
+# Generic agent
+generic_agent = Agent(
+    title="Assistant",
+    expertise="helping people with their problems",
+    goal="help people with their problems",
+    role="help people with their problems",
+    model=model,
+)
+
+# Team lead
 principal_investigator = Agent(
     title="Principal Investigator",
     expertise="applying artificial intelligence to biomedical research",
@@ -59,6 +71,10 @@ principal_investigator = Agent(
     model=model,
 )
 
+# Scientific critic
+scientific_critic = SCIENTIFIC_CRITIC
+
+# Specialized science agents
 immunologist = Agent(
     title="Immunologist",
     expertise="antibody engineering and immune response characterization",
@@ -83,11 +99,35 @@ computational_biologist = Agent(
     model=model,
 )
 
-scientific_critic = SCIENTIFIC_CRITIC
-
+# Team members
 team_members = (
     immunologist,
     machine_learning_specialist,
     computational_biologist,
     scientific_critic,
+)
+
+# Finetuned science agents
+immunologist_ft = Agent(
+    title=immunologist.title,
+    expertise=immunologist.expertise,
+    goal=immunologist.goal,
+    role=immunologist.role,
+    model="ft:gpt-4o-2024-08-06:personal:immunologist:AzXfaYoL",
+)
+
+machine_learning_specialist_ft = Agent(
+    title=machine_learning_specialist.title,
+    expertise=machine_learning_specialist.expertise,
+    goal=machine_learning_specialist.goal,
+    role=machine_learning_specialist.role,
+    model="ft:gpt-4o-2024-08-06:personal:machine-learning-specialist:AzXIKoIS",
+)
+
+computational_biologist_ft = Agent(
+    title=computational_biologist.title,
+    expertise=computational_biologist.expertise,
+    goal=computational_biologist.goal,
+    role=computational_biologist.role,
+    model="ft:gpt-4o-2024-08-06:personal:computational-biologist:AzXNlGca",
 )
