@@ -62,6 +62,27 @@ generic_agent = Agent(
     model=model,
 )
 
+# Generic team lead
+generic_team_lead = Agent(
+    title=f"{generic_agent.title} Lead",
+    expertise=generic_agent.expertise,
+    goal=generic_agent.goal,
+    role=generic_agent.role,
+    model=model,
+)
+
+# Generic team
+generic_team = [
+    Agent(
+        title=f"{generic_agent.title} {i}",
+        expertise=generic_agent.expertise,
+        goal=generic_agent.goal,
+        role=generic_agent.role,
+        model=model,
+    )
+    for i in range(1, 5)
+]
+
 # Team lead
 principal_investigator = Agent(
     title="Principal Investigator",
@@ -105,29 +126,4 @@ team_members = (
     machine_learning_specialist,
     computational_biologist,
     scientific_critic,
-)
-
-# Finetuned science agents
-immunologist_ft = Agent(
-    title=immunologist.title,
-    expertise=immunologist.expertise,
-    goal=immunologist.goal,
-    role=immunologist.role,
-    model="ft:gpt-4o-2024-08-06:personal:immunologist:AzXfaYoL",
-)
-
-machine_learning_specialist_ft = Agent(
-    title=machine_learning_specialist.title,
-    expertise=machine_learning_specialist.expertise,
-    goal=machine_learning_specialist.goal,
-    role=machine_learning_specialist.role,
-    model="ft:gpt-4o-2024-08-06:personal:machine-learning-specialist:AzXIKoIS",
-)
-
-computational_biologist_ft = Agent(
-    title=computational_biologist.title,
-    expertise=computational_biologist.expertise,
-    goal=computational_biologist.goal,
-    role=computational_biologist.role,
-    model="ft:gpt-4o-2024-08-06:personal:computational-biologist:AzXNlGca",
 )
