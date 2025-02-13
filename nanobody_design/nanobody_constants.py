@@ -33,7 +33,8 @@ workflow_2_phases = [
     "updated_workflow",
     "workflow_questions",
 ]
-phases = workflow_1_phases + finetuning_phases + workflow_2_phases
+review_phases = ["unpaired_cysteine"]
+phases = workflow_1_phases + finetuning_phases + workflow_2_phases + review_phases
 discussions_phase_to_dir = {phase: discussions_dir / phase for phase in phases}
 
 # Prompts
