@@ -32,6 +32,8 @@ workflow_2_phases = [
     "nanobody_improvement",
     "updated_workflow",
     "workflow_questions",
+    "alphafold_modified",
+    "rosetta_modified",
 ]
 review_phases = ["unpaired_cysteine"]
 phases = workflow_1_phases + finetuning_phases + workflow_2_phases + review_phases
