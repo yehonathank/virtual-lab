@@ -15,7 +15,7 @@ model_mini = "gpt-4o-mini-2024-07-18"
 
 # Discussion paths
 discussions_dir = Path("discussions")
-workflow_1_phases = [
+workflow_phases = [
     "team_selection",
     "project_specification",
     "tools_selection",
@@ -28,15 +28,8 @@ workflow_1_phases = [
 finetuning_phases = [
     "finetuning",
 ]
-workflow_2_phases = [
-    "nanobody_improvement",
-    "updated_workflow",
-    "workflow_questions",
-    "alphafold_modified",
-    "rosetta_modified",
-]
 review_phases = ["unpaired_cysteine"]
-phases = workflow_1_phases + finetuning_phases + workflow_2_phases + review_phases
+phases = workflow_phases + finetuning_phases + review_phases
 discussions_phase_to_dir = {phase: discussions_dir / phase for phase in phases}
 
 # Prompts

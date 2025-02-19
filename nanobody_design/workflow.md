@@ -1,4 +1,4 @@
-## Nanobody design - workflow 1
+## Nanobody design
 
 Starting with four nanobodies designed to bind to the original Wuhan strain of SARS-CoV-2---Ty1, H11-D4, Nb21, and VHH-72---improve them by iteratively adding mutations and scoring them using ESM, AlphaFold-Multimer, and Rosetta for four rounds.
 
@@ -13,7 +13,7 @@ python -c "from pathlib import Path; import pandas as pd
 data = pd.read_csv('nanobody_design/sequences/nanobodies.csv')
 data = data[data['name'] == '${NANOBODY}']
 data['log_likelihood_ratio'] = 0.0
-save_dir = Path('nanobody_design/designed/workflow_1/round_0/esm/${NANOBODY}')
+save_dir = Path('nanobody_design/designed/round_0/esm/${NANOBODY}')
 save_dir.mkdir(parents=True, exist_ok=True)
 data.to_csv(save_dir / '${NANOBODY}.csv', index=False)"
 done
@@ -27,10 +27,10 @@ PREV_ROUND_NUM=$((ROUND_NUM - 1))
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-mkdir -p nanobody_design/designed/workflow_1/round_${ROUND_NUM}/esm/${NANOBODY}
-python nanobody_design/scripts/workflow_1/models/improved/esm.py \
-    nanobody_design/designed/workflow_1/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
-    nanobody_design/designed/workflow_1/round_${ROUND_NUM}/esm/${NANOBODY}
+mkdir -p nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}
+python nanobody_design/scripts/models/improved/esm.py \
+    nanobody_design/designed/round_${PREV_ROUND_NUM}/scores/${NANOBODY}.csv \
+    nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}
 done
 ```
 
@@ -42,8 +42,8 @@ ROUND_NUM=1
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python -c "from pathlib import Path;import pandas as pd
-data = pd.concat([pd.read_csv(path).assign(name=path.stem) for path in Path('nanobody_design/designed/workflow_1/round_${ROUND_NUM}/esm/${NANOBODY}').glob('*.csv')])
-data.to_csv('nanobody_design/designed/workflow_1/round_${ROUND_NUM}/esm/${NANOBODY}.csv', index=False)"
+data = pd.concat([pd.read_csv(path).assign(name=path.stem) for path in Path('nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}').glob('*.csv')])
+data.to_csv('nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv', index=False)"
 done
 ```
 
@@ -57,11 +57,11 @@ ROUND_NUM=1
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-python nanobody_design/scripts/workflow_1/data_processing/esm_to_alphafold.py \
+python nanobody_design/scripts/data_processing/esm_to_alphafold.py \
     --spike_sequences_path nanobody_design/sequences/spike.csv \
     --spike_name KP.3 \
-    --nanobody_sequences_dir nanobody_design/designed/workflow_1/round_${ROUND_NUM}/esm/${NANOBODY} \
-    --save_dir nanobody_design/designed/workflow_1/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY} \
+    --nanobody_sequences_dir nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY} \
+    --save_dir nanobody_design/designed/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY} \
     --top_n 20
 done
 ```
@@ -76,10 +76,10 @@ ROUND_NUM=1
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-for FILE in nanobody_design/designed/workflow_1/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY}/*.fasta
+for FILE in nanobody_design/designed/round_${ROUND_NUM}/alphafold/sequences/${NANOBODY}/*.fasta
 do
 NAME=$(basename "$FILE" .fasta)
-colabfold_batch $FILE nanobody_design/designed/workflow_1/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/$NAME
+colabfold_batch $FILE nanobody_design/designed/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/$NAME
 done
 done
 ```
@@ -91,11 +91,11 @@ ROUND_NUM=1
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-python nanobody_design/scripts/workflow_1/models/improved/alphafold.py \
-    nanobody_design/designed/workflow_1/round_${ROUND_NUM}/alphafold/structures/${NANOBODY} \
+python nanobody_design/scripts/models/improved/alphafold.py \
+    nanobody_design/designed/round_${ROUND_NUM}/alphafold/structures/${NANOBODY} \
     A \
     B \
-    nanobody_design/designed/workflow_1/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv
+    nanobody_design/designed/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv
 done
 ```
 
@@ -109,15 +109,15 @@ ROUND_NUM=1
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-OUTPUT_DIR="nanobody_design/designed/workflow_1/round_${ROUND_NUM}/rosetta/${NANOBODY}"
+OUTPUT_DIR="nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY}"
 mkdir -p "${OUTPUT_DIR}"
 
-for FILE in nanobody_design/designed/workflow_1/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/*/*unrelaxed_rank_001*.pdb
+for FILE in nanobody_design/designed/round_${ROUND_NUM}/alphafold/structures/${NANOBODY}/*/*unrelaxed_rank_001*.pdb
 do
 NAME=$(basename "$(dirname "$FILE")")
 rosetta_scripts.default.linuxgccrelease \
     -s $FILE \
-    -parser:protocol nanobody_design/scripts/workflow_1/models/improved/rosetta.xml \
+    -parser:protocol nanobody_design/scripts/models/improved/rosetta.xml \
     -out:file:scorefile ${OUTPUT_DIR}/${NAME}.sc \
     -out:path:pdb ${OUTPUT_DIR}
 done
@@ -131,9 +131,9 @@ ROUND_NUM=1
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-python nanobody_design/scripts/workflow_1/models/improved/rosetta.py \
-    nanobody_design/designed/workflow_1/round_${ROUND_NUM}/rosetta/${NANOBODY} \
-    nanobody_design/designed/workflow_1/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv
+python nanobody_design/scripts/models/improved/rosetta.py \
+    nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY} \
+    nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv
 done
 ```
 
@@ -147,12 +147,12 @@ ROUND_NUM=1
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-python nanobody_design/scripts/workflow_1/data_processing/combine_scores.py \
-    --esm_scores_path nanobody_design/designed/workflow_1/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
-    --alphafold_scores_path nanobody_design/designed/workflow_1/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv \
-    --rosetta_scores_path nanobody_design/designed/workflow_1/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv \
-    --all_save_path nanobody_design/designed/workflow_1/round_${ROUND_NUM}/scores/${NANOBODY}_all.csv \
-    --top_save_path nanobody_design/designed/workflow_1/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
+python nanobody_design/scripts/data_processing/combine_scores.py \
+    --esm_scores_path nanobody_design/designed/round_${ROUND_NUM}/esm/${NANOBODY}.csv \
+    --alphafold_scores_path nanobody_design/designed/round_${ROUND_NUM}/alphafold/${NANOBODY}.csv \
+    --rosetta_scores_path nanobody_design/designed/round_${ROUND_NUM}/rosetta/${NANOBODY}.csv \
+    --all_save_path nanobody_design/designed/round_${ROUND_NUM}/scores/${NANOBODY}_all.csv \
+    --top_save_path nanobody_design/designed/round_${ROUND_NUM}/scores/${NANOBODY}.csv \
     --top_n 5
 done
 ```
@@ -165,10 +165,10 @@ After all the rounds have been run, select the best nanobodies.
 ```bash
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
-python nanobody_design/scripts/workflow_1/data_processing/select_nanobodies.py \
-    --score_path_pattern nanobody_design/designed/workflow_1/round_{round_num}/scores/${NANOBODY}_all.csv \
+python nanobody_design/scripts/data_processing/select_nanobodies.py \
+    --score_path_pattern nanobody_design/designed/round_{round_num}/scores/${NANOBODY}_all.csv \
     --max_round 4 \
-    --save_path nanobody_design/designed/workflow_1/selected/${NANOBODY}.csv \
+    --save_path nanobody_design/designed/selected/${NANOBODY}.csv \
     --top_n 24
 done
 ```
@@ -179,19 +179,19 @@ done
 Replace the 24th nanobody with the wildtype sequence as a control. Then, prepare the nanobodies for synthesis by adding the N-terminal pelB leader sequence (periplasm targeting) `MKYLLPTAAAGLLLLAAQPAMA` and the C-terminal His-tag with stop codon `HHHHHH*`.
 
 ```bash
-mkdir -p nanobody_design/designed/workflow_1/combined
+mkdir -p nanobody_design/designed/combined
 
 for NANOBODY in Ty1 H11-D4 Nb21 VHH-72
 do
 python -c "import pandas as pd
-wildtype = pd.read_csv('nanobody_design/designed/workflow_1/round_0/scores/${NANOBODY}.csv')
+wildtype = pd.read_csv('nanobody_design/designed/round_0/scores/${NANOBODY}.csv')
 wildtype['round_num'] = 0
 wildtype['log_likelihood_ratio_vs_wildtype'] = 0.0
 wildtype['weighted_score_vs_wildtype'] = wildtype['weighted_score']
-selected = pd.read_csv('nanobody_design/designed/workflow_1/selected/${NANOBODY}.csv')
+selected = pd.read_csv('nanobody_design/designed/selected/${NANOBODY}.csv')
 combined = pd.concat([selected.iloc[:23], wildtype])
 combined['sequence_with_tags'] = [f'MKYLLPTAAAGLLLLAAQPAMA{sequence}HHHHHH*' for sequence in combined['sequence']]
-combined.to_csv('nanobody_design/designed/workflow_1/combined/${NANOBODY}.csv', index=False)"
+combined.to_csv('nanobody_design/designed/combined/${NANOBODY}.csv', index=False)"
 done
 ```
 

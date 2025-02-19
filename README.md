@@ -16,7 +16,7 @@ Please see our paper [The Virtual Lab: AI Agents Design New SARS-CoV-2 Nanobodie
 
 As a real-world demonstration, we applied the Virtual Lab to design nanobodies for one of the latest variants of SARS-CoV-2 (see [nanobody_design](https://github.com/zou-group/virtual-lab/tree/main/nanobody_design)). The Virtual Lab built a computational pipeline consisting of [ESM](https://www.science.org/doi/10.1126/science.ade2574), [AlphaFold-Multimer](https://www.biorxiv.org/content/10.1101/2021.10.04.463034v2), and [Rosetta](https://rosettacommons.org/software/) and used it to design 92 nanobodies that were experimentally validated.
 
-Please see the notebook [nanobody_design/run_nanobody_design_1.ipynb](https://github.com/zou-group/virtual-lab/blob/main/nanobody_design/run_nanobody_design_1.ipynb) for an example of how to use the Virtual Lab to create agents and run team and individual meetings.
+Please see the notebook [nanobody_design/run_nanobody_design.ipynb](https://github.com/zou-group/virtual-lab/blob/main/nanobody_design/run_nanobody_design.ipynb) for an example of how to use the Virtual Lab to create agents and run team and individual meetings.
 
 
 ## Installation
