@@ -26,9 +26,10 @@ workflow_phases = [
     "workflow_design",
 ]
 ablation_phases = ["ablation"]
+human_eval_phases = ["human_eval"]
 finetuning_phases = ["finetuning"]
 review_phases = ["unpaired_cysteine"]
-phases = workflow_phases + ablation_phases + finetuning_phases + review_phases
+phases = workflow_phases + ablation_phases + human_eval_phases + finetuning_phases + review_phases
 discussions_phase_to_dir = {phase: discussions_dir / phase for phase in phases}
 
 # Prompts
