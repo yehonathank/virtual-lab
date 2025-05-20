@@ -88,5 +88,15 @@
         "generic_single",
         "scientist_team",
         "generic_team"
+    ],
+    [
+        "generic_team",
+        "scientist_team",
+        "generic_single"
+    ],
+    [
+        "scientist_team",
+        "generic_team",
+        "generic_single"
     ]
 ]
