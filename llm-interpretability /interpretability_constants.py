@@ -100,6 +100,7 @@ computational_linguist = Agent(
     expertise="natural language processing and language model interpretability",
     goal="develop methods to increase transparency in LLM outputs, focusing on phenotype definitions",
     role="design and implement algorithms for extracting and visualizing linguistic patterns from LLMs",
+    model=model,
 )
 
 biomedical_informatics_specialist = Agent(
@@ -107,6 +108,7 @@ biomedical_informatics_specialist = Agent(
     expertise="electronic health records (EHR) and phenotype algorithm development",
     goal="ensure the tool is aligned with clinical data standards and effectively integrates phenotype definitions",
     role="provide domain expertise for creating clinically relevant and accurate phenotype models",
+    model=model,
 )
 
 data_visualization_expert = Agent(
@@ -114,11 +116,13 @@ data_visualization_expert = Agent(
     expertise="creating interactive visualizations for complex data sets",
     goal="develop a user-friendly interface that enhances clinician trust by visually explaining LLM outputs",
     role="design visualization tools that make LLM interpretations accessible and intuitive for clinical users",
+    model=model,
 )
 
 # Team members
 team_members = (
     computational_linguist,
     biomedical_informatics_specialist,
-    data_visualization_expert
+    data_visualization_expert,
+    scientific_critic,
 )

@@ -18,30 +18,28 @@ Principal Investigator, please provide your response to the agenda.
 
 ## Principal Investigator
 
-For this project, I need to assemble a team with expertise in large language models, biomedical informatics, and user interface design to ensure that we can effectively interpret LLMs and create a tool that is both functional and trustworthy for clinicians. Here are the team members I would like to invite to the discussion:
+To effectively tackle the challenge of developing a tool for large language model (LLM) interpretability, particularly in the context of creating electronic phenotype definitions with a visual component, it is essential to assemble a diverse team with expertise in various relevant areas. Here are the proposed team members who have the knowledge and skills that will be instrumental in this project:
 
-```python
-Agent(
-    title="Computational Linguist",
-    expertise="large language model development and interpretability",
-    goal="develop techniques for interpreting LLM outputs in biomedical contexts",
-    role="design and implement interpretability methods specific to electronic phenotype definitions",
+1. Agent(
+    title="Senior Data Scientist",
+    expertise="machine learning and natural language processing (NLP)",
+    goal="design and implement algorithms for interpreting and explaining LLM outputs",
+    role="develop NLP methods to enhance LLM interpretability and collaborate on integrating visual tools for clinician interaction",
 )
 
-Agent(
-    title="Biomedical Informatics Specialist",
-    expertise="electronic health records (EHR) and phenotype extraction",
-    goal="integrate LLM interpretability into the process of creating accurate electronic phenotype definitions",
-    role="ensure the tool aligns with clinical standards and can effectively extract phenotypes from EHRs",
+2. Agent(
+    title="Clinical Informatics Specialist",
+    expertise="biomedical data and electronic health records (EHR)",
+    goal="ensure the tool's clinical relevance and utility by incorporating real-world clinical data and practices",
+    role="provide insight into the clinical application of phenotype definitions and validate the model's outputs against EHR data",
 )
 
-Agent(
-    title="Human-Computer Interaction (HCI) Designer",
-    expertise="user interface design with a focus on trust and usability",
-    goal="develop a visual interface that fosters trust and understanding between clinicians and the model",
-    role="design and evaluate the visual components of the LLM interpretability tool to maximize user engagement and comprehension",
+3. Agent(
+    title="Visual Analytics Expert",
+    expertise="data visualization and user interface design",
+    goal="create visual tools that improve model transparency and trust for clinicians",
+    role="develop interactive visual interfaces that allow clinicians to explore and understand the model's decision-making process",
 )
-```
 
-These team members will bring a well-rounded set of skills and knowledge to tackle the challenge of making LLMs interpretable and useful for clinicians in the context of electronic phenotype definitions.
+These team members collectively bring the necessary expertise to address both the technical and practical aspects of the project, ensuring that the final tool is both scientifically robust and clinically applicable.
 
