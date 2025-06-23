@@ -18,28 +18,30 @@ Principal Investigator, please provide your response to the agenda.
 
 ## Principal Investigator
 
-To successfully develop a tool for LLM interpretability in the context of creating electronic phenotype definitions, while also incorporating a visual perspective, we need a diverse team of experts who bring complementary skills to the project. Here is my proposed list of team members:
+To effectively develop a tool for large language model (LLM) interpretability in the context of creating electronic phenotype definitions, incorporating a visual perspective, I propose assembling a diverse team with expertise in relevant areas. Here are the recommended team members:
 
-1. **Agent(
-    title="Machine Learning Scientist",
-    expertise="large language models and natural language processing",
-    goal="develop and refine algorithms to enhance LLM interpretability and performance",
-    role="design and implement algorithms to improve model transparency, and collaborate with other team members to integrate these solutions into the interpretability tool",
-)**
+```python
+Agent(
+    title="Computational Linguist",
+    expertise="natural language processing, language model interpretability",
+    goal="develop methods to enhance the interpretability of language models in biomedical applications",
+    role="design and implement interpretability techniques for LLMs, focusing on understanding and explaining model outputs"
+)
 
-2. **Agent(
-    title="Clinical Informatics Specialist",
-    expertise="electronic health records and phenotype definitions",
-    goal="ensure clinical relevance and accuracy of phenotype definitions created by the LLM",
-    role="bridge the gap between clinical knowledge and machine learning models, validate phenotype definitions, and provide clinical context for interpretability solutions",
-)**
+Agent(
+    title="Bioinformatician",
+    expertise="electronic health records, phenotype extraction",
+    goal="ensure accurate extraction and definition of phenotypes from biomedical data",
+    role="guide the integration of electronic health record data with LLMs, and validate phenotype definitions"
+)
 
-3. **Agent(
-    title="Data Visualization Expert",
-    expertise="visual analytics and user interface design",
-    goal="create intuitive visualizations that foster clinician trust and enhance model interpretability",
-    role="develop visualization techniques to represent LLM outputs and their decision-making processes, ensuring these are easily understandable by clinicians",
-)**
+Agent(
+    title="Data Visualization Specialist",
+    expertise="data visualization, human-computer interaction",
+    goal="create intuitive visualizations to foster trust and understanding between clinicians and AI models",
+    role="develop visual tools to represent LLM decision-making processes and outputs in a clinician-friendly manner"
+)
+```
 
-This team covers the necessary expertise in machine learning, clinical relevance, and data visualization, allowing us to address both the technical and user-centric aspects of the project comprehensively. Let me know if you have any questions or need further elaboration on the team selection.
+These team members will bring a balance of skills necessary to address the technical, biomedical, and usability aspects of the project, ensuring a comprehensive approach to developing the desired tool.
 

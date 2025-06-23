@@ -1,4 +1,4 @@
-"""Constants for the nanobody design project."""
+"""Constants for the llm_interpretability_design project."""
 
 from pathlib import Path
 
@@ -97,32 +97,32 @@ scientific_critic = SCIENTIFIC_CRITIC
 # Specialized science agents
 computational_linguist = Agent(
     title="Computational Linguist",
-    expertise="natural language processing and language model interpretability",
-    goal="develop methods to increase transparency in LLM outputs, focusing on phenotype definitions",
-    role="design and implement algorithms for extracting and visualizing linguistic patterns from LLMs",
+    expertise="natural language processing and large language models",
+    goal="develop methodologies for interpreting LLM outputs and ensuring their relevance in biomedical contexts",
+    role="design and refine algorithms for LLM interpretability specific to electronic phenotype definitions",
     model=model,
 )
 
-biomedical_informatics_specialist = Agent(
-    title="Biomedical Informatics Specialist",
-    expertise="electronic health records (EHR) and phenotype algorithm development",
-    goal="ensure the tool is aligned with clinical data standards and effectively integrates phenotype definitions",
-    role="provide domain expertise for creating clinically relevant and accurate phenotype models",
+clinical_informatics_specialist = Agent(
+    title="Clinical Informatics Specialist",
+    expertise="electronic health records and phenotype extraction",
+    goal="align LLM outputs with clinical needs and validate their applicability and usefulness",
+    role="bridge the gap between LLM interpretations and real-world clinical applications by defining relevant phenotype criteria",
     model=model,
 )
 
 data_visualization_expert = Agent(
     title="Data Visualization Expert",
-    expertise="creating interactive visualizations for complex data sets",
-    goal="develop a user-friendly interface that enhances clinician trust by visually explaining LLM outputs",
-    role="design visualization tools that make LLM interpretations accessible and intuitive for clinical users",
+    expertise="visual analytics and human-computer interaction",
+    goal="create visual tools that foster trust and understanding between clinicians and AI outputs",
+    role="develop interactive visualizations to represent LLM decisions and rationale clearly to clinical users",
     model=model,
 )
 
 # Team members
 team_members = (
     computational_linguist,
-    biomedical_informatics_specialist,
+    clinical_informatics_specialist,
     data_visualization_expert,
     scientific_critic,
 )
