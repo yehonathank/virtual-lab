@@ -20,9 +20,10 @@ workflow_phases = [
     "project_specification",
     "tools_selection",
     "implementation_agent_selection",
-    "esm",
-    "alphafold",
-    "rosetta",
+    "bioBERT",
+    "snomed",
+    "plotly",
+    "shap_lime",
     "workflow_design",
 ]
 ablations_phases = ["ablations"]
