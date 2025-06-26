@@ -1,0 +1,408 @@
+## User
+
+This is the beginning of an individual meeting with Data Visualization Expert to discuss your research project.
+
+Here is the agenda for the meeting:
+
+You are working on a research project to use software techniques to develop a tool for large language model (LLM) interpretability in the context of creating electronic phenotype definitions, ideally, also incorporating a visual perspective to foster trust between the clinician and the model. To develop a tool for LLM interpretability in electronic phenotype definitions, we will adopt a machine learning approach, leveraging existing open-source interpretability libraries. Our focus will be on integrating SNOMED CT to enhance reasoning and reduce hallucinations, while incorporating visual elements to build clinician trust.
+                You are responsible for understanding the topic Human-AI interaction through visual explanation tools in the context of designing an LLM-based interpretability pipeline for electronic phenotype definition.
+                You need to fine-tune yourself on the relevant literature on Human-AI interaction through visual explanation tools to improve your ability to contribute effectively to building a transparent, clinically grounded, and visually intuitive interpretability tool.
+                Please write out a series of five distinct search queries that you want to run to find relevant scientific papers on Human-AI interaction through visual explanation tools. Include both general queries about Human-AI interaction through visual explanation tools and queries that specifically relate Human-AI interaction through visual explanation tools to LLM interpretability, phenotype definition, clinical applications, and clinician trust.
+                Please provide the queries in Python syntax as a list of double-quoted strings.
+
+Here are the agenda questions that must be answered:
+
+1. What are the PMCIDs and titles of the papers you wish to fine-tune yourself on (as a Python dictionary mapping PMCID as a double-quoted string to title as double-quoted string)?
+
+Data Visualization Expert, please provide your response to the agenda.
+
+## Data Visualization Expert
+
+To address the agenda for our meeting, I'll start by crafting a series of search queries to find relevant scientific papers on Human-AI interaction through visual explanation tools. These queries will cover both general aspects and specific applications related to LLM interpretability, phenotype definition, clinical applications, and clinician trust.
+
+Here are the search queries in Python syntax:
+
+```python
+search_queries = [
+    "Human-AI interaction visual explanation tools",
+    "LLM interpretability visual explanation tools",
+    "Electronic phenotype definition visual explanation tools",
+    "Clinical applications visual explanation tools",
+    "Clinician trust visual explanation tools"
+]
+```
+
+Next, I will use these queries to search for relevant scientific papers. Let's proceed with the search to gather the PMCIDs and titles of the papers.
+
+## Data Visualization Expert
+
+Here are the PMCIDs and titles of the papers from the search queries, formatted as a Python dictionary mapping PMCID to title:
+
+```python
+papers = {
+    "7926732": "A Review on Human–AI Interaction in Machine Learning and Insights for Medical Applications",
+    "10570436": "Defining human-AI teaming the human-centered way: a scoping review and network analysis",
+    "11525002": "Human-centered evaluation of explainable AI applications: a systematic review",
+    "11008604": "Ascribing consciousness to artificial intelligence: human-AI interaction and its carry-over effects on human-human interaction",
+    "11586345": "Managing human-AI collaborations within Industry 5.0 scenarios via knowledge graphs: key challenges and lessons learned",
+    "11739813": "A review of large language models and autonomous agents in chemistry",
+    "11844495": "Spike sorting AI agent",
+    "10561547": "14 examples of how LLMs can transform materials science and chemistry: a reflection on a large language model hackathon",
+    "11464944": "Multimodal Large Language Models in Health Care: Applications, Challenges, and Future Outlook",
+    "10898121": "Challenges and barriers of using large language models (LLM) such as ChatGPT for diagnostic medicine with a focus on digital pathology – a recent scoping review",
+    "9617215": "Open Hardware in Science: The Benefits of Open Electronics",
+    "7350392": "Guidelines for the use of flow cytometry and cell sorting in immunological studies (second edition)",
+    "5592441": "26th Annual Computational Neuroscience Meeting (CNS*2017): Part 3",
+    "9165548": "Guidelines for the use of flow cytometry and cell sorting in immunological studies",
+    "6854655": "28th Annual Computational Neuroscience Meeting: CNS*2019",
+    "8792348": "Benchmarking off-the-shelf statistical shape modeling tools in clinical applications",
+    "9859710": "From data to deployment: the Collaborative Communities on Ophthalmic Imaging roadmap for artificial intelligence in age-related macular degeneration",
+    "8833140": "Clinical applications of personalising the neural components of visual image quality metrics for individual eyes",
+    "11852121": "A Future Picture: A Review of Current Generative Adversarial Neural Networks in Vitreoretinal Pathologies and Their Future Potentials",
+    "7180744": "Situation Awareness-Oriented Patient Monitoring with Visual Patient Technology: A Qualitative Review of the Primary Research",
+    "8600426": "The Impact of Explanations on Layperson Trust in Artificial Intelligence–Driven Symptom Checker Apps: Experimental Study",
+    "8607252": "Trust and shared decision–making among individuals with multiple myeloma: A qualitative study",
+    "7722052": "Clinician-patient movement synchrony mediates social group effects on interpersonal trust and perceived pain",
+    "11310737": "The Impact of Information Relevancy and Interactivity on Intensivists’ Trust in a Machine Learning–Based Bacteremia Prediction System: Simulation Study",
+    "11890136": "Prioritizing Trust in Podiatrists’ Preference for AI in Supportive Roles Over Diagnostic Roles in Health Care: Qualitative Interview and Focus Group Study"
+}
+```
+
+These papers cover a range of topics related to Human-AI interaction, LLM interpretability, clinical applications, and clinician trust, providing a comprehensive foundation for your research project.
+
+## User
+
+Tool Output:
+
+Here are the top 5 articles on PubMed Central for the query "Human-AI interaction visual explanation tools":
+
+[begin paper 1]
+
+PMCID = 7926732
+
+Title = A Review on Human–AI Interaction in Machine Learning and Insights for Medical Applications
+
+Objective: To provide a human–Artificial Intelligence (AI) interaction review for Machine Learning (ML) applications to inform how to best combine both human domain expertise and computational power of ML methods. The review focuses on the medical field, as the medical ML application literature highlights a special necessity of medical experts collaborating with ML approaches. Methods: A scoping literature review is performed on Scopus and Google Scholar using the terms “human in the loop”, “human in the loop machine learning”, and “interactive machine learning”. Peer-reviewed papers published from 2015 to 2020 are included in our review. Results: We design four questions to investigate and describe human–AI interaction in ML applications. These questions are “Why should humans be in the loop?”, “Where does human–AI interaction occur in the ML processes?”, “Who are the humans in the loop?”, and “How do humans interact with ML in Human-In-the-Loop ML (HILML)?”. To answer the first question, we describe three main reasons regarding the importance of human involvement in ML applications. To address the second question, human–AI interaction is investigated in three main algorithmic stages: 1. data producing and pre-processing; 2. ML modelling; and 3. ML evaluation and refinement. The importance of the expertise level of the humans in human–AI interaction is described to answer the third question. The number of human interactions in HILML is grouped into three categories to address the fourth question. We conclude the paper by offering a discussion on open opportunities for future research in HILML.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 10570436
+
+Title = Defining human-AI teaming the human-centered way: a scoping review and network analysis
+
+With the advancement of technology and the increasing utilization of AI, the nature of human work is evolving, requiring individuals to collaborate not only with other humans but also with AI technologies to accomplish complex goals. This requires a shift in perspective from technology-driven questions to a human-centered research and design agenda putting people and evolving teams in the center of attention. A socio-technical approach is needed to view AI as more than just a technological tool, but as a team member, leading to the emergence of human-AI teaming (HAIT). In this new form of work, humans and AI synergistically combine their respective capabilities to accomplish shared goals.
+
+The aim of our work is to uncover current research streams on HAIT and derive a unified understanding of the construct through a bibliometric network analysis, a scoping review and synthetization of a definition from a socio-technical point of view. In addition, antecedents and outcomes examined in the literature are extracted to guide future research in this field.
+
+Through network analysis, five clusters with different research focuses on HAIT were identified. These clusters revolve around (1) human and (2) task-dependent variables, (3) AI explainability, (4) AI-driven robotic systems, and (5) the effects of AI performance on human perception. Despite these diverse research focuses, the current body of literature is predominantly driven by a technology-centric and engineering perspective, with no consistent definition or terminology of HAIT emerging to date.
+
+We propose a unifying definition combining a human-centered and team-oriented perspective as well as summarize what is still needed in future research regarding HAIT. Thus, this work contributes to support the idea of the Frontiers Research Topic of a theoretical and conceptual basis for human work with AI systems.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 11525002
+
+Title = Human-centered evaluation of explainable AI applications: a systematic review
+
+Explainable Artificial Intelligence (XAI) aims to provide insights into the inner workings and the outputs of AI systems. Recently, there's been growing recognition that explainability is inherently human-centric, tied to how people perceive explanations. Despite this, there is no consensus in the research community on whether user evaluation is crucial in XAI, and if so, what exactly needs to be evaluated and how. This systematic literature review addresses this gap by providing a detailed overview of the current state of affairs in human-centered XAI evaluation. We reviewed 73 papers across various domains where XAI was evaluated with users. These studies assessed what makes an explanation “good” from a user's perspective, i.e., what makes an explanation meaningful to a user of an AI system. We identified 30 components of meaningful explanations that were evaluated in the reviewed papers and categorized them into a taxonomy of human-centered XAI evaluation, based on: (a) the contextualized quality of the explanation, (b) the contribution of the explanation to human-AI interaction, and (c) the contribution of the explanation to human-AI performance. Our analysis also revealed a lack of standardization in the methodologies applied in XAI user studies, with only 19 of the 73 papers applying an evaluation framework used by at least one other study in the sample. These inconsistencies hinder cross-study comparisons and broader insights. Our findings contribute to understanding what makes explanations meaningful to users and how to measure this, guiding the XAI community toward a more unified approach in human-centered explainability.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 11008604
+
+Title = Ascribing consciousness to artificial intelligence: human-AI interaction and its carry-over effects on human-human interaction
+
+The question of whether artificial intelligence (AI) can be considered conscious and therefore should be evaluated through a moral lens has surfaced in recent years. In this paper, we argue that whether AI is conscious is less of a concern than the fact that AI can be considered conscious by users during human-AI interaction, because this ascription of consciousness can lead to carry-over effects on human-human interaction. When AI is viewed as conscious like a human, then how people treat AI appears to carry over into how they treat other people due to activating schemas that are congruent to those activated during interactions with humans. In light of this potential, we might consider regulating how we treat AI, or how we build AI to evoke certain kinds of treatment from users, but not because AI is inherently sentient. This argument focuses on humanlike, social actor AI such as chatbots, digital voice assistants, and social robots. In the first part of the paper, we provide evidence for carry-over effects between perceptions of AI consciousness and behavior toward humans through literature on human-computer interaction, human-AI interaction, and the psychology of artificial agents. In the second part of the paper, we detail how the mechanism of schema activation can allow us to test consciousness perception as a driver of carry-over effects between human-AI interaction and human-human interaction. In essence, perceiving AI as conscious like a human, thereby activating congruent mind schemas during interaction, is a driver for behaviors and perceptions of AI that can carry over into how we treat humans. Therefore, the fact that people can ascribe humanlike consciousness to AI is worth considering, and moral protection for AI is also worth considering, regardless of AI’s inherent conscious or moral status.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 11586345
+
+Title = Managing human-AI collaborations within Industry 5.0 scenarios via knowledge graphs: key challenges and lessons learned
+
+In this paper, we discuss technologies and approaches based on Knowledge Graphs (KGs) that enable the management of inline human interventions in AI-assisted manufacturing processes in Industry 5.0 under potentially changing conditions in order to maintain or improve the overall system performance. Whereas KG-based systems are commonly based on a static view with their structure fixed at design time, we argue that the dynamic challenge of inline Human-AI (H-AI) collaboration in industrial settings calls for a late shaping design principle. In contrast to early shaping, which determines the system's behavior at design time in a fine granular manner, late shaping is a coarse-to-fine approach that leaves more space for fine-tuning, adaptation and integration of human intelligence at runtime. In this context we discuss approaches and lessons learned from the European manufacturing project Teaming.AI, https://www.teamingai-project.eu/, addressing general challenges like the modeling of domain expertise with particular focus on vertical knowledge integration, as well as challenges linked to an industrial KG of choice, such as its dynamic population and the late shaping of KG embeddings as the foundation of relational machine learning models which have emerged as an effective tool for exploiting graph-structured data to infer new insights.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "LLM interpretability visual explanation tools":
+
+[begin paper 1]
+
+PMCID = 11739813
+
+Title = A review of large language models and autonomous agents in chemistry
+
+Large language models (LLMs) have emerged as powerful tools in chemistry, significantly impacting molecule design, property prediction, and synthesis optimization. This review highlights LLM capabilities in these domains and their potential to accelerate scientific discovery through automation. We also review LLM-based autonomous agents: LLMs with a broader set of tools to interact with their surrounding environment. These agents perform diverse tasks such as paper scraping, interfacing with automated laboratories, and synthesis planning. As agents are an emerging topic, we extend the scope of our review of agents beyond chemistry and discuss across any scientific domains. This review covers the recent history, current capabilities, and design of LLMs and autonomous agents, addressing specific challenges, opportunities, and future directions in chemistry. Key challenges include data quality and integration, model interpretability, and the need for standard benchmarks, while future directions point towards more sophisticated multi-modal agents and enhanced collaboration between agents and experimental methods. Due to the quick pace of this field, a repository has been built to keep track of the latest studies: .
+
+This review examines the roles of large language models (LLMs) and autonomous agents in chemistry, exploring advancements in molecule design, property prediction, and synthesis automation.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11844495
+
+Title = Spike sorting AI agent
+
+Spike sorting is a fundamental process for decoding neural activity, involving preprocessing, spike detection, feature extraction, clustering, and validation. However, conventional spike sorting methods are highly fragmented, labor-intensive, and heavily reliant on expert manual curation, limiting their scalability and reproducibility. This challenge has become more pressing with advances in neural recording technology, such as high-density Neuropixels for large-scale neural recording or flexible electrodes for long-term stable recording over months to years. The volume and complexity of these datasets make manual curation infeasible, requiring an automated and scalable solution. Here, we introduce SpikeAgent, a multimodal large language model (LLM)-based AI agent that automates and standardizes the entire spike sorting pipeline. Unlike traditional approaches, SpikeAgent integrates multiple LLM backends, coding functions, and established algorithms, autonomously performing spike sorting with reasoning-based decision-making and real-time interaction with intermediate results. It generates interpretable reports, providing transparent justifications for each sorting decision, enhancing transparency and reliability. We benchmarked SpikeAgent against human experts across various neural recording technology, demonstrating its versatility and ability to achieve curation consistency that are equal to, or even higher than human experts. It also drastically reduces the expertise barrier and accelerates the curation and validation time by orders of magnitude. Moreover, it enables automated interpretability of the neural spiking data, which cannot be achieved by any conventional methods. SpikeAgent presents a paradigm shift in processing signals for neuroscience and brain-computer interfaces, while laying the ground for AI agent-augmented science across various domains.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 10561547
+
+Title = 14 examples of how LLMs can transform materials science and chemistry: a reflection on a large language model hackathon†
+
+Large-language models (LLMs) such as GPT-4 caught the interest of many scientists. Recent studies suggested that these models could be useful in chemistry and materials science. To explore these possibilities, we organized a hackathon. This article chronicles the projects built as part of this hackathon. Participants employed LLMs for various applications, including predicting properties of molecules and materials, designing novel interfaces for tools, extracting knowledge from unstructured data, and developing new educational applications. The diverse topics and the fact that working prototypes could be generated in less than two days highlight that LLMs will profoundly impact the future of our fields. The rich collection of ideas and projects also indicates that the applications of LLMs are not limited to materials science and chemistry but offer potential benefits to a wide range of scientific disciplines.
+
+We report the findings of a hackathon focused on exploring the diverse applications of large language models in molecular and materials science.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 11464944
+
+Title = Multimodal Large Language Models in Health Care: Applications, Challenges, and Future Outlook
+
+In the complex and multidimensional field of medicine, multimodal data are prevalent and crucial for informed clinical decisions. Multimodal data span a broad spectrum of data types, including medical images (eg, MRI and CT scans), time-series data (eg, sensor data from wearable devices and electronic health records), audio recordings (eg, heart and respiratory sounds and patient interviews), text (eg, clinical notes and research articles), videos (eg, surgical procedures), and omics data (eg, genomics and proteomics). While advancements in large language models (LLMs) have enabled new applications for knowledge retrieval and processing in the medical field, most LLMs remain limited to processing unimodal data, typically text-based content, and often overlook the importance of integrating the diverse data modalities encountered in clinical practice. This paper aims to present a detailed, practical, and solution-oriented perspective on the use of multimodal LLMs (M-LLMs) in the medical field. Our investigation spanned M-LLM foundational principles, current and potential applications, technical and ethical challenges, and future research directions. By connecting these elements, we aimed to provide a comprehensive framework that links diverse aspects of M-LLMs, offering a unified vision for their future in health care. This approach aims to guide both future research and practical implementations of M-LLMs in health care, positioning them as a paradigm shift toward integrated, multimodal data–driven medical practice. We anticipate that this work will spark further discussion and inspire the development of innovative approaches in the next generation of medical M-LLM systems.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 10898121
+
+Title = Challenges and barriers of using large language models (LLM) such as ChatGPT for diagnostic medicine with a focus on digital pathology – a recent scoping review
+
+The integration of large language models (LLMs) like ChatGPT in diagnostic medicine, with a focus on digital pathology, has garnered significant attention. However, understanding the challenges and barriers associated with the use of LLMs in this context is crucial for their successful implementation.
+
+A scoping review was conducted to explore the challenges and barriers of using LLMs, in diagnostic medicine with a focus on digital pathology. A comprehensive search was conducted using electronic databases, including PubMed and Google Scholar, for relevant articles published within the past four years. The selected articles were critically analyzed to identify and summarize the challenges and barriers reported in the literature.
+
+The scoping review identified several challenges and barriers associated with the use of LLMs in diagnostic medicine. These included limitations in contextual understanding and interpretability, biases in training data, ethical considerations, impact on healthcare professionals, and regulatory concerns. Contextual understanding and interpretability challenges arise due to the lack of true understanding of medical concepts and lack of these models being explicitly trained on medical records selected by trained professionals, and the black-box nature of LLMs. Biases in training data pose a risk of perpetuating disparities and inaccuracies in diagnoses. Ethical considerations include patient privacy, data security, and responsible AI use. The integration of LLMs may impact healthcare professionals’ autonomy and decision-making abilities. Regulatory concerns surround the need for guidelines and frameworks to ensure safe and ethical implementation.
+
+The scoping review highlights the challenges and barriers of using LLMs in diagnostic medicine with a focus on digital pathology. Understanding these challenges is essential for addressing the limitations and developing strategies to overcome barriers. It is critical for health professionals to be involved in the selection of data and fine tuning of the models. Further research, validation, and collaboration between AI developers, healthcare professionals, and regulatory bodies are necessary to ensure the responsible and effective integration of LLMs in diagnostic medicine.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "Electronic phenotype definition visual explanation tools":
+
+[begin paper 1]
+
+PMCID = 9617215
+
+Title = Open Hardware in Science: The Benefits of Open Electronics
+
+Openly shared low-cost electronic hardware applications, known as open electronics, have sparked a new open-source movement, with much untapped potential to advance scientific research. Initially designed to appeal to electronic hobbyists, open electronics have formed a global “maker” community and are increasingly used in science and industry. In this perspective article, we review the current costs and benefits of open electronics for use in scientific research ranging from the experimental to the theoretical sciences. We discuss how user-made electronic applications can help (I) individual researchers, by increasing the customization, efficiency, and scalability of experiments, while improving data quantity and quality; (II) scientific institutions, by improving access to customizable high-end technologies, sustainability, visibility, and interdisciplinary collaboration potential; and (III) the scientific community, by improving transparency and reproducibility, helping decouple research capacity from funding, increasing innovation, and improving collaboration potential among researchers and the public. We further discuss how current barriers like poor awareness, knowledge access, and time investments can be resolved by increased documentation and collaboration, and provide guidelines for academics to enter this emerging field. We highlight that open electronics are a promising and powerful tool to help scientific research to become more innovative and reproducible and offer a key practical solution to improve democratic access to science.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 7350392
+
+Title = Guidelines for the use of flow cytometry and cell sorting in immunological studies (second edition)
+
+These guidelines are a consensus work of a considerable number of members of the immunology and flow cytometry community. They provide the theory and key practical aspects of flow cytometry enabling immunologists to avoid the common errors that often undermine immunological data. Notably, there are comprehensive sections of all major immune cell types with helpful Tables detailing phenotypes in murine and human cells. The latest flow cytometry techniques and applications are also described, featuring examples of the data that can be generated and, importantly, how the data can be analysed. Furthermore, there are sections detailing tips, tricks and pitfalls to avoid, all written and peer-reviewed by leading experts in the field, making this an essential research companion.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 5592441
+
+Title = 26th Annual Computational Neuroscience Meeting (CNS*2017): Part 3
+
+
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 9165548
+
+Title = Guidelines for the use of flow cytometry and cell sorting in immunological studies
+
+
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 6854655
+
+Title = 28th Annual Computational Neuroscience Meeting: CNS*2019
+
+
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "Clinical applications visual explanation tools":
+
+[begin paper 1]
+
+PMCID = 8792348
+
+Title = Benchmarking off-the-shelf statistical shape modeling tools in clinical applications
+
+Statistical shape modeling (SSM) is widely used in biology and medicine as a new generation of morphometric approaches for the quantitative analysis of anatomical shapes. Technological advancements of in vivo imaging have led to the development of open-source computational tools that automate the modeling of anatomical shapes and their population-level variability. However, little work has been done on the evaluation and validation of such tools in clinical applications that rely on morphometric quantifications. Here, we systematically assess the outcome of widely used, state-of-the-art SSM tools, namely ShapeWorks, Deformetrica, and SPHARM-PDM. We use both quantitative and qualitative metrics to evaluate shape models from different tools. We propose validation frameworks for anatomical landmark/measurement inference and lesion screening. We also present a lesion screening method to objectively characterize subtle abnormal shape changes with respect to learned population-level statistics of controls. Results demonstrate that SSM tools display different levels of consistencies, where ShapeWorks and Deformetrica models are more consistent compared to models from SPHARM-PDM due to the groupwise approach of estimating surface correspondences. Furthermore, ShapeWorks and Deformetrica shape models are found to capture clinically relevant population-level variability compared to SPHARM-PDM models.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 9859710
+
+Title = From data to deployment: the Collaborative Communities on Ophthalmic Imaging roadmap for artificial intelligence in age-related macular degeneration
+
+Healthcare systems worldwide are challenged to provide adequate care for the 200 million individuals with age-related macular degeneration (AMD). Artificial intelligence (AI) has the potential to make a significant positive impact on the diagnosis and management of patients with AMD. However, the development of effective AI devices for clinical care faces numerous considerations and challenges, a fact evidenced by a current absence of FDA-approved AI devices for AMD.
+
+To delineate the state of AI for AMD including current data, standards, achievements, and challenges.
+
+EVIDENCE Members of the Collaborative Community on Ophthalmic Imaging working group for AI in AMD attended an inaugural meeting on September 7, 2020 to discuss the topic. Subsequently, they undertook a comprehensive review of the medical literature relevant to the topic. Members engaged in meetings and discussion through December 2021 to synthesize the information and arrive at consensus.
+
+Existing infrastructure for robust AI development for AMD includes several large, labeled datasets of color fundus photography (CFP) and optical coherence tomography (OCT) images. However, image data often does not contain meta-data necessary for the development of reliable, valid, and generalizable models. Data sharing for AMD model development is made difficult by restrictions on data privacy and security, although potential solutions are under investigation. Computing resources may be adequate for current applications, but knowledge of machine learning (ML) development may be scarce in many clinical ophthalmology settings. Despite these challenges, researchers have produced promising AI models for AMD for screening, diagnosis, prediction, and monitoring. Future goals include defining benchmarks to facilitate regulatory authorization and subsequent real-world generalization.
+
+Delivering an FDA-authorized, AI-based device for clinical care in AMD involves numerous considerations including the identification of an appropriate clinical application, acquisition and curation of a large, high-quality data set, development of the AI architecture, training and validation of the model, and functional interactions between the model output and clinical end-user. The research efforts undertaken to date represent starting points for the medical devices that will eventually benefit providers, healthcare systems, and patients.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 8833140
+
+Title = Clinical applications of personalising the neural components of visual image quality metrics for individual eyes
+
+Eyecare is evolving increasingly personalised corrections and increasingly personalised evaluations of corrections on-eye. This report describes individualising optical and neural components of the VSX (visual Strehl) metric and evaluates personalisation using two clinical applications. (1) Better understanding visual experience: While VSX tracks visual performance in typical eyes, non-individualised metrics underestimated visual performance in highly aberrated eyes – could this be understood by personalising metrics? (2) Metric-optimised objective spherocylindrical refractions in typical and atypical eyes have used neural weighting functions of typical eyes – will personalisation affect the outcome in clinical 0.25D steps?
+
+Orientation-specific neural contrast sensitivity was measured in four typical myopic and astigmatic eyes and six eyes with keratoconus. Wavefront error was measured in all eyes while uncorrected and when the keratoconic eyes wore wavefront-guided scleral lenses. Total experiment duration was 24–28 h per subject. Two versions of VSX were calculated for each application: one weighted ocular optics with measured neural contrast sensitivity data from that eye, another weighted optics with a representative neural function of typical eyes. Wavefront-guided corrections were evaluated using the two metric values. Spherocylindrical corrections that optimised each metric were identified.
+
+Metric values for keratoconic eyes improved by a mean factor of 1.99 (~0.3 log units) when personalised. Applying this factor to a larger sample of eyes from a previous keratoconus study reconciled dissonances between the percentage of eyes reaching normative best-corrected metric levels and the percentages of eyes reaching normative levels of visual acuity and contrast sensitivity. Spherocylindrical corrections that optimised both versions of VSX were clinically equivalent (mean ± SD Euclidean dioptric difference 0.13 ± 0.18 D).
+
+Personalising visual image quality metrics is beneficial when actual metric values are used (evaluating ophthalmic corrections on-eye against norms) and when fine increments in visual quality are imparted (wavefront-guided corrections). However, partially individualised metrics appear adequate when metrics relatively rank spherocylindrical corrections in 0.25 D steps.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 11852121
+
+Title = A Future Picture: A Review of Current Generative Adversarial Neural Networks in Vitreoretinal Pathologies and Their Future Potentials
+
+Machine learning has transformed ophthalmology, particularly in predictive and discriminatory models for vitreoretinal pathologies. However, generative modeling, especially generative adversarial networks (GANs), remains underexplored. GANs consist of two neural networks—the generator and discriminator—that work in opposition to synthesize highly realistic images. These synthetic images can enhance diagnostic accuracy, expand the capabilities of imaging technologies, and predict treatment responses. GANs have already been applied to fundus imaging, optical coherence tomography (OCT), and fluorescein autofluorescence (FA). Despite their potential, GANs face challenges in reliability and accuracy. This review explores GAN architecture, their advantages over other deep learning models, and their clinical applications in retinal disease diagnosis and treatment monitoring. Furthermore, we discuss the limitations of current GAN models and propose novel applications combining GANs with OCT, OCT-angiography, fluorescein angiography, fundus imaging, electroretinograms, visual fields, and indocyanine green angiography.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 7180744
+
+Title = Situation Awareness-Oriented Patient Monitoring with Visual Patient Technology: A Qualitative Review of the Primary Research
+
+Visual Patient technology is a situation awareness-oriented visualization technology that translates numerical and waveform patient monitoring data into a new user-centered visual language. Vital sign values are converted into colors, shapes, and rhythmic movements—a language humans can easily perceive and interpret—on a patient avatar model in real time. In this review, we summarize the current state of the research on the Visual Patient, including the technology, its history, and its scientific context. We also provide a summary of our primary research and a brief overview of research work on similar user-centered visualizations in medicine. In several computer-based studies under various experimental conditions, Visual Patient transferred more information per unit time, increased perceived diagnostic certainty, and lowered perceived workload. Eye tracking showed the technology worked because of the way it synthesizes and transforms vital sign information into new and logical forms corresponding to the real phenomena. The technology could be particularly useful for improving situation awareness in settings with high cognitive demand or when users must make quick decisions. This comprehensive review of Visual Patient research is the foundation for an evaluation of the technology in clinical applications, starting with a high-fidelity simulation study in early 2020.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "Clinician trust visual explanation tools":
+
+[begin paper 1]
+
+PMCID = 8600426
+
+Title = The Impact of Explanations on Layperson Trust in Artificial Intelligence–Driven Symptom Checker Apps: Experimental Study
+
+Artificial intelligence (AI)–driven symptom checkers are available to millions of users globally and are advocated as a tool to deliver health care more efficiently. To achieve the promoted benefits of a symptom checker, laypeople must trust and subsequently follow its instructions. In AI, explanations are seen as a tool to communicate the rationale behind black-box decisions to encourage trust and adoption. However, the effectiveness of the types of explanations used in AI-driven symptom checkers has not yet been studied. Explanations can follow many forms, including why-explanations and how-explanations. Social theories suggest that why-explanations are better at communicating knowledge and cultivating trust among laypeople.
+
+The aim of this study is to ascertain whether explanations provided by a symptom checker affect explanatory trust among laypeople and whether this trust is impacted by their existing knowledge of disease.
+
+A cross-sectional survey of 750 healthy participants was conducted. The participants were shown a video of a chatbot simulation that resulted in the diagnosis of either a migraine or temporal arteritis, chosen for their differing levels of epidemiological prevalence. These diagnoses were accompanied by one of four types of explanations. Each explanation type was selected either because of its current use in symptom checkers or because it was informed by theories of contrastive explanation. Exploratory factor analysis of participants’ responses followed by comparison-of-means tests were used to evaluate group differences in trust.
+
+Depending on the treatment group, two or three variables were generated, reflecting the prior knowledge and subsequent mental model that the participants held. When varying explanation type by disease, migraine was found to be nonsignificant (P=.65) and temporal arteritis, marginally significant (P=.09). Varying disease by explanation type resulted in statistical significance for input influence (P=.001), social proof (P=.049), and no explanation (P=.006), with counterfactual explanation (P=.053). The results suggest that trust in explanations is significantly affected by the disease being explained. When laypeople have existing knowledge of a disease, explanations have little impact on trust. Where the need for information is greater, different explanation types engender significantly different levels of trust. These results indicate that to be successful, symptom checkers need to tailor explanations to each user’s specific question and discount the diseases that they may also be aware of.
+
+System builders developing explanations for symptom-checking apps should consider the recipient’s knowledge of a disease and tailor explanations to each user’s specific need. Effort should be placed on generating explanations that are personalized to each user of a symptom checker to fully discount the diseases that they may be aware of and to close their information gap.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 8607252
+
+Title = Trust and shared decision‐making among individuals with multiple myeloma: A qualitative study
+
+Multiple myeloma (MM) is an incurable cancer with complex treatment options. Trusting patient–clinician relationships are essential to promote effective shared decision‐making that aligns best clinical practices with patient values and preferences. This study sought to shed light on the development of trust between MM patients and clinicians.
+
+Nineteen individual semi‐structured interviews were conducted with MM patients within 2 years of initial diagnosis or relapse for this qualitative study. Interviews were recorded and transcripts were coded thematically.
+
+We identified three main themes: (1) externally validated trust describes patients’ predisposition to trust or distrust clinicians based on factors outside of patient–clinician interactions; (2) internally validated trust describes how patients develop trust based on interactions with specific clinicians. Internally validated trust is driven primarily by clinician communication practices that demonstrate competence, responsiveness, listening, honesty, and empathy; and (3) trust in relation to shared decision‐making describes how patients relate the feeling of trust, or lack thereof, to the process of shared decision‐making.
+
+Many factors contribute to the development of trust between MM patients and clinicians. While some are outside of clinicians’ control, others derive from clinician behaviors and interpersonal communication skills. These findings suggest the possibility that trust can be enhanced through communication training or shared decision‐making tools that emphasize relational communication. Given the important role trust plays in shared decision‐making, clinicians working with MM patients should prioritize establishing positive, trusting relationships.
+
+Patient–clinician trust is influenced by both external factors and clinician behaviors in the context of multiple myeloma. Trust between patients with myeloma and their clinicians is an important aspect of shared decision‐making.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 7722052
+
+Title = Clinician-patient movement synchrony mediates social group effects on interpersonal trust and perceived pain
+
+Pain is an unfortunate consequence of many medical procedures, which in some patients becomes chronic and debilitating. Among the factors affecting medical pain, clinician-patient (C-P) similarity and nonverbal communication are particularly important for pain diagnosis and treatment. Participants (N=66) were randomly assigned to the clinician and patient roles and were grouped into C-P dyads. Clinicians administered painful stimuli to patients as an analogue of a painful medical procedure. We manipulated the perceived C-P similarity of each dyad using groups ostensibly based on shared beliefs and values, and each patient was tested twice: Once with a same group clinician (concordant, CC) and once with a clinician from the other group (discordant, DC). Movement synchrony was calculated as a marker of nonverbal communication. We tested whether movement synchrony mediated the effects of group concordance on patients’ pain and trust in the clinician. Movement synchrony was higher in CC than DC dyads. Higher movement synchrony predicted reduced pain and increased trust in the clinician. Movement synchrony also formally mediated the group concordance effects on pain and trust. These findings increase our understanding of the role of nonverbal C-P communication on pain and related outcomes and suggest that interpersonal synchrony may be associated with better patient outcomes, independent of the specific treatment provided.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 11310737
+
+Title = The Impact of Information Relevancy and Interactivity on Intensivists’ Trust in a Machine Learning–Based Bacteremia Prediction System: Simulation Study
+
+The exponential growth in computing power and the increasing digitization of information have substantially advanced the machine learning (ML) research field. However, ML algorithms are often considered “black boxes,” and this fosters distrust. In medical domains, in which mistakes can result in fatal outcomes, practitioners may be especially reluctant to trust ML algorithms.
+
+The aim of this study is to explore the effect of user-interface design features on intensivists’ trust in an ML-based clinical decision support system.
+
+A total of 47 physicians from critical care specialties were presented with 3 patient cases of bacteremia in the setting of an ML-based simulation system. Three conditions of the simulation were tested according to combinations of information relevancy and interactivity. Participants’ trust in the system was assessed by their agreement with the system’s prediction and a postexperiment questionnaire. Linear regression models were applied to measure the effects.
+
+Participants’ agreement with the system’s prediction did not differ according to the experimental conditions. However, in the postexperiment questionnaire, higher information relevancy ratings and interactivity ratings were associated with higher perceived trust in the system (P<.001 for both). The explicit visual presentation of the features of the ML algorithm on the user interface resulted in lower trust among the participants (P=.05).
+
+Information relevancy and interactivity features should be considered in the design of the user interface of ML-based clinical decision support systems to enhance intensivists’ trust. This study sheds light on the connection between information relevancy, interactivity, and trust in human-ML interaction, specifically in the intensive care unit environment.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 11890136
+
+Title = Prioritizing Trust in Podiatrists’ Preference for AI in Supportive Roles Over Diagnostic Roles in Health Care: Qualitative Interview and Focus Group Study
+
+As artificial intelligence (AI) evolves, its roles have expanded from helping out with routine tasks to making complex decisions, once the exclusive domain of human experts. This shift is pronounced in health care, where AI aids in tasks ranging from image recognition in radiology to personalized treatment plans, demonstrating the potential to, at times, surpass human accuracy and efficiency. Despite AI’s accuracy in some critical tasks, the adoption of AI in health care is a challenge, in part because of skepticism about being able to rely on AI decisions.
+
+This study aimed to identify and delve into more effective and acceptable ways of integrating AI into a broader spectrum of health care tasks.
+
+We included 2 qualitative phases to explore podiatrists’ views on AI in health care. Initially, we interviewed 9 podiatrists (7 women and 2 men) with a mean age of 41 (SD 12) years and aimed to capture their sentiments regarding the use and role of AI in their work. Subsequently, a focus group with 5 podiatrists (4 women and 1 man) with a mean age of 54 (SD 10) years delved into AI’s supportive and diagnostic roles on the basis of the interviews. All interviews were recorded, transcribed verbatim, and analyzed using Atlas.ti and QDA-Miner, using both thematic analysis for broad patterns and framework analysis for structured insights per established guidelines.
+
+Our research unveiled 9 themes and 3 subthemes, clarifying podiatrists’ nuanced views on AI in health care. Key overlapping insights in the 2 phases included a preference for using AI in supportive roles, such as triage, because of its efficiency and process optimization capabilities. There is a discernible hesitancy toward leveraging AI for diagnostic purposes, driven by concerns regarding its accuracy and the essential nature of human expertise. The need for transparency and explainability in AI systems emerged as a critical factor for fostering trust in both phases.
+
+The findings highlight a complex view from podiatrists on AI, showing openness to its application in supportive roles while exercising caution with diagnostic use. This result is consistent with a careful introduction of AI into health care in roles, such as triage, in which there is initial trust, as opposed to roles that ask the AI for a complete diagnosis. Such strategic adoption can mitigate initial resistance, gradually building the confidence to explore AI’s capabilities in more nuanced tasks, including diagnostics, where skepticism is currently more pronounced. Adopting AI stepwise could thus enhance trust and acceptance across a broader range of health care tasks, aligning technology integration with professional comfort and patient care standards.
+
+[end paper 5]
+
+
+

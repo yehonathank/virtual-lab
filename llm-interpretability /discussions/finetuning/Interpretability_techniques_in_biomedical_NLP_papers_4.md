@@ -1,0 +1,374 @@
+## User
+
+This is the beginning of an individual meeting with Computational Linguist to discuss your research project.
+
+Here is the agenda for the meeting:
+
+You are working on a research project to use software techniques to develop a tool for large language model (LLM) interpretability in the context of creating electronic phenotype definitions, ideally, also incorporating a visual perspective to foster trust between the clinician and the model. To develop a tool for LLM interpretability in electronic phenotype definitions, we will adopt a machine learning approach, leveraging existing open-source interpretability libraries. Our focus will be on integrating SNOMED CT to enhance reasoning and reduce hallucinations, while incorporating visual elements to build clinician trust.
+                You are responsible for understanding the topic Interpretability techniques in biomedical NLP in the context of designing an LLM-based interpretability pipeline for electronic phenotype definition.
+                You need to fine-tune yourself on the relevant literature on Interpretability techniques in biomedical NLP to improve your ability to contribute effectively to building a transparent, clinically grounded, and visually intuitive interpretability tool.
+                Please write out a series of five distinct search queries that you want to run to find relevant scientific papers on Interpretability techniques in biomedical NLP. Include both general queries about Interpretability techniques in biomedical NLP and queries that specifically relate Interpretability techniques in biomedical NLP to LLM interpretability, phenotype definition, clinical applications, and clinician trust.
+                Please provide the queries in Python syntax as a list of double-quoted strings.
+
+Here are the agenda questions that must be answered:
+
+1. What are the PMCIDs and titles of the papers you wish to fine-tune yourself on (as a Python dictionary mapping PMCID as a double-quoted string to title as double-quoted string)?
+
+Computational Linguist, please provide your response to the agenda.
+
+## Computational Linguist
+
+To address the agenda, I will first outline a series of search queries to find relevant scientific papers on interpretability techniques in biomedical NLP. These queries will focus on general interpretability techniques, as well as their specific applications to LLM interpretability, phenotype definition, clinical applications, and clinician trust.
+
+Here are the search queries in Python syntax:
+
+```python
+queries = [
+    "Interpretability techniques in biomedical NLP",
+    "LLM interpretability in electronic phenotype definition",
+    "Interpretability techniques for clinical applications in NLP",
+    "Building clinician trust through NLP interpretability",
+    "SNOMED CT integration in LLM interpretability for phenotype definitions"
+]
+```
+
+Next, I will use these queries to search for relevant scientific papers. I will retrieve the PMCIDs and titles of these papers to help fine-tune my understanding of the topic. Let's proceed with the search using these queries.
+
+## Computational Linguist
+
+Here is a Python dictionary mapping the PMCIDs to the titles of the papers I found relevant for fine-tuning on the topic of interpretability techniques in biomedical NLP:
+
+```python
+papers = {
+    "11574504": "Screening for Depression Using Natural Language Processing: Literature Review",
+    "8223521": "Translational NLP: A New Paradigm and General Principles for Natural Language Processing Research",
+    "11642228": "Revolutionizing Radiology with Natural Language Processing and Chatbot Technologies: A Narrative Umbrella Review on Current Trends and Future Directions",
+    "9690240": "The Role of Natural Language Processing during the COVID-19 Pandemic: Health Applications, Opportunities, and Challenges",
+    "11839006": "Development and Validation of Natural Language Processing Algorithms in the ENACT National Electronic Health Record Research Network",
+    "11422740": "Prompt Engineering Paradigms for Medical Applications: Scoping Review",
+    "10689487": "Zero-shot interpretable phenotyping of postpartum hemorrhage using large language models",
+    "10137579": "Natural Language Processing for Breast Imaging: A Systematic Review",
+    "10874185": "Natural Language Processing for Radiation Oncology: Personalizing Treatment Pathways",
+    "11799763": "Emerging applications of NLP and large language models in gastroenterology and hepatology: a systematic review",
+    "11812127": "Natural language processing in Alzheimer's disease research: Systematic review of methods, data, and efficacy",
+    "9835770": "Portability of natural language processing methods to detect suicidality from clinical text in US and UK electronic health records",
+    "11592605": "Reliable Autism Spectrum Disorder Diagnosis for Pediatrics Using Machine Learning and Explainable AI",
+    "9832658": "Machine learning-driven clinical decision support system for concept-based searching: a field trial in a Norwegian hospital",
+    "11460004": "A hybrid framework with large language models for rare disease phenotyping"
+}
+```
+
+These papers cover a range of topics related to interpretability techniques in biomedical NLP, including general methodologies, specific applications in clinical settings, and the integration of large language models for phenotype definitions. This selection will help in building a transparent, clinically grounded, and visually intuitive interpretability tool.
+
+## User
+
+Tool Output:
+
+Here are the top 5 articles on PubMed Central for the query "Interpretability techniques in biomedical NLP":
+
+[begin paper 1]
+
+PMCID = 11574504
+
+Title = Screening for Depression Using Natural Language Processing: Literature Review
+
+Depression is a prevalent global mental health disorder with substantial individual and societal impact. Natural language processing (NLP), a branch of artificial intelligence, offers the potential for improving depression screening by extracting meaningful information from textual data, but there are challenges and ethical considerations.
+
+This literature review aims to explore existing NLP methods for detecting depression, discuss successes and limitations, address ethical concerns, and highlight potential biases.
+
+A literature search was conducted using Semantic Scholar, PubMed, and Google Scholar to identify studies on depression screening using NLP. Keywords included “depression screening,” “depression detection,” and “natural language processing.” Studies were included if they discussed the application of NLP techniques for depression screening or detection. Studies were screened and selected for relevance, with data extracted and synthesized to identify common themes and gaps in the literature.
+
+NLP techniques, including sentiment analysis, linguistic markers, and deep learning models, offer practical tools for depression screening. Supervised and unsupervised machine learning models and large language models like transformers have demonstrated high accuracy in a variety of application domains. However, ethical concerns related to privacy, bias, interpretability, and lack of regulations to protect individuals arise. Furthermore, cultural and multilingual perspectives highlight the need for culturally sensitive models.
+
+NLP presents opportunities to enhance depression detection, but considerable challenges persist. Ethical concerns must be addressed, governance guidance is needed to mitigate risks, and cross-cultural perspectives must be integrated. Future directions include improving interpretability, personalization, and increased collaboration with domain experts, such as data scientists and machine learning engineers. NLP’s potential to enhance mental health care remains promising, depending on overcoming obstacles and continuing innovation.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 8223521
+
+Title = Translational NLP: A New Paradigm and General Principles for Natural Language Processing Research
+
+Natural language processing (NLP) research combines the study of universal principles, through basic science, with applied science targeting specific use cases and settings. However, the process of exchange between basic NLP and applications is often assumed to emerge naturally, resulting in many innovations going unapplied and many important questions left unstudied. We describe a new paradigm of Translational NLP, which aims to structure and facilitate the processes by which basic and applied NLP research inform one another. Translational NLP thus presents a third research paradigm, focused on understanding the challenges posed by application needs and how these challenges can drive innovation in basic science and technology design. We show that many significant advances in NLP research have emerged from the intersection of basic principles with application needs, and present a conceptual framework outlining the stakeholders and key questions in translational research. Our framework provides a roadmap for developing Translational NLP as a dedicated research area, and identifies general translational principles to facilitate exchange between basic and applied research.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 11642228
+
+Title = Revolutionizing Radiology with Natural Language Processing and Chatbot Technologies: A Narrative Umbrella Review on Current Trends and Future Directions
+
+The application of chatbots and NLP in radiology is an emerging field, currently characterized by a growing body of research. An umbrella review has been proposed utilizing a standardized checklist and quality control procedure for including scientific papers. This review explores the early developments and potential future impact of these technologies in radiology. The current literature, comprising 15 systematic reviews, highlights potentialities, opportunities, areas needing improvements, and recommendations. This umbrella review offers a comprehensive overview of the current landscape of natural language processing (NLP) and natural language models (NLMs), including chatbots, in healthcare. These technologies show potential for improving clinical decision-making, patient engagement, and communication across various medical fields. However, significant challenges remain, particularly the lack of standardized protocols, which raises concerns about the reliability and consistency of these tools in different clinical contexts. Without uniform guidelines, variability in outcomes may hinder the broader adoption of NLP/NLM technologies by healthcare providers. Moreover, the limited research on how these technologies intersect with medical devices (MDs) is a notable gap in the literature. Future research must address these challenges to fully realize the potential of NLP/NLM applications in healthcare. Key future research directions include the development of standardized protocols to ensure the consistent and safe deployment of NLP/NLM tools, particularly in high-stake areas like radiology. Investigating the integration of these technologies with MD workflows will be crucial to enhance clinical decision-making and patient care. Ethical concerns, such as data privacy, informed consent, and algorithmic bias, must also be explored to ensure responsible use in clinical settings. Longitudinal studies are needed to evaluate the long-term impact of these technologies on patient outcomes, while interdisciplinary collaboration between healthcare professionals, data scientists, and ethicists is essential for driving innovation in an ethically sound manner. Addressing these areas will advance the application of NLP/NLM technologies and improve patient care in this emerging field.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 9690240
+
+Title = The Role of Natural Language Processing during the COVID-19 Pandemic: Health Applications, Opportunities, and Challenges
+
+The COVID-19 pandemic is the most devastating public health crisis in at least a century and has affected the lives of billions of people worldwide in unprecedented ways. Compared to pandemics of this scale in the past, societies are now equipped with advanced technologies that can mitigate the impacts of pandemics if utilized appropriately. However, opportunities are currently not fully utilized, particularly at the intersection of data science and health. Health-related big data and technological advances have the potential to significantly aid the fight against such pandemics, including the current pandemic’s ongoing and long-term impacts. Specifically, the field of natural language processing (NLP) has enormous potential at a time when vast amounts of text-based data are continuously generated from a multitude of sources, such as health/hospital systems, published medical literature, and social media. Effectively mitigating the impacts of the pandemic requires tackling challenges associated with the application and deployment of NLP systems. In this paper, we review the applications of NLP to address diverse aspects of the COVID-19 pandemic. We outline key NLP-related advances on a chosen set of topics reported in the literature and discuss the opportunities and challenges associated with applying NLP during the current pandemic and future ones. These opportunities and challenges can guide future research aimed at improving the current health and social response systems and pandemic preparedness.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 11839006
+
+Title = Development and Validation of Natural Language Processing Algorithms in the ENACT National Electronic Health Record Research Network
+
+Electronic health record (EHR) data are a rich and invaluable source of real-world clinical information, enabling detailed insights into patient populations, treatment outcomes, and healthcare practices. The availability of large volumes of EHR data are critical for advancing translational research and developing innovative technologies such as artificial intelligence. The Evolve to Next-Gen Accrual to Clinical Trials (ENACT) network, established in 2015 with funding from the National Center for Advancing Translational Sciences (NCATS), aims to accelerate translational research by democratizing access to EHR data for all Clinical and Translational Science Awards (CTSA) hub investigators. The present ENACT network provides access to structured EHR data, enabling cohort discovery and translational research across the network. However, a substantial amount of critical information is contained in clinical narratives, and natural language processing (NLP) is required for extracting this information to support research. To address this need, the ENACT NLP Working Group was formed to make NLP-derived clinical information accessible and queryable across the network. This article describes the implementation and deployment of NLP infrastructure across ENACT. First, we describe the formation and goals of the Working Group, the practices and logistics involved in implementation and deployment, and the specific NLP tools and technologies utilized. Then, we describe how we extended the ENACT ontology to standardize and query NLP-derived data, as well as how we conducted multisite evaluations of the NLP algorithms. Finally, we reflect on the experience and lessons learnt, which may be useful for other national data networks that are deploying NLP to unlock the potential of clinical text for research.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "LLM interpretability in electronic phenotype definition":
+
+[begin paper 1]
+
+PMCID = 11422740
+
+Title = Prompt Engineering Paradigms for Medical Applications: Scoping Review
+
+Prompt engineering, focusing on crafting effective prompts to large language models (LLMs), has garnered attention for its capabilities at harnessing the potential of LLMs. This is even more crucial in the medical domain due to its specialized terminology and language technicity. Clinical natural language processing applications must navigate complex language and ensure privacy compliance. Prompt engineering offers a novel approach by designing tailored prompts to guide models in exploiting clinically relevant information from complex medical texts. Despite its promise, the efficacy of prompt engineering in the medical domain remains to be fully explored.
+
+The aim of the study is to review research efforts and technical approaches in prompt engineering for medical applications as well as provide an overview of opportunities and challenges for clinical practice.
+
+Databases indexing the fields of medicine, computer science, and medical informatics were queried in order to identify relevant published papers. Since prompt engineering is an emerging field, preprint databases were also considered. Multiple data were extracted, such as the prompt paradigm, the involved LLMs, the languages of the study, the domain of the topic, the baselines, and several learning, design, and architecture strategies specific to prompt engineering. We include studies that apply prompt engineering–based methods to the medical domain, published between 2022 and 2024, and covering multiple prompt paradigms such as prompt learning (PL), prompt tuning (PT), and prompt design (PD).
+
+We included 114 recent prompt engineering studies. Among the 3 prompt paradigms, we have observed that PD is the most prevalent (78 papers). In 12 papers, PD, PL, and PT terms were used interchangeably. While ChatGPT is the most commonly used LLM, we have identified 7 studies using this LLM on a sensitive clinical data set. Chain-of-thought, present in 17 studies, emerges as the most frequent PD technique. While PL and PT papers typically provide a baseline for evaluating prompt-based approaches, 61% (48/78) of the PD studies do not report any nonprompt-related baseline. Finally, we individually examine each of the key prompt engineering–specific information reported across papers and find that many studies neglect to explicitly mention them, posing a challenge for advancing prompt engineering research.
+
+In addition to reporting on trends and the scientific landscape of prompt engineering, we provide reporting guidelines for future studies to help advance research in the medical field. We also disclose tables and figures summarizing medical prompt engineering papers available and hope that future contributions will leverage these existing works to better advance the field.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11480249
+
+Title = Confronting the data deluge: How artificial intelligence can be used in the study of plant stress
+
+The advent of the genomics era enabled the generation of high-throughput data and computational methods that serve as powerful hypothesis-generating tools to understand the genomic and gene functional basis of plant stress resilience. The proliferation of experimental and analytical methods used in biology has resulted in a situation where plentiful data exists, but the volume and heterogeneity of this data has made analysis a significant challenge. Current advanced deep-learning models have displayed an unprecedented level of comprehension and problem-solving ability, and have been used to predict gene structure, function and expression based on DNA or protein sequence, and prominently also their use in high-throughput phenomics in agriculture. However, the application of deep-learning models to understand gene regulatory and signalling behaviour is still in its infancy. We discuss in this review the availability of data resources and bioinformatic tools, and several applications of these advanced ML/AI models in the context of plant stress response, and demonstrate the use of a publicly available LLM (ChatGPT) to derive a knowledge graph of various experimental and computational methods used in the study of plant stress. We hope this will stimulate further interest in collaboration between computer scientists, computational biologists and plant scientists to distil the deluge of genomic, transcriptomic, proteomic, metabolomic and phenomic data into meaningful knowledge that can be used for the benefit of humanity.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 11639975
+
+Title = EXACT-Net: Framework for EHR-Guided Lung Tumor Auto-Segmentation for Non-Small Cell Lung Cancer Radiotherapy
+
+In recent years, large language models have shown great potential to enhance traditional medical image processing by incorporating multimodality information into decision-making. Conventional artificial intelligence systems solely rely on images to make predictions or decisions. However, information from medical reports can provide invaluable information for the system to curate its decision. Here we are presenting a multimodality language-vision model and framework for accurate segmentation of medical images.
+
+Background/Objectives: Lung cancer is a devastating disease with the highest mortality rate among cancer types. Over 60% of non-small cell lung cancer (NSCLC) patients, accounting for 87% of lung cancer diagnoses, require radiation therapy. Rapid treatment initiation significantly increases the patient’s survival rate and reduces the mortality rate. Accurate tumor segmentation is a critical step in diagnosing and treating NSCLC. Manual segmentation is time- and labor-consuming and causes delays in treatment initiation. Although many lung nodule detection methods, including deep learning-based models, have been proposed. Most of these methods still have a long-standing problem of high false positives (FPs). Methods: Here, we developed an electronic health record (EHR)-guided lung tumor auto-segmentation called EXACT-Net (EHR-enhanced eXACtitude in Tumor segmentation), where the extracted information from EHRs using a pre-trained large language model (LLM) was used to remove the FPs and keep the TP nodules only. Results: The auto-segmentation model was trained on NSCLC patients’ computed tomography (CT), and the pre-trained LLM was used with the zero-shot learning approach. Our approach resulted in a 250% boost in successful nodule detection using the data from ten NSCLC patients treated in our institution. Conclusions: We demonstrated that combining vision-language information in EXACT-Net multi-modal AI framework greatly enhances the performance of vision only models, paving the road to multimodal AI framework for medical image processing.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 11545079
+
+Title = The Evolution of Artificial Intelligence in Medical Imaging: From Computer Science to Machine and Deep Learning
+
+Artificial intelligence, now one of the most promising frontiers of medicine, has a long and tumultuous history punctuated by successes and failures. One of its successes was its application to medical images. We reconstruct the timeline of the advancements in this field, from its origins in the 1940s before crossing medical images to early applications of machine learning to radiology, to the present era where artificial intelligence is revolutionizing radiology.
+
+Artificial intelligence (AI), the wide spectrum of technologies aiming to give machines or computers the ability to perform human-like cognitive functions, began in the 1940s with the first abstract models of intelligent machines. Soon after, in the 1950s and 1960s, machine learning algorithms such as neural networks and decision trees ignited significant enthusiasm. More recent advancements include the refinement of learning algorithms, the development of convolutional neural networks to efficiently analyze images, and methods to synthesize new images. This renewed enthusiasm was also due to the increase in computational power with graphical processing units and the availability of large digital databases to be mined by neural networks. AI soon began to be applied in medicine, first through expert systems designed to support the clinician’s decision and later with neural networks for the detection, classification, or segmentation of malignant lesions in medical images. A recent prospective clinical trial demonstrated the non-inferiority of AI alone compared with a double reading by two radiologists on screening mammography. Natural language processing, recurrent neural networks, transformers, and generative models have both improved the capabilities of making an automated reading of medical images and moved AI to new domains, including the text analysis of electronic health records, image self-labeling, and self-reporting. The availability of open-source and free libraries, as well as powerful computing resources, has greatly facilitated the adoption of deep learning by researchers and clinicians. Key concerns surrounding AI in healthcare include the need for clinical trials to demonstrate efficacy, the perception of AI tools as ‘black boxes’ that require greater interpretability and explainability, and ethical issues related to ensuring fairness and trustworthiness in AI systems. Thanks to its versatility and impressive results, AI is one of the most promising resources for frontier research and applications in medicine, in particular for oncological applications.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 10689487
+
+Title = Zero-shot interpretable phenotyping of postpartum hemorrhage using large language models
+
+Many areas of medicine would benefit from deeper, more accurate phenotyping, but there are limited approaches for phenotyping using clinical notes without substantial annotated data. Large language models (LLMs) have demonstrated immense potential to adapt to novel tasks with no additional training by specifying task-specific instructions. Here we report the performance of a publicly available LLM, Flan-T5, in phenotyping patients with postpartum hemorrhage (PPH) using discharge notes from electronic health records (n = 271,081). The language model achieves strong performance in extracting 24 granular concepts associated with PPH. Identifying these granular concepts accurately allows the development of interpretable, complex phenotypes and subtypes. The Flan-T5 model achieves high fidelity in phenotyping PPH (positive predictive value of 0.95), identifying 47% more patients with this complication compared to the current standard of using claims codes. This LLM pipeline can be used reliably for subtyping PPH and outperforms a claims-based approach on the three most common PPH subtypes associated with uterine atony, abnormal placentation, and obstetric trauma. The advantage of this approach to subtyping is its interpretability, as each concept contributing to the subtype determination can be evaluated. Moreover, as definitions may change over time due to new guidelines, using granular concepts to create complex phenotypes enables prompt and efficient updating of the algorithm. Using this language modelling approach enables rapid phenotyping without the need for any manually annotated training data across multiple clinical use cases.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "Interpretability techniques for clinical applications in NLP":
+
+[begin paper 1]
+
+PMCID = 10137579
+
+Title = Natural Language Processing for Breast Imaging: A Systematic Review
+
+Natural Language Processing (NLP) has gained prominence in diagnostic radiology, offering a promising tool for improving breast imaging triage, diagnosis, lesion characterization, and treatment management in breast cancer and other breast diseases. This review provides a comprehensive overview of recent advances in NLP for breast imaging, covering the main techniques and applications in this field. Specifically, we discuss various NLP methods used to extract relevant information from clinical notes, radiology reports, and pathology reports and their potential impact on the accuracy and efficiency of breast imaging. In addition, we reviewed the state-of-the-art in NLP-based decision support systems for breast imaging, highlighting the challenges and opportunities of NLP applications for breast imaging in the future. Overall, this review underscores the potential of NLP in enhancing breast imaging care and offers insights for clinicians and researchers interested in this exciting and rapidly evolving field.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11642228
+
+Title = Revolutionizing Radiology with Natural Language Processing and Chatbot Technologies: A Narrative Umbrella Review on Current Trends and Future Directions
+
+The application of chatbots and NLP in radiology is an emerging field, currently characterized by a growing body of research. An umbrella review has been proposed utilizing a standardized checklist and quality control procedure for including scientific papers. This review explores the early developments and potential future impact of these technologies in radiology. The current literature, comprising 15 systematic reviews, highlights potentialities, opportunities, areas needing improvements, and recommendations. This umbrella review offers a comprehensive overview of the current landscape of natural language processing (NLP) and natural language models (NLMs), including chatbots, in healthcare. These technologies show potential for improving clinical decision-making, patient engagement, and communication across various medical fields. However, significant challenges remain, particularly the lack of standardized protocols, which raises concerns about the reliability and consistency of these tools in different clinical contexts. Without uniform guidelines, variability in outcomes may hinder the broader adoption of NLP/NLM technologies by healthcare providers. Moreover, the limited research on how these technologies intersect with medical devices (MDs) is a notable gap in the literature. Future research must address these challenges to fully realize the potential of NLP/NLM applications in healthcare. Key future research directions include the development of standardized protocols to ensure the consistent and safe deployment of NLP/NLM tools, particularly in high-stake areas like radiology. Investigating the integration of these technologies with MD workflows will be crucial to enhance clinical decision-making and patient care. Ethical concerns, such as data privacy, informed consent, and algorithmic bias, must also be explored to ensure responsible use in clinical settings. Longitudinal studies are needed to evaluate the long-term impact of these technologies on patient outcomes, while interdisciplinary collaboration between healthcare professionals, data scientists, and ethicists is essential for driving innovation in an ethically sound manner. Addressing these areas will advance the application of NLP/NLM technologies and improve patient care in this emerging field.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 11574504
+
+Title = Screening for Depression Using Natural Language Processing: Literature Review
+
+Depression is a prevalent global mental health disorder with substantial individual and societal impact. Natural language processing (NLP), a branch of artificial intelligence, offers the potential for improving depression screening by extracting meaningful information from textual data, but there are challenges and ethical considerations.
+
+This literature review aims to explore existing NLP methods for detecting depression, discuss successes and limitations, address ethical concerns, and highlight potential biases.
+
+A literature search was conducted using Semantic Scholar, PubMed, and Google Scholar to identify studies on depression screening using NLP. Keywords included “depression screening,” “depression detection,” and “natural language processing.” Studies were included if they discussed the application of NLP techniques for depression screening or detection. Studies were screened and selected for relevance, with data extracted and synthesized to identify common themes and gaps in the literature.
+
+NLP techniques, including sentiment analysis, linguistic markers, and deep learning models, offer practical tools for depression screening. Supervised and unsupervised machine learning models and large language models like transformers have demonstrated high accuracy in a variety of application domains. However, ethical concerns related to privacy, bias, interpretability, and lack of regulations to protect individuals arise. Furthermore, cultural and multilingual perspectives highlight the need for culturally sensitive models.
+
+NLP presents opportunities to enhance depression detection, but considerable challenges persist. Ethical concerns must be addressed, governance guidance is needed to mitigate risks, and cross-cultural perspectives must be integrated. Future directions include improving interpretability, personalization, and increased collaboration with domain experts, such as data scientists and machine learning engineers. NLP’s potential to enhance mental health care remains promising, depending on overcoming obstacles and continuing innovation.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 10874185
+
+Title = Natural Language Processing for Radiation Oncology: Personalizing Treatment Pathways
+
+Natural language processing (NLP), a technology that translates human language into machine-readable data, is revolutionizing numerous sectors, including cancer care. This review outlines the evolution of NLP and its potential for crafting personalized treatment pathways for cancer patients. Leveraging NLP’s ability to transform unstructured medical data into structured learnable formats, researchers can tap into the potential of big data for clinical and research applications. Significant advancements in NLP have spurred interest in developing tools that automate information extraction from clinical text, potentially transforming medical research and clinical practices in radiation oncology. Applications discussed include symptom and toxicity monitoring, identification of social determinants of health, improving patient-physician communication, patient education, and predictive modeling. However, several challenges impede the full realization of NLP’s benefits, such as privacy and security concerns, biases in NLP models, and the interpretability and generalizability of these models. Overcoming these challenges necessitates a collaborative effort between computer scientists and the radiation oncology community. This paper serves as a comprehensive guide to understanding the intricacies of NLP algorithms, their performance assessment, past research contributions, and the future of NLP in radiation oncology research and clinics.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 11799763
+
+Title = Emerging applications of NLP and large language models in gastroenterology and hepatology: a systematic review
+
+In the last years, natural language processing (NLP) has transformed significantly with the introduction of large language models (LLM). This review updates on NLP and LLM applications and challenges in gastroenterology and hepatology.
+
+Registered with PROSPERO (CRD42024542275) and adhering to PRISMA guidelines, we searched six databases for relevant studies published from 2003 to 2024, ultimately including 57 studies.
+
+Our review of 57 studies notes an increase in relevant publications in 2023–2024 compared to previous years, reflecting growing interest in newer models such as GPT-3 and GPT-4. The results demonstrate that NLP models have enhanced data extraction from electronic health records and other unstructured medical data sources. Key findings include high precision in identifying disease characteristics from unstructured reports and ongoing improvement in clinical decision-making. Risk of bias assessments using ROBINS-I, QUADAS-2, and PROBAST tools confirmed the methodological robustness of the included studies.
+
+NLP and LLMs can enhance diagnosis and treatment in gastroenterology and hepatology. They enable extraction of data from unstructured medical records, such as endoscopy reports and patient notes, and for enhancing clinical decision-making. Despite these advancements, integrating these tools into routine practice is still challenging. Future work should prospectively demonstrate real-world value.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "Building clinician trust through NLP interpretability":
+
+[begin paper 1]
+
+PMCID = 11812127
+
+Title = Natural language processing in Alzheimer's disease research: Systematic review of methods, data, and efficacy
+
+Alzheimer's disease (AD) prevalence is increasing, with no current cure. Natural language processing (NLP) offers the potential for non‐invasive diagnostics, social burden assessment, and research advancements in AD.
+
+A systematic review using Preferred Reporting Items for Systematic Reviews and Meta‐Analyses guidelines explored NLP applications in AD, focusing on dataset types, sources, research foci, methods, and effectiveness. Searches were conducted across six databases (ACM, Embase, IEEE, PubMed, Scopus, and Web of Science) from January 2020 to July 2024.
+
+Of 1740 records, 79 studies were selected. Frequently used datasets included speech and electronic health records (EHR), along with social media and scientific publications. Machine learning and neural networks were primarily applied to speech, EHR, and social media data, while rule‐based methods were used to analyze literature datasets.
+
+NLP has proven effective in various aspects of AD research, including diagnosis, monitoring, social burden assessment, biomarker analysis, and research. However, there are opportunities for improvement in dataset diversity, model interpretability, multilingual capabilities, and addressing ethical concerns.
+
+This review systematically analyzed 79 studies from six major databases, focusing on the advancements and applications of natural language processing (NLP) in Alzheimer's disease (AD) research.
+
+The study highlights the need for models focusing on remote monitoring of AD patients using speech analysis, offering a cost‐effective alternative to traditional methods such as brain imaging and aiding clinicians in both prediagnosis and post‐diagnosis periods.
+
+The use of pretrained multilingual models is recommended to improve AD detection across different languages by leveraging diverse speech features and utilizing publicly available datasets.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11642228
+
+Title = Revolutionizing Radiology with Natural Language Processing and Chatbot Technologies: A Narrative Umbrella Review on Current Trends and Future Directions
+
+The application of chatbots and NLP in radiology is an emerging field, currently characterized by a growing body of research. An umbrella review has been proposed utilizing a standardized checklist and quality control procedure for including scientific papers. This review explores the early developments and potential future impact of these technologies in radiology. The current literature, comprising 15 systematic reviews, highlights potentialities, opportunities, areas needing improvements, and recommendations. This umbrella review offers a comprehensive overview of the current landscape of natural language processing (NLP) and natural language models (NLMs), including chatbots, in healthcare. These technologies show potential for improving clinical decision-making, patient engagement, and communication across various medical fields. However, significant challenges remain, particularly the lack of standardized protocols, which raises concerns about the reliability and consistency of these tools in different clinical contexts. Without uniform guidelines, variability in outcomes may hinder the broader adoption of NLP/NLM technologies by healthcare providers. Moreover, the limited research on how these technologies intersect with medical devices (MDs) is a notable gap in the literature. Future research must address these challenges to fully realize the potential of NLP/NLM applications in healthcare. Key future research directions include the development of standardized protocols to ensure the consistent and safe deployment of NLP/NLM tools, particularly in high-stake areas like radiology. Investigating the integration of these technologies with MD workflows will be crucial to enhance clinical decision-making and patient care. Ethical concerns, such as data privacy, informed consent, and algorithmic bias, must also be explored to ensure responsible use in clinical settings. Longitudinal studies are needed to evaluate the long-term impact of these technologies on patient outcomes, while interdisciplinary collaboration between healthcare professionals, data scientists, and ethicists is essential for driving innovation in an ethically sound manner. Addressing these areas will advance the application of NLP/NLM technologies and improve patient care in this emerging field.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 9835770
+
+Title = Portability of natural language processing methods to detect suicidality from clinical text in US and UK electronic health records
+
+In the global effort to prevent death by suicide, many academic medical institutions are implementing natural language processing (NLP) approaches to detect suicidality from unstructured clinical text in electronic health records (EHRs), with the hope of targeting timely, preventative interventions to individuals most at risk of suicide. Despite the international need, the development of these NLP approaches in EHRs has been largely local and not shared across healthcare systems.
+
+In this study, we developed a process to share NLP approaches that were individually developed at King’s College London (KCL), UK and Weill Cornell Medicine (WCM), US - two academic medical centers based in different countries with vastly different healthcare systems. We tested and compared the algorithms’ performance on manually annotated clinical notes (KCL: n = 4,911 and WCM = 837).
+
+After a successful technical porting of the NLP approaches, our quantitative evaluation determined that independently developed NLP approaches can detect suicidality at another healthcare organization with a different EHR system, clinical documentation processes, and culture, yet do not achieve the same level of success as at the institution where the NLP algorithm was developed (KCL approach: F1-score 0.85 vs. 0.68, WCM approach: F1-score 0.87 vs. 0.72).
+
+Independent NLP algorithm development and patient cohort selection at the two institutions comprised direct comparability.
+
+Shared use of these NLP approaches is a critical step forward towards improving data-driven algorithms for early suicide risk identification and timely prevention.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 11592605
+
+Title = Reliable Autism Spectrum Disorder Diagnosis for Pediatrics Using Machine Learning and Explainable AI
+
+Background: As the demand for early and accurate diagnosis of autism spectrum disorder (ASD) increases, the integration of machine learning (ML) and explainable artificial intelligence (XAI) is emerging as a critical advancement that promises to revolutionize intervention strategies by improving both accuracy and transparency. Methods: This paper presents a method that combines XAI techniques with a rigorous data-preprocessing pipeline to improve the accuracy and interpretability of ML-based diagnostic tools. Our preprocessing pipeline included outlier removal, missing data handling, and selecting pertinent features based on clinical expert advice. Using R and the caret package (version 6.0.94), we developed and compared several ML algorithms, validated using 10-fold cross-validation and optimized by grid search hyperparameter tuning. XAI techniques were employed to improve model transparency, offering insights into how features contribute to predictions, thereby enhancing clinician trust. Results: Rigorous data-preprocessing improved the models’ generalizability and real-world applicability across diverse clinical datasets, ensuring a robust performance. Neural networks and extreme gradient boosting models achieved the best performance in terms of accuracy, precision, and recall. XAI techniques demonstrated that behavioral features significantly influenced model predictions, leading to greater interpretability. Conclusions: This study successfully developed highly precise and interpretable ML models for ASD diagnosis, connecting advanced ML methods with practical clinical application and supporting the adoption of AI-driven diagnostic tools by healthcare professionals. This study’s findings contribute to personalized intervention strategies and early diagnostic practices, ultimately improving outcomes and quality of life for individuals with ASD.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 9832658
+
+Title = Machine learning-driven clinical decision support system for concept-based searching: a field trial in a Norwegian hospital
+
+Natural language processing (NLP) based clinical decision support systems (CDSSs) have demonstrated the ability to extract vital information from patient electronic health records (EHRs) to facilitate important decision support tasks. While obtaining accurate, medical domain interpretable results is crucial, it is demanding because real-world EHRs contain many inconsistencies and inaccuracies. Further, testing of such machine learning-based systems in clinical practice has received limited attention and are yet to be accepted by clinicians for regular use.
+
+We present our results from the evaluation of an NLP-driven CDSS developed and implemented in a Norwegian Hospital. The system incorporates unsupervised and supervised machine learning combined with rule-based algorithms for clinical concept-based searching to identify and classify allergies of concern for anesthesia and intensive care. The system also implements a semi-supervised machine learning approach to automatically annotate medical concepts in the narrative.
+
+Evaluation of system adoption was performed by a mixed methods approach applying The Unified Theory of Acceptance and Use of Technology (UTAUT) as a theoretical lens. Most of the respondents demonstrated a high degree of system acceptance and expressed a positive attitude towards the system in general and intention to use the system in the future. Increased detection of patient allergies, and thus improved quality of practice and patient safety during surgery or ICU stays, was perceived as the most important advantage of the system.
+
+Our combined machine learning and rule-based approach benefits system performance, efficiency, and interpretability. The results demonstrate that the proposed CDSS increases detection of patient allergies, and that the system received high-level acceptance by the clinicians using it. Useful recommendations for further system improvements and implementation initiatives are reducing the quantity of alarms, expansion of the system to include more clinical concepts, closer EHR system integration, and more workstations available at point of care. 
+
+[end paper 5]
+
+
+
+Here are the top 2 articles on PubMed Central for the query "SNOMED CT integration in LLM interpretability for phenotype definitions":
+
+[begin paper 1]
+
+PMCID = 11460004
+
+Title = A hybrid framework with large language models for rare disease phenotyping
+
+Rare diseases pose significant challenges in diagnosis and treatment due to their low prevalence and heterogeneous clinical presentations. Unstructured clinical notes contain valuable information for identifying rare diseases, but manual curation is time-consuming and prone to subjectivity. This study aims to develop a hybrid approach combining dictionary-based natural language processing (NLP) tools with large language models (LLMs) to improve rare disease identification from unstructured clinical reports.
+
+We propose a novel hybrid framework that integrates the Orphanet Rare Disease Ontology (ORDO) and the Unified Medical Language System (UMLS) to create a comprehensive rare disease vocabulary. SemEHR, a dictionary-based NLP tool, is employed to extract rare disease mentions from clinical notes. To refine the results and improve accuracy, we leverage various LLMs, including LLaMA3, Phi3-mini, and domain-specific models like OpenBioLLM and BioMistral. Different prompting strategies, such as zero-shot, few-shot, and knowledge-augmented generation, are explored to optimize the LLMs’ performance.
+
+The proposed hybrid approach demonstrates superior performance compared to traditional NLP systems and standalone LLMs. LLaMA3 and Phi3-mini achieve the highest F1 scores in rare disease identification. Few-shot prompting with 1-3 examples yields the best results, while knowledge-augmented generation shows limited improvement. Notably, the approach uncovers a significant number of potential rare disease cases not documented in structured diagnostic records, highlighting its ability to identify previously unrecognized patients.
+
+The hybrid approach combining dictionary-based NLP tools with LLMs shows great promise for improving rare disease identification from unstructured clinical reports. By leveraging the strengths of both techniques, the method demonstrates superior performance and the potential to uncover hidden rare disease cases. Further research is needed to address limitations related to ontology mapping and overlapping case identification, and to integrate the approach into clinical practice for early diagnosis and improved patient outcomes.
+
+The online version contains supplementary material available at 10.1186/s12911-024-02698-7.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11786076
+
+Title = Methods for identifying health status from routinely collected health data: An overview
+
+Routinely collected health data (RCD) are currently accelerating publications that evaluate the effectiveness and safety of medicines and medical devices. One of the fundamental steps in using these data is developing algorithms to identify health status that can be used for observational studies. However, the process and methodologies for identifying health status from RCD remain insufficiently understood. While most current methods rely on International Classification of Diseases (ICD) codes, they may not be universally applicable. Although machine learning methods hold promise for more accurately identifying the health status, they remain underutilized in RCD studies. To address these significant methodological gaps, we outline key steps and methodological considerations for identifying health statuses in observational studies using RCD. This review has the potential to boost the credibility of findings from observational studies that use RCD.
+
+[end paper 2]
+
+
+

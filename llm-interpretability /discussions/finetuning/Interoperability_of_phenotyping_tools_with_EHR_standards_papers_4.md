@@ -1,0 +1,384 @@
+## User
+
+This is the beginning of an individual meeting with Clinical Informatics Specialist to discuss your research project.
+
+Here is the agenda for the meeting:
+
+You are working on a research project to use software techniques to develop a tool for large language model (LLM) interpretability in the context of creating electronic phenotype definitions, ideally, also incorporating a visual perspective to foster trust between the clinician and the model. To develop a tool for LLM interpretability in electronic phenotype definitions, we will adopt a machine learning approach, leveraging existing open-source interpretability libraries. Our focus will be on integrating SNOMED CT to enhance reasoning and reduce hallucinations, while incorporating visual elements to build clinician trust.
+                You are responsible for understanding the topic Interoperability of phenotyping tools with EHR standards in the context of designing an LLM-based interpretability pipeline for electronic phenotype definition.
+                You need to fine-tune yourself on the relevant literature on Interoperability of phenotyping tools with EHR standards to improve your ability to contribute effectively to building a transparent, clinically grounded, and visually intuitive interpretability tool.
+                Please write out a series of five distinct search queries that you want to run to find relevant scientific papers on Interoperability of phenotyping tools with EHR standards. Include both general queries about Interoperability of phenotyping tools with EHR standards and queries that specifically relate Interoperability of phenotyping tools with EHR standards to LLM interpretability, phenotype definition, clinical applications, and clinician trust.
+                Please provide the queries in Python syntax as a list of double-quoted strings.
+
+Here are the agenda questions that must be answered:
+
+1. What are the PMCIDs and titles of the papers you wish to fine-tune yourself on (as a Python dictionary mapping PMCID as a double-quoted string to title as double-quoted string)?
+
+Clinical Informatics Specialist, please provide your response to the agenda.
+
+## Clinical Informatics Specialist
+
+To address the agenda and provide a comprehensive response, I'll first outline a series of search queries that will help us gather relevant literature on the interoperability of phenotyping tools with EHR standards, particularly in the context of LLM interpretability and clinical applications. Here are the queries in Python syntax:
+
+```python
+queries = [
+    "Interoperability of phenotyping tools with EHR standards",
+    "LLM interpretability in electronic phenotype definition",
+    "Integration of SNOMED CT in phenotype tools and EHR",
+    "Visual interpretability tools for clinical phenotyping",
+    "Clinician trust in AI-driven phenotype definitions"
+]
+```
+
+Next, I will use these queries to search for relevant scientific papers. Let's proceed with retrieving the PMCIDs and titles of the papers that match these queries. I'll perform the searches and then provide the results.
+
+## Clinical Informatics Specialist
+
+Here are the PMCIDs and titles of the papers that are relevant to the queries on interoperability of phenotyping tools with EHR standards and related topics:
+
+```python
+papers = {
+    "11472501": "State-of-the-Art Fast Healthcare Interoperability Resources (FHIR)–Based Data Model and Structure Implementations: Systematic Scoping Review",
+    "9147872": "HL7 FHIR with SNOMED-CT to Achieve Semantic and Structural Interoperability in Personal Health Data: A Proof-of-Concept Study",
+    "9346559": "Fast Healthcare Interoperability Resources (FHIR) for Interoperability in Health Research: Systematic Review",
+    "10865191": "Electronic Health Record and Semantic Issues Using Fast Healthcare Interoperability Resources: Systematic Mapping Review",
+    "6990976": "Developing a FHIR-based EHR phenotyping framework: A case study for identification of patients with obesity and multiple comorbidities from discharge summaries",
+    "11422740": "Prompt Engineering Paradigms for Medical Applications: Scoping Review",
+    "11639975": "EXACT-Net: Framework for EHR-Guided Lung Tumor Auto-Segmentation for Non-Small Cell Lung Cancer Radiotherapy",
+    "10689487": "Zero-shot interpretable phenotyping of postpartum hemorrhage using large language models",
+    "8714300": "A State-of-the Art Review of SNOMED CT Terminology Binding and Recommendations for Practice and Research",
+    "6351992": "SNOMED CT Concept Hierarchies for Computable Clinical Phenotypes From Electronic Health Record Data: Comparison of Intensional Versus Extensional Value Sets",
+    "10546035": "Explainable deep learning in plant phenotyping",
+    "9065125": "Interpretability and fairness evaluation of deep learning models on MIMIC-IV dataset",
+    "11848901": "Artificial intelligence to revolutionize IBD clinical trials: a comprehensive review"
+}
+```
+
+These papers cover various aspects of interoperability, LLM interpretability, SNOMED CT integration, visual interpretability, and clinician trust in AI-driven phenotype definitions. They will provide a solid foundation for understanding the current landscape and challenges in developing an LLM-based interpretability pipeline for electronic phenotype definitions.
+
+## User
+
+Tool Output:
+
+Here are the top 5 articles on PubMed Central for the query "Interoperability of phenotyping tools with EHR standards":
+
+[begin paper 1]
+
+PMCID = 11472501
+
+Title = State-of-the-Art Fast Healthcare Interoperability Resources (FHIR)–Based Data Model and Structure Implementations: Systematic Scoping Review
+
+Data models are crucial for clinical research as they enable researchers to fully use the vast amount of clinical data stored in medical systems. Standardized data and well-defined relationships between data points are necessary to guarantee semantic interoperability. Using the Fast Healthcare Interoperability Resources (FHIR) standard for clinical data representation would be a practical methodology to enhance and accelerate interoperability and data availability for research.
+
+This research aims to provide a comprehensive overview of the state-of-the-art and current landscape in FHIR-based data models and structures. In addition, we intend to identify and discuss the tools, resources, limitations, and other critical aspects mentioned in the selected research papers.
+
+To ensure the extraction of reliable results, we followed the instructions of the PRISMA-ScR (Preferred Reporting Items for Systematic Reviews and Meta-Analyses extension for Scoping Reviews) checklist. We analyzed the indexed articles in PubMed, Scopus, Web of Science, IEEE Xplore, the ACM Digital Library, and Google Scholar. After identifying, extracting, and assessing the quality and relevance of the articles, we synthesized the extracted data to identify common patterns, themes, and variations in the use of FHIR-based data models and structures across different studies.
+
+On the basis of the reviewed articles, we could identify 2 main themes: dynamic (pipeline-based) and static data models. The articles were also categorized into health care use cases, including chronic diseases, COVID-19 and infectious diseases, cancer research, acute or intensive care, random and general medical notes, and other conditions. Furthermore, we summarized the important or common tools and approaches of the selected papers. These items included FHIR-based tools and frameworks, machine learning approaches, and data storage and security. The most common resource was “Observation” followed by “Condition” and “Patient.” The limitations and challenges of developing data models were categorized based on the issues of data integration, interoperability, standardization, performance, and scalability or generalizability.
+
+FHIR serves as a highly promising interoperability standard for developing real-world health care apps. The implementation of FHIR modeling for electronic health record data facilitates the integration, transmission, and analysis of data while also advancing translational research and phenotyping. Generally, FHIR-based exports of local data repositories improve data interoperability for systems and data warehouses across different settings. However, ongoing efforts to address existing limitations and challenges are essential for the successful implementation and integration of FHIR data models.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 9147872
+
+Title = HL7 FHIR with SNOMED-CT to Achieve Semantic and Structural Interoperability in Personal Health Data: A Proof-of-Concept Study
+
+Heterogeneity is a problem in storing and exchanging data in a digital health information system (HIS) following semantic and structural integrity. The existing literature shows different methods to overcome this problem. Fast healthcare interoperable resources (FHIR) as a structural standard may explain other information models, (e.g., personal, physiological, and behavioral data from heterogeneous sources, such as activity sensors, questionnaires, and interviews) with semantic vocabularies, (e.g., Systematized Nomenclature of Medicine—Clinical Terms (SNOMED-CT)) to connect personal health data to an electronic health record (EHR). We design and develop an intuitive health coaching (eCoach) smartphone application to prove the concept. We combine HL7 FHIR and SNOMED-CT vocabularies to exchange personal health data in JavaScript object notion (JSON). This study explores and analyzes our attempt to design and implement a structurally and logically compatible tethered personal health record (PHR) that allows bidirectional communication with an EHR. Our eCoach prototype implements most PHR-S FM functions as an interoperability quality standard. Its end-to-end (E2E) data are protected with a TSD (Services for Sensitive Data) security mechanism. We achieve 0% data loss and 0% unreliable performances during data transfer between PHR and EHR. Furthermore, this experimental study shows the effectiveness of FHIR modular resources toward flexible management of data components in the PHR (eCoach) prototype.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 9346559
+
+Title = Fast Healthcare Interoperability Resources (FHIR) for Interoperability in Health Research: Systematic Review
+
+The standard Fast Healthcare Interoperability Resources (FHIR) is widely used in health information technology. However, its use as a standard for health research is still less prevalent. To use existing data sources more efficiently for health research, data interoperability becomes increasingly important. FHIR provides solutions by offering resource domains such as “Public Health & Research” and “Evidence-Based Medicine” while using already established web technologies. Therefore, FHIR could help standardize data across different data sources and improve interoperability in health research.
+
+The aim of our study was to provide a systematic review of existing literature and determine the current state of FHIR implementations in health research and possible future directions.
+
+We searched the PubMed/MEDLINE, Embase, Web of Science, IEEE Xplore, and Cochrane Library databases for studies published from 2011 to 2022. Studies investigating the use of FHIR in health research were included. Articles published before 2011, abstracts, reviews, editorials, and expert opinions were excluded. We followed the PRISMA (Preferred Reporting Items for Systematic Reviews and Meta-Analyses) guidelines and registered this study with PROSPERO (CRD42021235393). Data synthesis was done in tables and figures.
+
+We identified a total of 998 studies, of which 49 studies were eligible for inclusion. Of the 49 studies, most (73%, n=36) covered the domain of clinical research, whereas the remaining studies focused on public health or epidemiology (6%, n=3) or did not specify their research domain (20%, n=10). Studies used FHIR for data capture (29%, n=14), standardization of data (41%, n=20), analysis (12%, n=6), recruitment (14%, n=7), and consent management (4%, n=2). Most (55%, 27/49) of the studies had a generic approach, and 55% (12/22) of the studies focusing on specific medical specialties (infectious disease, genomics, oncology, environmental health, imaging, and pulmonary hypertension) reported their solutions to be conferrable to other use cases. Most (63%, 31/49) of the studies reported using additional data models or terminologies: Systematized Nomenclature of Medicine Clinical Terms (29%, n=14), Logical Observation Identifiers Names and Codes (37%, n=18), International Classification of Diseases 10th Revision (18%, n=9), Observational Medical Outcomes Partnership common data model (12%, n=6), and others (43%, n=21). Only 4 (8%) studies used a FHIR resource from the domain “Public Health & Research.” Limitations using FHIR included the possible change in the content of FHIR resources, safety, legal matters, and the need for a FHIR server.
+
+Our review found that FHIR can be implemented in health research, and the areas of application are broad and generalizable in most use cases. The implementation of international terminologies was common, and other standards such as the Observational Medical Outcomes Partnership common data model could be used as a complement to FHIR. Limitations such as the change of FHIR content, lack of FHIR implementation, safety, and legal matters need to be addressed in future releases to expand the use of FHIR and, therefore, interoperability in health research.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 10865191
+
+Title = Electronic Health Record and Semantic Issues Using Fast Healthcare Interoperability Resources: Systematic Mapping Review
+
+The increasing use of electronic health records and the Internet of Things has led to interoperability issues at different levels (structural and semantic). Standards are important not only for successfully exchanging data but also for appropriately interpreting them (semantic interoperability). Thus, to facilitate the semantic interoperability of data exchanged in health care, considerable resources have been deployed to improve the quality of shared clinical data by structuring and mapping them to the Fast Healthcare Interoperability Resources (FHIR) standard.
+
+The aims of this study are 2-fold: to inventory the studies on FHIR semantic interoperability resources and terminologies and to identify and classify the approaches and contributions proposed in these studies.
+
+A systematic mapping review (SMR) was conducted using 10 electronic databases as sources of information for inventory and review studies published during 2012 to 2022 on the development and improvement of semantic interoperability using the FHIR standard.
+
+A total of 70 FHIR studies were selected and analyzed to identify FHIR resource types and terminologies from a semantic perspective. The proposed semantic approaches were classified into 6 categories, namely mapping (31/126, 24.6%), terminology services (18/126, 14.3%), resource description framework or web ontology language–based proposals (24/126, 19%), annotation proposals (18/126, 14.3%), machine learning (ML) and natural language processing (NLP) proposals (20/126, 15.9%), and ontology-based proposals (15/126, 11.9%). From 2012 to 2022, there has been continued research in 6 categories of approaches as well as in new and emerging annotations and ML and NLP proposals. This SMR also classifies the contributions of the selected studies into 5 categories: framework or architecture proposals, model proposals, technique proposals, comparison services, and tool proposals. The most frequent type of contribution is the proposal of a framework or architecture to enable semantic interoperability.
+
+This SMR provides a classification of the different solutions proposed to address semantic interoperability using FHIR at different levels: collecting, extracting and annotating data, modeling electronic health record data from legacy systems, and applying transformation and mapping to FHIR models and terminologies. The use of ML and NLP for unstructured data is promising and has been applied to specific use case scenarios. In addition, terminology services are needed to accelerate their use and adoption; furthermore, techniques and tools to automate annotation and ontology comparison should help reduce human interaction.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 6990976
+
+Title = Developing a FHIR-based EHR phenotyping framework: A case study for identification of patients with obesity and multiple comorbidities from discharge summaries
+
+Standards-based clinical data normalization has become a key component of effective data integration and accurate phenotyping for secondary use of electronic healthcare records (EHR) data. HL7 Fast Healthcare Interoperability Resources (FHIR) is an emerging clinical data standard for exchanging electronic healthcare data and has been used in modeling and integrating both structured and unstructured EHR data for a variety of clinical research applications. The overall objective of this study is to develop and evaluate a FHIR-based EHR phenotyping framework for identification of patients with obesity and its multiple comorbidities from semi-structured discharge summaries leveraging a FHIR-based clinical data normalization pipeline (known as NLP2FHIR).
+
+We implemented a multi-class and multi-label classification system based on the i2b2 Obesity Challenge task to evaluate the FHIR-based EHR phenotyping framework. Two core parts of the framework are: (a) the conversion of discharge summaries into corresponding FHIR resources – Composition, Condition, MedicationStatement, Procedure and FamilyMemberHistory using the NLP2FHIR pipeline, and (b) the implementation of four machine learning algorithms (logistic regression, support vector machine, decision tree, and random forest) to train classifiers to predict disease state of obesity and 15 comorbidities using features extracted from standard FHIR resources and terminology expansions. We used the macro- and micro-averaged precision (P), recall (R), and F1 score (F1) measures to evaluate the classifier performance. We validated the framework using a second obesity dataset extracted from the MIMIC-III database.
+
+Using the NLP2FHIR pipeline, 1237 clinical discharge summaries from the 2008 i2b2 obesity challenge dataset were represented as the instances of the FHIR Composition resource consisting of 5677 records with 16 unique section types. After the NLP processing and FHIR modeling, a set of 244,438 FHIR clinical resource instances were generated. As the results of the four machine learning classifiers, the random forest algorithm performed the best with F1-micro(0.9466)/F1-macro(0.7887) and F1-micro(0.9536)/F1-macro(0.6524) for intuitive classification (reflecting medical professionals’ judgments) and textual classification (reflecting the judgments based on explicitly reported information of diseases), respectively. The MIMIC-III obesity dataset was successfully integrated for prediction with minimal configuration of the NLP2FHIR pipeline and machine learning models.
+
+The study demonstrated that the FHIR-based EHR phenotyping approach could effectively identify the state of obesity and multiple comorbidities using semi-structured discharge summaries. Our FHIR-based phenotyping approach is a first concrete step towards improving the data aspect of phenotyping portability across EHR systems and enhancing interpretability of the machine learning-based phenotyping algorithms.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "LLM interpretability in electronic phenotype definition":
+
+[begin paper 1]
+
+PMCID = 11422740
+
+Title = Prompt Engineering Paradigms for Medical Applications: Scoping Review
+
+Prompt engineering, focusing on crafting effective prompts to large language models (LLMs), has garnered attention for its capabilities at harnessing the potential of LLMs. This is even more crucial in the medical domain due to its specialized terminology and language technicity. Clinical natural language processing applications must navigate complex language and ensure privacy compliance. Prompt engineering offers a novel approach by designing tailored prompts to guide models in exploiting clinically relevant information from complex medical texts. Despite its promise, the efficacy of prompt engineering in the medical domain remains to be fully explored.
+
+The aim of the study is to review research efforts and technical approaches in prompt engineering for medical applications as well as provide an overview of opportunities and challenges for clinical practice.
+
+Databases indexing the fields of medicine, computer science, and medical informatics were queried in order to identify relevant published papers. Since prompt engineering is an emerging field, preprint databases were also considered. Multiple data were extracted, such as the prompt paradigm, the involved LLMs, the languages of the study, the domain of the topic, the baselines, and several learning, design, and architecture strategies specific to prompt engineering. We include studies that apply prompt engineering–based methods to the medical domain, published between 2022 and 2024, and covering multiple prompt paradigms such as prompt learning (PL), prompt tuning (PT), and prompt design (PD).
+
+We included 114 recent prompt engineering studies. Among the 3 prompt paradigms, we have observed that PD is the most prevalent (78 papers). In 12 papers, PD, PL, and PT terms were used interchangeably. While ChatGPT is the most commonly used LLM, we have identified 7 studies using this LLM on a sensitive clinical data set. Chain-of-thought, present in 17 studies, emerges as the most frequent PD technique. While PL and PT papers typically provide a baseline for evaluating prompt-based approaches, 61% (48/78) of the PD studies do not report any nonprompt-related baseline. Finally, we individually examine each of the key prompt engineering–specific information reported across papers and find that many studies neglect to explicitly mention them, posing a challenge for advancing prompt engineering research.
+
+In addition to reporting on trends and the scientific landscape of prompt engineering, we provide reporting guidelines for future studies to help advance research in the medical field. We also disclose tables and figures summarizing medical prompt engineering papers available and hope that future contributions will leverage these existing works to better advance the field.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11480249
+
+Title = Confronting the data deluge: How artificial intelligence can be used in the study of plant stress
+
+The advent of the genomics era enabled the generation of high-throughput data and computational methods that serve as powerful hypothesis-generating tools to understand the genomic and gene functional basis of plant stress resilience. The proliferation of experimental and analytical methods used in biology has resulted in a situation where plentiful data exists, but the volume and heterogeneity of this data has made analysis a significant challenge. Current advanced deep-learning models have displayed an unprecedented level of comprehension and problem-solving ability, and have been used to predict gene structure, function and expression based on DNA or protein sequence, and prominently also their use in high-throughput phenomics in agriculture. However, the application of deep-learning models to understand gene regulatory and signalling behaviour is still in its infancy. We discuss in this review the availability of data resources and bioinformatic tools, and several applications of these advanced ML/AI models in the context of plant stress response, and demonstrate the use of a publicly available LLM (ChatGPT) to derive a knowledge graph of various experimental and computational methods used in the study of plant stress. We hope this will stimulate further interest in collaboration between computer scientists, computational biologists and plant scientists to distil the deluge of genomic, transcriptomic, proteomic, metabolomic and phenomic data into meaningful knowledge that can be used for the benefit of humanity.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 11639975
+
+Title = EXACT-Net: Framework for EHR-Guided Lung Tumor Auto-Segmentation for Non-Small Cell Lung Cancer Radiotherapy
+
+In recent years, large language models have shown great potential to enhance traditional medical image processing by incorporating multimodality information into decision-making. Conventional artificial intelligence systems solely rely on images to make predictions or decisions. However, information from medical reports can provide invaluable information for the system to curate its decision. Here we are presenting a multimodality language-vision model and framework for accurate segmentation of medical images.
+
+Background/Objectives: Lung cancer is a devastating disease with the highest mortality rate among cancer types. Over 60% of non-small cell lung cancer (NSCLC) patients, accounting for 87% of lung cancer diagnoses, require radiation therapy. Rapid treatment initiation significantly increases the patient’s survival rate and reduces the mortality rate. Accurate tumor segmentation is a critical step in diagnosing and treating NSCLC. Manual segmentation is time- and labor-consuming and causes delays in treatment initiation. Although many lung nodule detection methods, including deep learning-based models, have been proposed. Most of these methods still have a long-standing problem of high false positives (FPs). Methods: Here, we developed an electronic health record (EHR)-guided lung tumor auto-segmentation called EXACT-Net (EHR-enhanced eXACtitude in Tumor segmentation), where the extracted information from EHRs using a pre-trained large language model (LLM) was used to remove the FPs and keep the TP nodules only. Results: The auto-segmentation model was trained on NSCLC patients’ computed tomography (CT), and the pre-trained LLM was used with the zero-shot learning approach. Our approach resulted in a 250% boost in successful nodule detection using the data from ten NSCLC patients treated in our institution. Conclusions: We demonstrated that combining vision-language information in EXACT-Net multi-modal AI framework greatly enhances the performance of vision only models, paving the road to multimodal AI framework for medical image processing.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 11545079
+
+Title = The Evolution of Artificial Intelligence in Medical Imaging: From Computer Science to Machine and Deep Learning
+
+Artificial intelligence, now one of the most promising frontiers of medicine, has a long and tumultuous history punctuated by successes and failures. One of its successes was its application to medical images. We reconstruct the timeline of the advancements in this field, from its origins in the 1940s before crossing medical images to early applications of machine learning to radiology, to the present era where artificial intelligence is revolutionizing radiology.
+
+Artificial intelligence (AI), the wide spectrum of technologies aiming to give machines or computers the ability to perform human-like cognitive functions, began in the 1940s with the first abstract models of intelligent machines. Soon after, in the 1950s and 1960s, machine learning algorithms such as neural networks and decision trees ignited significant enthusiasm. More recent advancements include the refinement of learning algorithms, the development of convolutional neural networks to efficiently analyze images, and methods to synthesize new images. This renewed enthusiasm was also due to the increase in computational power with graphical processing units and the availability of large digital databases to be mined by neural networks. AI soon began to be applied in medicine, first through expert systems designed to support the clinician’s decision and later with neural networks for the detection, classification, or segmentation of malignant lesions in medical images. A recent prospective clinical trial demonstrated the non-inferiority of AI alone compared with a double reading by two radiologists on screening mammography. Natural language processing, recurrent neural networks, transformers, and generative models have both improved the capabilities of making an automated reading of medical images and moved AI to new domains, including the text analysis of electronic health records, image self-labeling, and self-reporting. The availability of open-source and free libraries, as well as powerful computing resources, has greatly facilitated the adoption of deep learning by researchers and clinicians. Key concerns surrounding AI in healthcare include the need for clinical trials to demonstrate efficacy, the perception of AI tools as ‘black boxes’ that require greater interpretability and explainability, and ethical issues related to ensuring fairness and trustworthiness in AI systems. Thanks to its versatility and impressive results, AI is one of the most promising resources for frontier research and applications in medicine, in particular for oncological applications.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 10689487
+
+Title = Zero-shot interpretable phenotyping of postpartum hemorrhage using large language models
+
+Many areas of medicine would benefit from deeper, more accurate phenotyping, but there are limited approaches for phenotyping using clinical notes without substantial annotated data. Large language models (LLMs) have demonstrated immense potential to adapt to novel tasks with no additional training by specifying task-specific instructions. Here we report the performance of a publicly available LLM, Flan-T5, in phenotyping patients with postpartum hemorrhage (PPH) using discharge notes from electronic health records (n = 271,081). The language model achieves strong performance in extracting 24 granular concepts associated with PPH. Identifying these granular concepts accurately allows the development of interpretable, complex phenotypes and subtypes. The Flan-T5 model achieves high fidelity in phenotyping PPH (positive predictive value of 0.95), identifying 47% more patients with this complication compared to the current standard of using claims codes. This LLM pipeline can be used reliably for subtyping PPH and outperforms a claims-based approach on the three most common PPH subtypes associated with uterine atony, abnormal placentation, and obstetric trauma. The advantage of this approach to subtyping is its interpretability, as each concept contributing to the subtype determination can be evaluated. Moreover, as definitions may change over time due to new guidelines, using granular concepts to create complex phenotypes enables prompt and efficient updating of the algorithm. Using this language modelling approach enables rapid phenotyping without the need for any manually annotated training data across multiple clinical use cases.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "Integration of SNOMED CT in phenotype tools and EHR":
+
+[begin paper 1]
+
+PMCID = 9147872
+
+Title = HL7 FHIR with SNOMED-CT to Achieve Semantic and Structural Interoperability in Personal Health Data: A Proof-of-Concept Study
+
+Heterogeneity is a problem in storing and exchanging data in a digital health information system (HIS) following semantic and structural integrity. The existing literature shows different methods to overcome this problem. Fast healthcare interoperable resources (FHIR) as a structural standard may explain other information models, (e.g., personal, physiological, and behavioral data from heterogeneous sources, such as activity sensors, questionnaires, and interviews) with semantic vocabularies, (e.g., Systematized Nomenclature of Medicine—Clinical Terms (SNOMED-CT)) to connect personal health data to an electronic health record (EHR). We design and develop an intuitive health coaching (eCoach) smartphone application to prove the concept. We combine HL7 FHIR and SNOMED-CT vocabularies to exchange personal health data in JavaScript object notion (JSON). This study explores and analyzes our attempt to design and implement a structurally and logically compatible tethered personal health record (PHR) that allows bidirectional communication with an EHR. Our eCoach prototype implements most PHR-S FM functions as an interoperability quality standard. Its end-to-end (E2E) data are protected with a TSD (Services for Sensitive Data) security mechanism. We achieve 0% data loss and 0% unreliable performances during data transfer between PHR and EHR. Furthermore, this experimental study shows the effectiveness of FHIR modular resources toward flexible management of data components in the PHR (eCoach) prototype.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 8714300
+
+Title = A State-of-the Art Review of SNOMED CT Terminology Binding and Recommendations for Practice and Research
+
+Background  Unambiguous sharing of data requires information models and terminology in combination, but there is a lack of knowledge as to how they should be combined, leading to impaired interoperability. 
+
+Objectives  To facilitate creation of guidelines for SNOMED CT terminology binding we have performed a literature review to find existing recommendations and expose knowledge gaps. The primary audience is practitioners and researchers working with terminology binding. 
+
+Methods  PubMed, Scopus, and Web of Science were searched for papers containing “terminology binding,” “subset,” “map,” “information model” or “implement” and the term “SNOMED.” 
+
+Results  The search yielded 616 unique papers published from 2004 to 2020, from which 55 papers were selected and analyzed inductively. Topics described in the papers include problems related to input material, SNOMED CT, information models, and lack of appropriate tools as well as recommendations regarding competence. 
+
+Conclusion  Recommendations are given for practitioners and researchers. Many of the stated problems can be solved by better co-operation between domain experts and informaticians and better knowledge of SNOMED CT. Settings where these competences either work together or where staff with knowledge of both act as brokers are well equipped for terminology binding. Tooling is not thoroughly researched and might be a possible way to facilitate terminology binding. 
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 6351992
+
+Title = SNOMED CT Concept Hierarchies for Computable Clinical Phenotypes From Electronic Health Record Data: Comparison of Intensional Versus Extensional Value Sets
+
+Defining clinical phenotypes from electronic health record (EHR)–derived data proves crucial for clinical decision support, population health endeavors, and translational research. EHR diagnoses now commonly draw from a finely grained clinical terminology—either native SNOMED CT or a vendor-supplied terminology mapped to SNOMED CT concepts as the standard for EHR interoperability. Accordingly, electronic clinical quality measures (eCQMs) increasingly define clinical phenotypes with SNOMED CT value sets. The work of creating and maintaining list-based value sets proves daunting, as does insuring that their contents accurately represent the clinically intended condition.
+
+The goal of the research was to compare an intensional (concept hierarchy-based) versus extensional (list-based) value set approach to defining clinical phenotypes using SNOMED CT–encoded data from EHRs by evaluating value set conciseness, time to create, and completeness.
+
+Starting from published Centers for Medicare and Medicaid Services (CMS) high-priority eCQMs, we selected 10 clinical conditions referenced by those eCQMs. For each, the published SNOMED CT list-based (extensional) value set was downloaded from the Value Set Authority Center (VSAC). Ten corresponding SNOMED CT hierarchy-based intensional value sets for the same conditions were identified within our EHR. From each hierarchy-based intensional value set, an exactly equivalent full extensional value set was derived enumerating all included descendant SNOMED CT concepts. Comparisons were then made between (1) VSAC-downloaded list-based (extensional) value sets, (2) corresponding hierarchy-based intensional value sets for the same conditions, and (3) derived list-based (extensional) value sets exactly equivalent to the hierarchy-based intensional value sets. Value set conciseness was assessed by the number of SNOMED CT concepts needed for definition. Time to construct the value sets for local use was measured. Value set completeness was assessed by comparing contents of the downloaded extensional versus intensional value sets. Two measures of content completeness were made: for individual SNOMED CT concepts and for the mapped diagnosis clinical terms available for selection within the EHR by clinicians.
+
+The 10 hierarchy-based intensional value sets proved far simpler and faster to construct than exactly equivalent derived extensional value set lists, requiring a median 3 versus 78 concepts to define and 5 versus 37 minutes to build. The hierarchy-based intensional value sets also proved more complete: in comparison, the 10 downloaded 2018 extensional value sets contained a median of just 35% of the intensional value sets’ SNOMED CT concepts and 65% of mapped EHR clinical terms.
+
+In the EHR era, defining conditions preferentially should employ SNOMED CT concept hierarchy-based (intensional) value sets rather than extensional lists. By doing so, clinical guideline and eCQM authors can more readily engage specialists in vetting condition subtypes to include and exclude, and streamline broad EHR implementation of condition-specific decision support promoting guideline adherence for patient benefit.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 10403057
+
+Title = A health terminological system for inherited retinal diseases: Content coverage evaluation and a proposed classification
+
+To present a classification of inherited retinal diseases (IRDs) and evaluate its content coverage in comparison with common standard terminology systems.
+
+In this comparative cross-sectional study, a panel of subject matter experts annotated a list of IRDs based on a comprehensive review of the literature. Then, they leveraged clinical terminologies from various reference sets including Unified Medical Language System (UMLS), Online Mendelian Inheritance in Man (OMIM), International Classification of Diseases (ICD-11), Systematized Nomenclature of Medicine (SNOMED-CT) and Orphanet Rare Disease Ontology (ORDO).
+
+Initially, we generated a hierarchical classification of 62 IRD diagnosis concepts in six categories. Subsequently, the classification was extended to 164 IRD diagnoses after adding concepts from various standard terminologies. Finally, 158 concepts were selected to be classified into six categories and genetic subtypes of 412 cases were added to the related concepts. UMLS has the greatest content coverage of 90.51% followed respectively by SNOMED-CT (83.54%), ORDO (81.01%), OMIM (60.76%), and ICD-11 (60.13%). There were 53 IRD concepts (33.54%) that were covered by all five investigated systems. However, 2.53% of the IRD concepts in our classification were not covered by any of the standard terminologies.
+
+This comprehensive classification system was established to organize IRD diseases based on phenotypic and genotypic specifications. It could potentially be used for IRD clinical documentation purposes and could also be considered a preliminary step forward to developing a more robust standard ontology for IRDs or updating available standard terminologies. In comparison, the greatest content coverage of our proposed classification was related to the UMLS Metathesaurus.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 4748471
+
+Title = Interoperability between phenotypes in research and healthcare terminologies—Investigating partial mappings between HPO and SNOMED CT
+
+Identifying partial mappings between two terminologies is of special importance when one terminology is finer-grained than the other, as is the case for the Human Phenotype Ontology (HPO), mainly used for research purposes, and SNOMED CT, mainly used in healthcare.
+
+To investigate and contrast lexical and logical approaches to deriving partial mappings between HPO and SNOMED CT.
+
+1) Lexical approach—We identify modifiers in HPO terms and attempt to map demodified terms to SNOMED CT through UMLS; 2) Logical approach—We leverage subsumption relations in HPO to infer partial mappings to SNOMED CT; 3) Comparison—We analyze the specific contribution of each approach and evaluate the quality of the partial mappings through manual review.
+
+There are 7358 HPO concepts with no complete mapping to SNOMED CT. We identified partial mappings lexically for 33 % of them and logically for 82 %. We identified partial mappings both lexically and logically for 27 %. The clinical relevance of the partial mappings (for a cohort selection use case) is 49 % for lexical mappings and 67 % for logical mappings.
+
+Through complete and partial mappings, 92 % of the 10,454 HPO concepts can be mapped to SNOMED CT (30 % complete and 62 % partial). Equivalence mappings between HPO and SNOMED CT allow for interoperability between data described using these two systems. However, due to differences in focus and granularity, equivalence is only possible for 30 % of HPO classes. In the remaining cases, partial mappings provide a next-best approach for traversing between the two systems. Both lexical and logical mapping techniques produce mappings that cannot be generated by the other technique, suggesting that the two techniques are complementary to each other. Finally, this work demonstrates interesting properties (both lexical and logical) of HPO and SNOMED CT and illustrates some limitations of mapping through UMLS.
+
+[end paper 5]
+
+
+
+Here are the top 5 articles on PubMed Central for the query "Visual interpretability tools for clinical phenotyping":
+
+[begin paper 1]
+
+PMCID = 10546035
+
+Title = Explainable deep learning in plant phenotyping
+
+The increasing human population and variable weather conditions, due to climate change, pose a threat to the world's food security. To improve global food security, we need to provide breeders with tools to develop crop cultivars that are more resilient to extreme weather conditions and provide growers with tools to more effectively manage biotic and abiotic stresses in their crops. Plant phenotyping, the measurement of a plant's structural and functional characteristics, has the potential to inform, improve and accelerate both breeders' selections and growers' management decisions. To improve the speed, reliability and scale of plant phenotyping procedures, many researchers have adopted deep learning methods to estimate phenotypic information from images of plants and crops. Despite the successful results of these image-based phenotyping studies, the representations learned by deep learning models remain difficult to interpret, understand, and explain. For this reason, deep learning models are still considered to be black boxes. Explainable AI (XAI) is a promising approach for opening the deep learning model's black box and providing plant scientists with image-based phenotypic information that is interpretable and trustworthy. Although various fields of study have adopted XAI to advance their understanding of deep learning models, it has yet to be well-studied in the context of plant phenotyping research. In this review article, we reviewed existing XAI studies in plant shoot phenotyping, as well as related domains, to help plant researchers understand the benefits of XAI and make it easier for them to integrate XAI into their future studies. An elucidation of the representations within a deep learning model can help researchers explain the model's decisions, relate the features detected by the model to the underlying plant physiology, and enhance the trustworthiness of image-based phenotypic information used in food production systems.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 9065125
+
+Title = Interpretability and fairness evaluation of deep learning models on MIMIC-IV dataset
+
+The recent release of large-scale healthcare datasets has greatly propelled the research of data-driven deep learning models for healthcare applications. However, due to the nature of such deep black-boxed models, concerns about interpretability, fairness, and biases in healthcare scenarios where human lives are at stake call for a careful and thorough examination of both datasets and models. In this work, we focus on MIMIC-IV (Medical Information Mart for Intensive Care, version IV), the largest publicly available healthcare dataset, and conduct comprehensive analyses of interpretability as well as dataset representation bias and prediction fairness of deep learning models for in-hospital mortality prediction. First, we analyze the interpretability of deep learning mortality prediction models and observe that (1) the best-performing interpretability method successfully identifies critical features for mortality prediction on various prediction models as well as recognizing new important features that domain knowledge does not consider; (2) prediction models rely on demographic features, raising concerns in fairness. Therefore, we then evaluate the fairness of models and do observe the unfairness: (1) there exists disparate treatment in prescribing mechanical ventilation among patient groups across ethnicity, gender and age; (2) models often rely on racial attributes unequally across subgroups to generate their predictions. We further draw concrete connections between interpretability methods and fairness metrics by showing how feature importance from interpretability methods can be beneficial in quantifying potential disparities in mortality predictors. Our analysis demonstrates that the prediction performance is not the only factor to consider when evaluating models for healthcare applications, since high prediction performance might be the result of unfair utilization of demographic features. Our findings suggest that future research in AI models for healthcare applications can benefit from utilizing the analysis workflow of interpretability and fairness as well as verifying if models achieve superior performance at the cost of introducing bias.
+
+[end paper 2]
+
+[begin paper 3]
+
+PMCID = 10603917
+
+Title = An Integrated Multi-Omics and Artificial Intelligence Framework for Advance Plant Phenotyping in Horticulture
+
+The future of plant biology, particularly rapidly advancing precision horticulture and predictive breeding, will require the transformation of huge volumes of multi-omics data into structured information and valuable knowledge, representing a key challenge. This review aims to delve into the transformative potential of integrating multi-omics data and artificial intelligence (AI) for a more comprehensive, high-throughput approach to plant phenotyping in horticultural research. We argue that the union of these advanced techniques can provide a robust analytical framework that can handle the complexity of plant biology, thus surmounting the limitations of traditional phenotyping methods. Our discussion also acknowledges the technical and non-technical challenges associated with this integration, critically evaluating their advantages and limitations, proposing potential solutions, and outlining promising future prospects.
+
+This review discusses the transformative potential of integrating multi-omics data and artificial intelligence (AI) in advancing horticultural research, specifically plant phenotyping. The traditional methods of plant phenotyping, while valuable, are limited in their ability to capture the complexity of plant biology. The advent of (meta-)genomics, (meta-)transcriptomics, proteomics, and metabolomics has provided an opportunity for a more comprehensive analysis. AI and machine learning (ML) techniques can effectively handle the complexity and volume of multi-omics data, providing meaningful interpretations and predictions. Reflecting the multidisciplinary nature of this area of research, in this review, readers will find a collection of state-of-the-art solutions that are key to the integration of multi-omics data and AI for phenotyping experiments in horticulture, including experimental design considerations with several technical and non-technical challenges, which are discussed along with potential solutions. The future prospects of this integration include precision horticulture, predictive breeding, improved disease and stress response management, sustainable crop management, and exploration of plant biodiversity. The integration of multi-omics and AI holds immense promise for revolutionizing horticultural research and applications, heralding a new era in plant phenotyping.
+
+[end paper 3]
+
+[begin paper 4]
+
+PMCID = 9676543
+
+Title = Modern views of machine learning for precision psychiatry
+
+In light of the National Institute of Mental Health (NIMH)’s Research Domain Criteria (RDoC), the advent of functional neuroimaging, novel technologies and methods provide new opportunities to develop precise and personalized prognosis and diagnosis of mental disorders. Machine learning (ML) and artificial intelligence (AI) technologies are playing an increasingly critical role in the new era of precision psychiatry. Combining ML/AI with neuromodulation technologies can potentially provide explainable solutions in clinical practice and effective therapeutic treatment. Advanced wearable and mobile technologies also call for the new role of ML/AI for digital phenotyping in mobile mental health. In this review, we provide a comprehensive review of ML methodologies and applications by combining neuroimaging, neuromodulation, and advanced mobile technologies in psychiatry practice. We further review the role of ML in molecular phenotyping and cross-species biomarker identification in precision psychiatry. We also discuss explainable AI (XAI) and neuromodulation in a closed human-in-the-loop manner and highlight the ML potential in multi-media information extraction and multi-modal data fusion. Finally, we discuss conceptual and practical challenges in precision psychiatry and highlight ML opportunities in future research.
+
+Mental health issues are an epidemic in the United States and the world and have imposed a tremendous burden to the healthcare system and society. To date, there is still a lack of biomarkers and individualized treatment guidelines for mental illnesses. In recent years, machine learning (ML) and artificial intelligence (AI) have become increasingly popular in analyzing complex patterns of neural and behavioral data for psychiatry. We provide a comprehensive review of ML methodologies and applications in precision psychiatry. We argue that advances in ML-powered modern technologies will create a paradigm shift in the current practice in diagnosis, prognosis, monitoring, and treatment of mental illnesses. We discuss conceptual and practical challenges in precision psychiatry and highlight future research opportunities in ML.
+
+Managing and analyzing a large amount of neuroimaging and behavioral data related to mental health have become increasingly important in both precision psychiatry and data science research. Chen et al. present a comprehensive review of machine-learning methodologies, artificial intelligence (AI)-powered technologies and applications by combining neuroimaging, neuromodulation, and mobile devices in psychiatry practice. The review highlights the machine-learning potential in multi-media information extraction and multi-modal data fusion and discusses the challenges and opportunities in future computational psychiatry research.
+
+[end paper 4]
+
+[begin paper 5]
+
+PMCID = 9117425
+
+Title = Digital Phenotyping in Clinical Neurology
+
+Internet-connected devices, including personal computers, smartphones, smartwatches, and voice assistants, have evolved into powerful multi-sensor technologies that billions of people interact with daily to connect with friends and colleagues, access and share information, purchase goods, play games, and navigate their environment. Digital phenotyping taps into the data streams captured by these devices to characterize and understand health and disease. The purpose of this article is to summarize opportunities for digital phenotyping in neurology, review studies using everyday technologies to obtain motor and cognitive information, and provide a perspective on how neurologists can embrace and accelerate progress in this emerging field.
+
+[end paper 5]
+
+
+
+Here are the top 2 articles on PubMed Central for the query "Clinician trust in AI-driven phenotype definitions":
+
+[begin paper 1]
+
+PMCID = 11848901
+
+Title = Artificial intelligence to revolutionize IBD clinical trials: a comprehensive review
+
+Integrating artificial intelligence (AI) into clinical trials for inflammatory bowel disease (IBD) has potential to be transformative to the field. This article explores how AI-driven technologies, including machine learning (ML), natural language processing, and predictive analytics, have the potential to enhance important aspects of IBD trials—from patient recruitment and trial design to data analysis and personalized treatment strategies. As AI advances, it has potential to improve long-standing challenges in trial efficiency, accuracy, and personalization with the goal of accelerating the discovery of novel therapies and improve outcomes for people living with IBD. AI can streamline multiple trial phases, from target identification and patient recruitment to data analysis and monitoring. By integrating multi-omics data, electronic health records, and imaging repositories, AI can uncover molecular targets and personalize trial strategies, ultimately expediting drug development. However, the adoption of AI in IBD clinical trials encounters significant challenges. These include technical barriers in data integration, ethical concerns regarding patient privacy, and regulatory issues related to AI validation standards. Additionally, AI models risk producing biased outcomes if training datasets lack diversity, potentially impacting underrepresented populations in clinical trials. Addressing these limitations requires standardized data formats, interdisciplinary collaboration, and robust ethical frameworks to ensure inclusivity and accuracy. Continued partnerships among clinicians, researchers, data scientists, and regulators will be essential to establish transparent, patient-centered AI frameworks. By overcoming these obstacles, AI has the potential to enhance the efficiency, equity, and efficacy of IBD clinical trials, ultimately benefiting patient care.
+
+ Artificial intelligence in IBD clinical trials 
+
+Inflammatory Bowel Disease (IBD), including Crohn’s disease and ulcerative colitis, poses significant challenges for clinical trials, such as difficulties in recruiting participants, variations in disease presentation, and inconsistent treatment responses. Artificial intelligence (AI) is increasingly recognized as a solution to these challenges, improving recruitment, data analysis, personalized care, and trial design. AI can enhance recruitment by analyzing medical records to match patients to trials efficiently. AI tools can automate this process, improving both efficiency and diversity. Additionally, AI can predict dropout risks, helping researchers plan better and maintain trial integrity. IBD trials generate complex datasets that require advanced analysis. AI can process these large datasets to identify patterns in disease progression and treatment efficacy, also improving the accuracy of endoscopic and histological assessments, providing deeper insights into the disease. AI can enable personalized treatments by predicting responses based on genetics, biomarkers, and medical history. Real-time monitoring through wearable devices supports early interventions, improving patient outcomes and disease management. Adaptive trial designs might also benefit from AI, allowing protocols to adjust based on interim results. This enhances trial efficiency, ethical standards, and participant safety, while ensuring accurate data collection. However, implementing AI requires addressing data privacy, fairness, and regulatory compliance. Transparent, secure, and inclusive AI models are essential to build trust and ensure equitable benefits across all patient populations. AI is transforming IBD clinical trials by streamlining recruitment, improving data analysis, personalizing care, and optimizing trial design. By addressing challenges proactively, we can unlock AI’s full potential, leading to more efficient trials and better outcomes for patients.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11893894
+
+Title = Ethical considerations in AI for child health and recommendations for child-centered medical AI
+
+There does not exist any previous comprehensive review on AI ethics in child health or any guidelines for management, unlike in adult medicine. This review describes ethical principles in AI for child health and provides recommendations for child-centered medical AI. We also introduce the Pediatrics EthicAl Recommendations List for AI (PEARL-AI) framework for clinicians and AI developers to ensure ethical AI enabled systems in healthcare for children.
+
+[end paper 2]
+
+
+

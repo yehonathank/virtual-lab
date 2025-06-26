@@ -1,0 +1,204 @@
+## User
+
+This is the beginning of an individual meeting with Clinical Informatics Specialist to discuss your research project.
+
+Here is the agenda for the meeting:
+
+You are working on a research project to use software techniques to develop a tool for large language model (LLM) interpretability in the context of creating electronic phenotype definitions, ideally, also incorporating a visual perspective to foster trust between the clinician and the model. To develop a tool for LLM interpretability in electronic phenotype definitions, we will adopt a machine learning approach, leveraging existing open-source interpretability libraries. Our focus will be on integrating SNOMED CT to enhance reasoning and reduce hallucinations, while incorporating visual elements to build clinician trust.
+                You are responsible for understanding the topic Mapping free-text clinical concepts to standardized vocabularies in the context of designing an LLM-based interpretability pipeline for electronic phenotype definition.
+                You need to fine-tune yourself on the relevant literature on Mapping free-text clinical concepts to standardized vocabularies to improve your ability to contribute effectively to building a transparent, clinically grounded, and visually intuitive interpretability tool.
+                Please write out a series of five distinct search queries that you want to run to find relevant scientific papers on Mapping free-text clinical concepts to standardized vocabularies. Include both general queries about Mapping free-text clinical concepts to standardized vocabularies and queries that specifically relate Mapping free-text clinical concepts to standardized vocabularies to LLM interpretability, phenotype definition, clinical applications, and clinician trust.
+                Please provide the queries in Python syntax as a list of double-quoted strings.
+
+Here are the agenda questions that must be answered:
+
+1. What are the PMCIDs and titles of the papers you wish to fine-tune yourself on (as a Python dictionary mapping PMCID as a double-quoted string to title as double-quoted string)?
+
+Clinical Informatics Specialist, please provide your response to the agenda.
+
+## Clinical Informatics Specialist
+
+To address the agenda and gather relevant literature on mapping free-text clinical concepts to standardized vocabularies, especially in the context of LLM interpretability and electronic phenotype definitions, I will formulate a series of search queries. These queries will help identify scientific papers that can inform the development of a transparent and clinically grounded interpretability tool. Here are the search queries:
+
+```python
+search_queries = [
+    "Mapping free-text clinical concepts to standardized vocabularies",
+    "LLM interpretability in electronic phenotype definitions",
+    "Mapping clinical concepts to SNOMED CT for phenotype extraction",
+    "Clinical applications of mapping free-text to standardized vocabularies",
+    "Building clinician trust with LLM-based phenotype tools"
+]
+```
+
+Next, I will use these queries to search for relevant papers in PubMed Central. Once I have the results, I will provide the PMCIDs and titles of the papers that are most relevant to our research project. Let's proceed with the search.
+
+## Clinical Informatics Specialist
+
+Based on the search queries, here are the PMCIDs and titles of the papers that are relevant to our research project on mapping free-text clinical concepts to standardized vocabularies and their application in LLM interpretability and phenotype definitions:
+
+```python
+papers = {
+    "10452256": "Mapping the Oncological Basis Dataset to the Standardized Vocabularies of a Common Data Model: A Feasibility Study",
+    "10196319": "Ontologizing health systems data at scale: making translational discovery a reality",
+    "11422740": "Prompt Engineering Paradigms for Medical Applications: Scoping Review",
+    "10689487": "Zero-shot interpretable phenotyping of postpartum hemorrhage using large language models",
+    "11494256": "Use of SNOMED CT in Large Language Models: Scoping Review",
+    "11151346": "Evaluation of SNOMED CT Grouper Accuracy and Coverage in Organizing the Electronic Health Record Problem List by Clinical System: Observational Study",
+    "11307071": "IMPatienT: An Integrated Web Application to Digitize, Process and Explore Multimodal PATIENt daTa",
+    "8565035": "Standardizing registry data to the OMOP Common Data Model: experience from three pulmonary hypertension databases",
+    "10834163": "Artificial intelligence: revolutionizing cardiology with large language models"
+}
+```
+
+These papers cover a range of topics from mapping clinical data to standardized vocabularies, the integration of SNOMED CT in LLMs, to the application of LLMs in phenotype definitions and building clinician trust. They will provide a comprehensive foundation for understanding the current landscape and potential methodologies for our project.
+
+## User
+
+Tool Output:
+
+Here are the top 2 articles on PubMed Central for the query "Mapping free-text clinical concepts to standardized vocabularies":
+
+[begin paper 1]
+
+PMCID = 10452256
+
+Title = Mapping the Oncological Basis Dataset to the Standardized Vocabularies of a Common Data Model: A Feasibility Study
+
+Resident physicians and medical institutions in Germany are required to report diagnostics, treatments, progression, and follow-up information for tumor patients to the respective state cancer registries. The information is transmitted electronically according to a defined data scheme (oncological basis dataset [oBDS]). In this study, we first mapped oBDS elements to the standardized vocabularies, a metadata repository of the observational medical outcomes partnership (OMOP) common data model (CDM). The mapping of the oBDS to the standardized vocabularies promotes the semantic interoperability of oncological data in Germany and provides the opportunity to participate in network studies of observational health data sciences and informatics under the usage of federated analysis.
+
+In their joint effort against cancer, all involved parties within the German healthcare system are obligated to report diagnostics, treatments, progression, and follow-up information for tumor patients to the respective cancer registries. Given the federal structure of Germany, the oncological basis dataset (oBDS) operates as the legally required national standard for oncological reporting. Unfortunately, the usage of various documentation software solutions leads to semantic and technical heterogeneity of the data, complicating the establishment of research networks and collective data analysis. Within this feasibility study, we evaluated the transferability of all oBDS characteristics to the standardized vocabularies, a metadata repository of the observational medical outcomes partnership (OMOP) common data model (CDM). A total of 17,844 oBDS expressions were mapped automatically or manually to standardized concepts of the OMOP CDM. In a second step, we converted real patient data retrieved from the Hamburg Cancer Registry to the new terminologies. Given our pipeline, we transformed 1773.373 cancer-related data elements to the OMOP CDM. The mapping of the oBDS to the standardized vocabularies of the OMOP CDM promotes the semantic interoperability of oncological data in Germany. Moreover, it allows the participation in network studies of the observational health data sciences and informatics under the usage of federated analysis beyond the level of individual countries.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 10196319
+
+Title = Ontologizing health systems data at scale: making translational discovery a reality
+
+Common data models solve many challenges of standardizing electronic health record (EHR) data but are unable to semantically integrate all of the resources needed for deep phenotyping. Open Biological and Biomedical Ontology (OBO) Foundry ontologies provide computable representations of biological knowledge and enable the integration of heterogeneous data. However, mapping EHR data to OBO ontologies requires significant manual curation and domain expertise. We introduce OMOP2OBO, an algorithm for mapping Observational Medical Outcomes Partnership (OMOP) vocabularies to OBO ontologies. Using OMOP2OBO, we produced mappings for 92,367 conditions, 8611 drug ingredients, and 10,673 measurement results, which covered 68–99% of concepts used in clinical practice when examined across 24 hospitals. When used to phenotype rare disease patients, the mappings helped systematically identify undiagnosed patients who might benefit from genetic testing. By aligning OMOP vocabularies to OBO ontologies our algorithm presents new opportunities to advance EHR-based deep phenotyping.
+
+[end paper 2]
+
+
+
+Here are the top 2 articles on PubMed Central for the query "LLM interpretability in electronic phenotype definitions":
+
+[begin paper 1]
+
+PMCID = 11422740
+
+Title = Prompt Engineering Paradigms for Medical Applications: Scoping Review
+
+Prompt engineering, focusing on crafting effective prompts to large language models (LLMs), has garnered attention for its capabilities at harnessing the potential of LLMs. This is even more crucial in the medical domain due to its specialized terminology and language technicity. Clinical natural language processing applications must navigate complex language and ensure privacy compliance. Prompt engineering offers a novel approach by designing tailored prompts to guide models in exploiting clinically relevant information from complex medical texts. Despite its promise, the efficacy of prompt engineering in the medical domain remains to be fully explored.
+
+The aim of the study is to review research efforts and technical approaches in prompt engineering for medical applications as well as provide an overview of opportunities and challenges for clinical practice.
+
+Databases indexing the fields of medicine, computer science, and medical informatics were queried in order to identify relevant published papers. Since prompt engineering is an emerging field, preprint databases were also considered. Multiple data were extracted, such as the prompt paradigm, the involved LLMs, the languages of the study, the domain of the topic, the baselines, and several learning, design, and architecture strategies specific to prompt engineering. We include studies that apply prompt engineering–based methods to the medical domain, published between 2022 and 2024, and covering multiple prompt paradigms such as prompt learning (PL), prompt tuning (PT), and prompt design (PD).
+
+We included 114 recent prompt engineering studies. Among the 3 prompt paradigms, we have observed that PD is the most prevalent (78 papers). In 12 papers, PD, PL, and PT terms were used interchangeably. While ChatGPT is the most commonly used LLM, we have identified 7 studies using this LLM on a sensitive clinical data set. Chain-of-thought, present in 17 studies, emerges as the most frequent PD technique. While PL and PT papers typically provide a baseline for evaluating prompt-based approaches, 61% (48/78) of the PD studies do not report any nonprompt-related baseline. Finally, we individually examine each of the key prompt engineering–specific information reported across papers and find that many studies neglect to explicitly mention them, posing a challenge for advancing prompt engineering research.
+
+In addition to reporting on trends and the scientific landscape of prompt engineering, we provide reporting guidelines for future studies to help advance research in the medical field. We also disclose tables and figures summarizing medical prompt engineering papers available and hope that future contributions will leverage these existing works to better advance the field.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 10689487
+
+Title = Zero-shot interpretable phenotyping of postpartum hemorrhage using large language models
+
+Many areas of medicine would benefit from deeper, more accurate phenotyping, but there are limited approaches for phenotyping using clinical notes without substantial annotated data. Large language models (LLMs) have demonstrated immense potential to adapt to novel tasks with no additional training by specifying task-specific instructions. Here we report the performance of a publicly available LLM, Flan-T5, in phenotyping patients with postpartum hemorrhage (PPH) using discharge notes from electronic health records (n = 271,081). The language model achieves strong performance in extracting 24 granular concepts associated with PPH. Identifying these granular concepts accurately allows the development of interpretable, complex phenotypes and subtypes. The Flan-T5 model achieves high fidelity in phenotyping PPH (positive predictive value of 0.95), identifying 47% more patients with this complication compared to the current standard of using claims codes. This LLM pipeline can be used reliably for subtyping PPH and outperforms a claims-based approach on the three most common PPH subtypes associated with uterine atony, abnormal placentation, and obstetric trauma. The advantage of this approach to subtyping is its interpretability, as each concept contributing to the subtype determination can be evaluated. Moreover, as definitions may change over time due to new guidelines, using granular concepts to create complex phenotypes enables prompt and efficient updating of the algorithm. Using this language modelling approach enables rapid phenotyping without the need for any manually annotated training data across multiple clinical use cases.
+
+[end paper 2]
+
+
+
+Here are the top 2 articles on PubMed Central for the query "Mapping clinical concepts to SNOMED CT for phenotype extraction":
+
+[begin paper 1]
+
+PMCID = 11494256
+
+Title = Use of SNOMED CT in Large Language Models: Scoping Review
+
+Large language models (LLMs) have substantially advanced natural language processing (NLP) capabilities but often struggle with knowledge-driven tasks in specialized domains such as biomedicine. Integrating biomedical knowledge sources such as SNOMED CT into LLMs may enhance their performance on biomedical tasks. However, the methodologies and effectiveness of incorporating SNOMED CT into LLMs have not been systematically reviewed.
+
+This scoping review aims to examine how SNOMED CT is integrated into LLMs, focusing on (1) the types and components of LLMs being integrated with SNOMED CT, (2) which contents of SNOMED CT are being integrated, and (3) whether this integration improves LLM performance on NLP tasks.
+
+Following the PRISMA-ScR (Preferred Reporting Items for Systematic Reviews and Meta-Analyses extension for Scoping Reviews) guidelines, we searched ACM Digital Library, ACL Anthology, IEEE Xplore, PubMed, and Embase for relevant studies published from 2018 to 2023. Studies were included if they incorporated SNOMED CT into LLM pipelines for natural language understanding or generation tasks. Data on LLM types, SNOMED CT integration methods, end tasks, and performance metrics were extracted and synthesized.
+
+The review included 37 studies. Bidirectional Encoder Representations from Transformers and its biomedical variants were the most commonly used LLMs. Three main approaches for integrating SNOMED CT were identified: (1) incorporating SNOMED CT into LLM inputs (28/37, 76%), primarily using concept descriptions to expand training corpora; (2) integrating SNOMED CT into additional fusion modules (5/37, 14%); and (3) using SNOMED CT as an external knowledge retriever during inference (5/37, 14%). The most frequent end task was medical concept normalization (15/37, 41%), followed by entity extraction or typing and classification. While most studies (17/19, 89%) reported performance improvements after SNOMED CT integration, only a small fraction (19/37, 51%) provided direct comparisons. The reported gains varied widely across different metrics and tasks, ranging from 0.87% to 131.66%. However, some studies showed either no improvement or a decline in certain performance metrics.
+
+This review demonstrates diverse approaches for integrating SNOMED CT into LLMs, with a focus on using concept descriptions to enhance biomedical language understanding and generation. While the results suggest potential benefits of SNOMED CT integration, the lack of standardized evaluation methods and comprehensive performance reporting hinders definitive conclusions about its effectiveness. Future research should prioritize consistent reporting of performance comparisons and explore more sophisticated methods for incorporating SNOMED CT’s relational structure into LLMs. In addition, the biomedical NLP community should develop standardized evaluation frameworks to better assess the impact of ontology integration on LLM performance.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 11151346
+
+Title = Evaluation of SNOMED CT Grouper Accuracy and Coverage in Organizing the Electronic Health Record Problem List by Clinical System: Observational Study
+
+The problem list (PL) is a repository of diagnoses for patients’ medical conditions and health-related issues. Unfortunately, over time, our PLs have become overloaded with duplications, conflicting entries, and no-longer-valid diagnoses. The lack of a standardized structure for review adds to the challenges of clinical use. Previously, our default electronic health record (EHR) organized the PL primarily via alphabetization, with other options available, for example, organization by clinical systems or priority settings. The system’s PL was built with limited groupers, resulting in many diagnoses that were inconsistent with the expected clinical systems or not associated with any clinical systems at all. As a consequence of these limited EHR configuration options, our PL organization has poorly supported clinical use over time, particularly as the number of diagnoses on the PL has increased.
+
+We aimed to measure the accuracy of sorting PL diagnoses into PL system groupers based on Systematized Nomenclature of Medicine Clinical Terms (SNOMED CT) concept groupers implemented in our EHR.
+
+We transformed and developed 21 system- or condition-based groupers, using 1211 SNOMED CT hierarchal concepts refined with Boolean logic, to reorganize the PL in our EHR. To evaluate the clinical utility of our new groupers, we extracted all diagnoses on the PLs from a convenience sample of 50 patients with 3 or more encounters in the previous year. To provide a spectrum of clinical diagnoses, we included patients from all ages and divided them by sex in a deidentified format. Two physicians independently determined whether each diagnosis was correctly attributed to the expected clinical system grouper. Discrepancies were discussed, and if no consensus was reached, they were adjudicated by a third physician. Descriptive statistics and Cohen κ statistics for interrater reliability were calculated.
+
+Our 50-patient sample had a total of 869 diagnoses (range 4-59; median 12, IQR 9-24). The reviewers initially agreed on 821 system attributions. Of the remaining 48 items, 16 required adjudication with the tie-breaking third physician. The calculated κ statistic was 0.7. The PL groupers appropriately associated diagnoses to the expected clinical system with a sensitivity of 97.6%, a specificity of 58.7%, a positive predictive value of 96.8%, and an F1-score of 0.972.
+
+We found that PL organization by clinical specialty or condition using SNOMED CT concept groupers accurately reflects clinical systems. Our system groupers were subsequently adopted by our vendor EHR in their foundation system for PL organization.
+
+[end paper 2]
+
+
+
+Here are the top 2 articles on PubMed Central for the query "Clinical applications of mapping free-text to standardized vocabularies":
+
+[begin paper 1]
+
+PMCID = 11307071
+
+Title = IMPatienT: An Integrated Web Application to Digitize, Process and Explore Multimodal PATIENt daTa
+
+Medical acts, such as imaging, lead to the production of various medical text reports that describe the relevant findings. This induces multimodality in patient data by combining image data with free-text and consequently, multimodal data have become central to drive research and improve diagnoses. However, the exploitation of patient data is problematic as the ecosystem of analysis tools is fragmented according to the type of data (images, text, genetics), the task (processing, exploration) and domain of interest (clinical phenotype, histology). To address the challenges, we developed IMPatienT (Integrated digital Multimodal PATIENt daTa), a simple, flexible and open-source web application to digitize, process and explore multimodal patient data. IMPatienT has a modular architecture allowing to: (i) create a standard vocabulary for a domain, (ii) digitize and process free-text data, (iii) annotate images and perform image segmentation, (iv) generate a visualization dashboard and provide diagnosis decision support. To demonstrate the advantages of IMPatienT, we present a use case on a corpus of 40 simulated muscle biopsy reports of congenital myopathy patients. As IMPatienT provides users with the ability to design their own vocabulary, it can be adapted to any research domain and can be used as a patient registry for exploratory data analysis. A demo instance of the application is available at https://impatient.lbgi.fr/.
+
+[end paper 1]
+
+[begin paper 2]
+
+PMCID = 8565035
+
+Title = Standardizing registry data to the OMOP Common Data Model: experience from three pulmonary hypertension databases
+
+The Observational Medical Outcomes Partnership (OMOP) Common Data Model (CDM) can be used to transform observational health data to a common format. CDM transformation allows for analysis across disparate databases for the generation of new, real-word evidence, which is especially important in rare disease where data are limited. Pulmonary hypertension (PH) is a progressive, life-threatening disease, with rare subgroups such as pulmonary arterial hypertension (PAH), for which generating real-world evidence is challenging. Our objective is to document the process and outcomes of transforming registry data in PH to the OMOP CDM, and highlight challenges and our potential solutions.
+
+Three observational studies were transformed from the Clinical Data Interchange Standards Consortium study data tabulation model (SDTM) to OMOP CDM format. OPUS was a prospective, multi-centre registry (2014–2020) and OrPHeUS was a retrospective, multi-centre chart review (2013–2017); both enrolled patients newly treated with macitentan in the US. EXPOSURE is a prospective, multi-centre cohort study (2017–ongoing) of patients newly treated with selexipag or any PAH-specific therapy in Europe and Canada. OMOP CDM version 5.3.1 with recent OMOP CDM vocabulary was used. Imputation rules were defined and applied for missing dates to avoid exclusion of data. Custom target concepts were introduced when existing concepts did not provide sufficient granularity.
+
+Of the 6622 patients in the three registry studies, records were mapped for 6457. Custom target concepts were introduced for PAH subgroups (by combining SNOMED concepts or creating custom concepts) and World Health Organization functional class. Per the OMOP CDM convention, records about the absence of an event, or the lack of information, were not mapped. Excluding these non-event records, 4% (OPUS), 2% (OrPHeUS) and 1% (EXPOSURE) of records were not mapped.
+
+SDTM data from three registries were transformed to the OMOP CDM with limited exclusion of data and deviation from the SDTM database content. Future researchers can apply our strategy and methods in different disease areas, with tailoring as necessary. Mapping registry data to the OMOP CDM facilitates more efficient collaborations between researchers and establishment of federated data networks, which is an unmet need in rare diseases.
+
+The online version contains supplementary material available at 10.1186/s12874-021-01434-3.
+
+[end paper 2]
+
+
+
+Here are the top 1 articles on PubMed Central for the query "Building clinician trust with LLM-based phenotype tools":
+
+[begin paper 1]
+
+PMCID = 10834163
+
+Title = Artificial intelligence: revolutionizing cardiology with large language models
+
+Overview of input sources (top) to train or fine-tune cardio large language models and different applications (bottom). ECG, electrocardiogram; Q&A, questions and answers.
+
+Natural language processing techniques are having an increasing impact on clinical care from patient, clinician, administrator, and research perspective. Among others are automated generation of clinical notes and discharge letters, medical term coding for billing, medical chatbots both for patients and clinicians, data enrichment in the identification of disease symptoms or diagnosis, cohort selection for clinical trial, and auditing purposes. In the review, an overview of the history in natural language processing techniques developed with brief technical background is presented. Subsequently, the review will discuss implementation strategies of natural language processing tools, thereby specifically focusing on large language models, and conclude with future opportunities in the application of such techniques in the field of cardiology.
+
+[end paper 1]
+
+
+
